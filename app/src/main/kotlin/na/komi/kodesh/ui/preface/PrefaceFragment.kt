@@ -27,6 +27,7 @@ import na.komi.kodesh.ui.main.MainViewModel
 import na.komi.kodesh.util.closestKatana
 import na.komi.kodesh.util.onClick
 import na.komi.kodesh.util.page.Fonts
+import na.komi.kodesh.util.sp
 import na.komi.kodesh.util.viewModel
 import na.komi.kodesh.widget.LayoutedTextView
 import na.komi.kodesh.widget.NestedRecyclerView
@@ -290,13 +291,22 @@ class PrefaceChildAdapter(
              * We get each individual string
              * Now just set text.
              */
-            textView.setTextFuture(
+            if (sp(textView.textSize) != TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_SP,
+                    Prefs.mainFontSize,
+                    textView.context.resources.displayMetrics
+                )
+            ) {
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, Prefs.mainFontSize)
+            }
+            textView.text = item
+            /*textView.setTextFuture(
                 PrecomputedTextCompat.getTextFuture(
                     item,
                     textView.textMetricsParamsCompat,
                     vm.executorDispatcher.executor
                 )
-            )
+            )*/
         }
     }
 }

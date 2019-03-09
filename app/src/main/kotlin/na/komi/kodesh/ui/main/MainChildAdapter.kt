@@ -150,7 +150,7 @@ class MainChildAdapter(
                     verseView.post{
                         verseView.draw(c)
                     }*/
-                   // verseView.updatePadding(top = 0, right = 0, bottom = 0)
+                    // verseView.updatePadding(top = 0, right = 0, bottom = 0)
                     //verseView.setTextSize(TypedValue.COMPLEX_UNIT_SP, Prefs.mainFontSize * 4)
                     //bigTextSize = verseView.textSize
                     //verseView.includeFontPadding = false
@@ -192,10 +192,10 @@ class MainChildAdapter(
                     append(vt.drop(1))
                 }
                 verseView.post {
-                    if (verseView.lineCount == 1 )
-                        verseView.updatePadding(top=200)
+                    if (verseView.lineCount == 1)
+                        verseView.updatePadding(top = 200)
                     else
-                        verseView.updatePadding(top=0)
+                        verseView.updatePadding(top = 0)
                 }
             } else {
 
