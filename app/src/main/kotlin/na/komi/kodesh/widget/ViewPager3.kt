@@ -245,10 +245,7 @@ class ViewPager3 : RecyclerView {
                 }
 
             }
-            //}
-
-
-            //adapter?.notifyDataSetChanged()
+            adapter?.notifyDataSetChanged()
 
             // Set so font size changes apply to the next RecyclerView child.
 
