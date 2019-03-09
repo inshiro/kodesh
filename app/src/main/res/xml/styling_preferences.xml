@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:title="Styling settings">
+
+        <SwitchPreferenceCompat
+            android:key="KJVSTYLE_ID"
+            android:title="KJV Styling"
+            android:defaultValue="false"
+            android:summary="Use KJV punctuation and capitalisation"/>
+
+        <SwitchPreferenceCompat
+            android:key="DROP_CAP_ID"
+            android:title="Drop cap"
+            android:defaultValue="true"
+            android:summary="Show a large initial capital letter"/>
+        <SwitchPreferenceCompat
+            android:key="RED_LETTER_ID"
+            android:title="Red letter"
+            android:defaultValue="true"
+            android:summary="Highlight important words in red"/>
+        <SwitchPreferenceCompat
+            android:key="VERSE_NUMBERS"
+            android:title="Verse numbers"
+            android:defaultValue="true"
+            android:summary="Show numbers beside verses"/>
+
+    </PreferenceCategory>
+</androidx.preference.PreferenceScreen >

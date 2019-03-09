@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group
+        android:id="@+id/group1"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/action_read"
+            android:icon="@drawable/ic_script"
+            android:checked="true"
+            android:title="Read"/>
+        <item
+            android:id="@+id/action_preface"
+            android:icon="@drawable/ic_study"
+            android:title="Preface" />
+    </group>
+    <group
+        android:id="@+id/group11"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/action_search"
+            android:icon="@drawable/kod_search"
+            android:title="Search" />
+        <item
+            android:id="@+id/action_find_in_page"
+            android:icon="@drawable/ic_find_in_page"
+            android:checkable="false"
+            android:title="Find in page" />
+    </group>
+
+    <group
+        android:id="@+id/group2"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/action_settings"
+            android:icon="@drawable/ic_settings"
+            android:title="Settings" />
+    </group>
+
+    <group
+        android:id="@+id/group3"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/action_about"
+            android:icon="@drawable/ic_info"
+            android:title="About" />
+    </group>
+</menu>

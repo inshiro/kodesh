@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="icons">
+        <item>@drawable/kod_filter</item>
+        <item>@drawable/kod_logo</item>
+        <item>@drawable/kod_branded_menu</item>
+    </array>
+    <array name="colors">
+        <item>#FFFF0000</item>
+        <item>#FF00FF00</item>
+        <item>#FF0000FF</item>
+    </array>
+    <string-array name="entries">
+        <item>Active</item>
+        <item>Visited</item>
+        <item>xcvxcv</item>
+        <item>xcvvcx</item>
+    </string-array>
+    <string-array name="entry_values">
+        <item>Active</item>
+        <item>Visited</item>
+    </string-array>
+    <string-array name="themes">
+        <item>Light</item>
+        <item>Dark</item>
+        <item>Black</item>
+    </string-array>
+    <string-array name="themes_id">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+</resources>

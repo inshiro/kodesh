@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <PreferenceCategory
+        android:title="General">
+
+        <ListPreference
+            android:key="THEME_ID"
+            android:title="Theme"
+            android:summary="Select an app theme"
+            app:useSimpleSummaryProvider="true"
+            android:entries="@array/themes"
+            android:entryValues="@array/themes_id"
+            android:dialogTitle="Choose a theme"/>
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

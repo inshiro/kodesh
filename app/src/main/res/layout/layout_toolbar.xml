@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/main_bottom_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        app:layout_behavior="na.komi.kodesh.ui.internal.BottomSheetBehavior2">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_main"
+            style="@style/Widget.Shrine.Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimaryVariant"
+            tools:title="@string/app_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <ProgressBar
+            android:id="@+id/toolbar_progress_bar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/toolbar_main"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navigation_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimaryVariant"
+            android:fitsSystemWindows="false"
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbars="vertical"
+            android:theme="@style/NavigationDrawerStyle"
+            app:itemBackground="?navigation_item_background"
+            app:itemIconPadding="24dp"
+            app:itemIconTint="@color/nav_item_text"
+            app:itemTextColor="@color/nav_item_text"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_main"
+            app:menu="@menu/menu_drawer" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</merge>

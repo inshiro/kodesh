@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="textColor" format="color|reference" />
+    <attr name="backgroundColor" format="color|reference" />
+    <attr name="navigation_item_background" format="reference" />
+    <attr name="numberPickerDividerColor" format="color|reference" />
+    <attr name="redLetterColor" format="color|reference" />
+    <attr name="colorDisabled" format="color|reference" />
+</resources>

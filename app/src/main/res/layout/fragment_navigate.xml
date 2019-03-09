@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorAccent"
+    tools:context=".ui.main.MainActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_navigate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="9.5dp"
+        android:paddingBottom="9.5dp"
+        android:background="?attr/colorAccent"
+        app:elevation="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_navigate"
+            style="@style/Widget.Shrine.Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+
+            app:title="@string/app_name" />
+    </com.google.android.material.appbar.AppBarLayout>
+<!-- app:navigationIcon="@drawable/kod_menu" -->
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll_view_navigate"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:paddingTop="20dp"
+            android:scrollbars="none"
+            android:background="@color/colorBackground"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/app_bar_navigate"
+            app:layout_constraintStart_toStartOf="@+id/app_bar_navigate"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_input"
+                    style="@style/Widget.Shrine.TextInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/kod_hint_search_book"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.9">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/text_input_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 "
+                        android:inputType="textCapWords"
+                        android:singleLine="true" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/header1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="24dp"
+                    android:paddingLeft="24dp"
+                    android:paddingTop="24dp"
+                    android:paddingEnd="24dp"
+                    android:text="@string/navigate_header_book"
+                    android:textSize="24sp"
+                    app:layout_constraintLeft_toLeftOf="@+id/text_input"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/text_input" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroup1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="24dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/header1"
+                    app:layout_constraintTop_toBottomOf="@+id/header1"
+                    app:singleSelection="true">
+
+                    <!--
+                    <com.google.android.material.chip.Chip
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="50dp"
+                        android:text="Genesis"/> -->
+
+                </com.google.android.material.chip.ChipGroup>
+
+                <TextView
+                    android:id="@+id/header2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="24dp"
+                    android:paddingLeft="24dp"
+                    android:paddingTop="24dp"
+                    android:paddingEnd="24dp"
+                    android:text="@string/navigate_header_chapter"
+                    android:textSize="24sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/chipGroup1" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroup2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="24dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/header2"
+                    app:singleSelection="true">
+                    <!--
+                                <com.google.android.material.chip.Chip
+                                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="01" /> -->
+
+                </com.google.android.material.chip.ChipGroup>
+
+
+                <TextView
+                    android:id="@+id/header3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="24dp"
+                    android:paddingLeft="24dp"
+                    android:paddingTop="24dp"
+                    android:paddingEnd="24dp"
+                    android:text="@string/navigate_header_verse"
+                    android:textSize="24sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/chipGroup2" />
+
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroup3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="24dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/header3"
+                    app:singleSelection="true">
+                    <!--
+                                <com.google.android.material.chip.Chip
+                                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="12" />
+                    -->
+                </com.google.android.material.chip.ChipGroup>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/go_button"
+                    style="@style/Widget.Shrine.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/kod_button_go"
+                    app:layout_constraintEnd_toEndOf="@+id/chipGroup3"
+                    app:layout_constraintTop_toBottomOf="@+id/chipGroup3" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/cancel_button"
+                    style="@style/Widget.Shrine.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginRight="12dp"
+                    android:text="@string/kod_button_cancel"
+                    app:layout_constraintEnd_toStartOf="@+id/go_button"
+                    app:layout_constraintRight_toLeftOf="@+id/go_button"
+                    app:layout_constraintTop_toBottomOf="@+id/chipGroup3" />
+
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.Shrine.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:text="@string/kod_button_go"
+                    android:visibility="invisible"
+                    app:layout_constraintStart_toStartOf="@+id/go_button"
+                    app:layout_constraintEnd_toEndOf="@+id/go_button"
+                    app:layout_constraintTop_toBottomOf="@+id/go_button"
+                    app:layout_constraintHeight_percent="0.12"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    <ProgressBar
+        android:id="@+id/progress_navigate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar_navigate" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

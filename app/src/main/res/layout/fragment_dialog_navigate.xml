@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="?bottomSheetDialogTheme"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/navigate_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Go to"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+        android:padding="14dp"
+        android:gravity="center_horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/numberpicker_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/navigate_title">
+
+        <na.komi.kodesh.widget.NumberPicker2
+            android:id="@+id/bookNumberPicker"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            app:layout_constraintRight_toLeftOf="@id/chapterNumberPicker"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.5" />
+
+        <na.komi.kodesh.widget.NumberPicker2
+            android:id="@+id/chapterNumberPicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            app:layout_constraintLeft_toRightOf="@id/bookNumberPicker"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <na.komi.kodesh.widget.NumberPicker2
+            android:id="@+id/verseNumberPicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_marginLeft="20dp"
+            app:layout_constraintLeft_toRightOf="@id/chapterNumberPicker"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/navigate_cancel_button"
+        android:layout_marginTop="10dp"
+        android:text="CANCEL"
+        app:layout_constraintTop_toBottomOf="@+id/numberpicker_container"
+        app:layout_constraintEnd_toStartOf="@id/navigate_positive_button"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp" />
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:id="@+id/navigate_positive_button"
+        android:text="OK"
+        app:layout_constraintTop_toBottomOf="@+id/numberpicker_container"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/navigate_cancel_button"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

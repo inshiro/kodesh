@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- on api 19+ devices nav drawer will go "under" status bar, 
+        so we need to push down content -->
+    <dimen name="nav_drawer_top_padding">24dp</dimen>
+</resources>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<na.komi.kodesh.widget.NestedRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/child_recycler_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:paddingBottom="200dp"
+    android:scrollbars="vertical"
+    android:scrollbarStyle="outsideOverlay"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:listitem="@layout/recyclerview_child_content_main" />
+ <!--
+    android:scrollbarThumbVertical="@drawable/scrollbar_color"
+ It is not possible to reference an attribute in an xml drawable below API 21.
+ to do so, create one xml drawable per theme.
+ https://stackoverflow.com/a/41499356
+
+ -->

@@ -1,0 +1,265 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Kodesh</string>
+    <string name="kod_filter_title">Filter</string>
+    <string name="kod_search_title">Search</string>
+    <string name="kod_button_go">Go</string>
+    <string name="kod_button_cancel">Cancel</string>
+    <string name="kod_hint_search_book">Book</string>
+    <string name="hint_search">Search</string>
+
+    <!-- Navigation page -->
+    <string name="navigate_header_book">Book</string>
+    <string name="navigate_header_chapter">Chapter</string>
+    <string name="navigate_header_verse">Verse</string>
+    <string name="navigate_dialog_title">Go to</string>
+
+    <!-- Menu -->
+    <string name="search_verses">Search verses</string>
+    <string name="find_in_page_title">Find in page</string>
+    <string name="font_and_theme_title">Font and theme</string>
+    <string name="styling_title">Styling</string>
+    <string name="kjv_styling_title">KJV styling</string>
+    <string name="drop_cap_title">Drop cap</string>
+    <string name="red_letter_title">Red letter</string>
+    <string name="verse_numbers_title">Verse numbers</string>
+    <string name="separate_verses_title">Separate verses</string>
+    <string name="paragraph_breaks_title">Paragraph breaks</string>
+
+    <!-- About -->
+    <string name="about_banner_icon_description">Kodesh icon</string>
+    <string name="about_banner_text">An app for reading the scriptures.\n\nv1.0\nBy inshiro  —  Source code</string>
+
+
+    <!-- Settings -->
+    <string name="read_title">Read</string>
+    <string name="preface_title">Preface</string>
+    <string name="settings_title">Settings</string>
+    <string name="about_title">About</string>
+    <string name="dedicatory_text">
+        <![CDATA[
+         <h4>TO THE MOST HIGH AND MIGHTY PRINCE<br></br>
+<big>JAMES</big><br></br>
+<i>BY THE GRACE OF GOD</i></h4>
+<h2>KING OF GREAT BRITAIN, FRANCE AND IRELAND,<br></br>
+DEFENDER OF THE FAITH &c.</h2>
+<p><h2>The translators of the Bible wish Grace, Mercy, and Peace, 
+through <i>JESUS CHRIST</i> our Lord.</h2><br></br>
+     GREAT and manifold were the blessings, most dread Sovereign, which Almighty God, the Father of all mercies, bestowed upon us the people of England, when first he sent Your Majesty\'s Royal Person to rule and reign over us. For whereas it was the expectation of many, who wished not well unto our Sion, that upon the setting of that bright Occidental Star, Queen Elizabeth of most happy memory, some thick and palpable clouds of darkness would so have overshadowed this Land, that men should have been in doubt which way they were to walk; and that it should hardly be known, who was to direct the unsettled State; the appearance of Your Majesty, as of the Sun in his strength, instantly dispelled those supposed and surmised mists, and gave unto all that were well affected exceeding cause of comfort; especially when we beheld the Government established in Your Highness, and Your hopeful Seed, by an undoubted Title, and this also accompanied with peace and tranquillity at home and abroad.</p>
+
+     <p>But among all our joys, there was no one that more filled our hearts, than the blessed continuance of the preaching of God\'s sacred Word among us; which is that inestimable treasure, which excelleth all the riches of the earth; because the fruit thereof extendeth itself, not only to the time spent in this transitory world, but directeth and disposeth men unto that eternal happiness which is above in heaven.</p>
+
+     <p>Then not to suffer this to fall to the ground, but rather to take it up, and to continue it in that state, wherein the famous Predecessor of Your Highness did leave it: nay, to go forward with the confidence and resolution of a Man in maintaining the truth of Christ, and propagating it far and near, is that which hath so bound and firmly knit the hearts of all Your Majesty\'s loyal and religious people unto You, that Your very name is precious among them: their eye doth behold You with comfort, and they bless You in their hearts, as that sanctified Person, who, under God, is the immediate Author of their true happiness. And this their contentment doth not diminish or decay, but every day increaseth and taketh strength, when they observe, that the zeal of Your Majesty toward the house of God doth not slack or go backward, but is more and more kindled, manifesting itself abroad in the farthest parts of Christendom, by writing in defence of the Truth, (which hath given such a blow unto that Man of Sin, as will not be healed,) and every day at home, by religious and learned discourse, by frequenting the house of God, by hearing the Word preached, by cherishing the Teachers thereof, by caring for the Church, as a most tender and loving nursing Father.</p>
+
+     <p>There are infinite arguments of this right Christian and religious affection in Your Majesty; but none is more forcible to declare it to others than the vehement and perpetuated desire of accomplishing and publishing of this work, which now with all humility we present unto Your Majesty. For when Your Highness had once out of deep judgment apprehended how convenient it was, that out of the Original Sacred Tongues, together with comparing of the labours, both in our own, and other foreign Languages, of many worthy men who went before us, there should be one more exact Translation of the holy Scriptures into the English Tongue; Your Majesty did never desist to urge and to excite those to whom it was commended, that the work might be hastened, and that the business might be expedited in so decent a manner, as a matter of such importance might justly require.</p>
+
+     <p>And now at last, by the mercy of God, and the continuance of our labours, it being brought unto such a conclusion, as that we have great hopes that the Church of England shall reap good fruit thereby; we hold it our duty to offer it to Your Majesty, not only as to our King and Sovereign, but as to the principal Mover and Author of the work: humbly craving of Your most Sacred Majesty, that since things of this quality have ever been subject to the censures of ill-meaning and discontented persons, it may receive approbation and patronage from so learned and judicious a Prince as Your Highness is, whose allowance and acceptance of our labours shall more honour and encourage us, than all the calumniations and hard interpretations of other men shall dismay us. So that if, on the one side, we shall be traduced by Popish Persons at home or abroad, who therefore will malign us, because we are poor instruments to make God\'s holy Truth to be yet more and more known unto the people, whom they desire still to keep in ignorance and darkness; or if, on the other side, we shall be maligned by self-conceited Brethren, who run their own ways, and give liking unto nothing, but what is framed by themselves, and hammered on their anvil; we may rest secure, supported within by the truth and innocency of a good conscience, having walked the ways of simplicity and integrity, as before the Lord; and sustained without by the powerful protection of Your Majesty\'s grace and favour, which will ever give countenance to honest and Christian endeavours against bitter censures and uncharitable imputations.</p>
+
+     <p>The Lord of heaven and earth bless Your Majesty with many and happy days, that, as his heavenly hand hath enriched Your Highness with many singular and extraordinary graces, so You may be the wonder of the world in this latter age for happiness and true felicity, to the honour of that great GOD, and the good of his Church, through Jesus Christ our Lord and only Saviour.</p>
+        ]]>
+    </string>
+    <string name="apache_license" tools:ignore="TypographyOther">
+        <![CDATA[
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      "License" shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      "Licensor" shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      "Legal Entity" shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      "control" means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      "You" (or "Your") shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      "Source" form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      "Object" form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      "Work" shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      "Derivative Works" shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      "Contribution" shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, "submitted"
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as "Not a Contribution."
+
+      "Contributor" shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a "NOTICE" text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets "{}"
+      replaced with your own identifying information. (Don't include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same "printed page" as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright {yyyy} {name of copyright owner}
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+]]>
+    </string>
+</resources>

@@ -1,0 +1,173 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. "Theme.AppCompat.Light.DarkActionBar" -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@android:color/transparent</item>
+        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/colorPrimaryDark</item>
+        <!-- <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">true</item> -->
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
+
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
+
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorSecondaryVariant">#B9A6A6</item>
+        <item name="redLetterColor">@color/redletter_color_dark</item>
+
+        <item name="colorControlActivated">@color/default_background_color</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="bottomSheetDialogTheme">@style/Theme.MaterialComponents.Light.BottomSheetDialog</item>
+        <item name="alertDialogTheme">@style/Theme.MaterialComponents.Light.Dialog.Alert</item>
+        <item name="popupTheme">@style/ThemeOverlay.MaterialComponents.Light</item>
+        <item name="backgroundColor">@color/default_background_color</item>
+        <item name="android:textColor">#E8000000</item>
+        <item name="textColor">#E8000000</item>
+        <item name="navigation_item_background">@drawable/nav_item_background_light</item>
+        <item name="numberPickerDividerColor">@color/transparent_divider_light</item>
+
+    </style>
+
+    <style name="Theme.Shrine.Dark" parent="Theme.MaterialComponents.NoActionBar">
+
+        <item name="android:navigationBarColor" tools:targetApi="lollipop">#27272F</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimary">@color/darkColorPrimary</item>
+        <item name="colorPrimaryDark">@color/darkColorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorBackgroundDark</item>
+       <!-- <item name="colorPrimaryVariant">#1A1A1F</item> -->
+
+        <item name="colorAccent">@color/colorAccentDark</item>
+        <item name="colorSecondary">@color/colorAccentDark</item>
+        <item name="colorSecondaryVariant">@color/colorAccentVariantDark</item>
+        <item name="colorOnSecondary">@color/colorAccentVariantDark</item>
+
+        <item name="colorControlActivated">@color/colorAccentDark</item>
+        <item name="android:textColorPrimary">@color/default_background_color</item>
+        <item name="android:textColorSecondary">@color/default_background_color</item>
+        <item name="redLetterColor">@color/redletter_color</item>
+        <item name="colorDisabled">@color/mtrl_on_primary_disabled</item>
+
+        <item name="android:windowBackground">@color/darkColorPrimary</item>
+        <item name="backgroundColor">@color/darkColorPrimary</item>
+        <item name="android:textColor">@color/default_background_color</item>
+        <item name="textColor">@color/default_background_color</item>
+        <item name="bottomSheetDialogTheme">@style/BottomSheetDialog.Dark</item>
+        <item name="alertDialogTheme">@style/AlertDialog.Dark</item>
+        <item name="popupTheme">@style/ThemeOverlay.MaterialComponents</item>
+        <item name="navigation_item_background">@drawable/nav_item_background</item>
+        <item name="numberPickerDividerColor">@color/transparent_dark</item>
+    </style>
+    <style name="Theme.Shrine.Black" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimary">@android:color/black</item>
+        <item name="colorPrimaryDark">@android:color/black</item> <!-- This sets Status bar color -->
+        <item name="colorPrimaryVariant">#0C0C0C</item>
+       <!-- <item name="colorPrimaryVariant">#1A1A1F</item> -->
+
+        <item name="colorAccent">@color/colorAccentBlack</item>
+        <item name="colorSecondary">@color/colorAccentBlack</item>
+        <item name="colorSecondaryVariant">@color/colorAccentBlack</item>
+        <item name="colorOnSecondary">@color/colorAccentBlack</item>
+
+        <item name="colorControlActivated">@color/colorAccentBlack</item>
+        <item name="android:textColorPrimary">@color/default_background_color</item>
+        <item name="android:textColorSecondary">@color/default_background_color</item>
+        <item name="redLetterColor">@color/redletter_color</item>
+        <item name="colorDisabled">@color/mtrl_dark_on_primary_disabled</item>
+
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="backgroundColor">@android:color/black</item>
+        <item name="android:textColor">@color/default_background_color</item>
+        <item name="textColor">@color/default_background_color</item>
+        <item name="bottomSheetDialogTheme">@style/BottomSheetDialog.Black</item>
+        <item name="alertDialogTheme">@style/AlertDialog.Black</item>
+        <item name="popupTheme">@style/ThemeOverlay.MaterialComponents</item>
+        <item name="navigation_item_background">@drawable/nav_item_background_black</item>
+        <item name="numberPickerDividerColor">@color/transparent_divider_light</item>
+    </style>
+
+    <style name="AlertDialog.Dark" parent="Theme.MaterialComponents.Dialog.Alert">
+        <item name="colorAccent">@color/colorAccentDark</item>
+    </style>
+    <style name="BottomSheetDialog.Dark" parent="Theme.MaterialComponents.BottomSheetDialog">
+        <item name="colorAccent">@color/colorAccentDark</item>
+    </style>
+    <style name="AlertDialog.Black" parent="Theme.MaterialComponents.BottomSheetDialog">
+        <item name="colorAccent">@color/colorAccentBlack</item>
+    </style>
+    <style name="BottomSheetDialog.Black" parent="Theme.MaterialComponents.BottomSheetDialog">
+        <item name="colorAccent">@color/colorAccentBlack</item>
+    </style>
+    <!-- TextInputLayout -->
+    <style name="Widget.Shrine.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="hintTextAppearance">@style/TextAppearance.Shrine.TextInputLayout.HintText</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+
+    <style name="TextAppearance.Shrine.TextInputLayout.HintText" parent="TextAppearance.MaterialComponents.Subtitle2">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
+    <!-- Buttons -->
+    <style name="Widget.Shrine.Button" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="backgroundTint">?attr/colorPrimaryDark</item>
+        <item name="android:stateListAnimator" tools:ignore="NewApi"> @animator/shr_next_button_state_list_anim </item>
+    </style>
+
+    <style name="Widget.Shrine.Button.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
+    <style name="Widget.Shrine.Toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="titleTextAppearance">@style/TextAppearance.Shrine.Toolbar</item>
+    </style>
+
+    <!--
+    <item name="android:theme">@style/AppTheme</item>
+    <item name="popupTheme">@style/ThemeOverlay.MaterialComponents.Light</item> -->
+    <style name="TextAppearance.Shrine.Toolbar" parent="TextAppearance.MaterialComponents.Button">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="ChipTextStyle">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:fontFamily" tools:targetApi="jelly_bean">@font/rubik</item>
+    </style>
+
+
+    <style name="CatchUp.TabLayout" parent="Widget.Design.TabLayout">
+        <item name="android:theme">@style/Theme.AppCompat</item>
+        <item name="tabIndicatorColor">#FFFFFF</item>
+    </style>
+
+    <style name="CatchUp.TabLayout.Inverted" parent="Widget.Design.TabLayout">
+        <item name="android:theme">@style/Theme.AppCompat.Light</item>
+        <item name="tabIndicatorColor">?android:textColorPrimary</item>
+    </style>
+
+
+    <style name="PrefaceButton">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">22dp</item>
+        <item name="android:drawablePadding">24dp</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:textSize">@dimen/smallTextSize</item>
+        <item name="android:textColor">#CFB53B</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="NavigationDrawerStyle">
+        <item name="android:textSize">@dimen/smallTextSize</item><!-- text size in menu-->
+        <item name="android:listDivider">@color/transparent_divider_light</item>
+    </style>
+
+
+</resources>

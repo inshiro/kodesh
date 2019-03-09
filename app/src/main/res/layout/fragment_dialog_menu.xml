@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginStart="18dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:contentDescription="@string/app_name"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center_vertical"
+            app:srcCompat="@drawable/kod_logo"
+            android:background="?attr/colorAccent"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:text="@string/app_name"
+            android:textSize="16sp" />
+    </LinearLayout>
+    <!--
+ <androidx.appcompat.widget.AppCompatTextView
+     android:id="@+id/read_dialog_textview"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:background="?attr/selectableItemBackground"
+     android:clickable="true"
+     android:focusable="true"
+     android:padding="24dp"
+     android:text="Read"
+     android:gravity="center"
+     android:textSize="24sp"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toTopOf="parent" />
+
+     <androidx.appcompat.widget.AppCompatTextView
+         android:id="@+id/preface_dialog_textview"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:background="?attr/selectableItemBackground"
+         android:clickable="true"
+         android:focusable="true"
+         android:gravity="center"
+         android:padding="24dp"
+         android:text="Preface"
+         android:textSize="24sp"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toBottomOf="@+id/read_dialog_textview" />
+
+     <androidx.appcompat.widget.AppCompatTextView
+         android:id="@+id/navigate_dialog_textview"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:background="?attr/selectableItemBackground"
+         android:clickable="true"
+         android:focusable="true"
+         android:padding="24dp"
+         android:gravity="center"
+         android:text="Go to .."
+         android:textSize="24sp"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toBottomOf="@+id/preface_dialog_textview" />
+
+     <androidx.appcompat.widget.AppCompatTextView
+         android:id="@+id/settings_dialog_textview"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:background="?attr/selectableItemBackground"
+         android:clickable="true"
+         android:focusable="true"
+         android:gravity="center"
+         android:padding="24dp"
+         android:text="Settings"
+         android:textSize="24sp"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toBottomOf="@+id/navigate_dialog_textview" />
+
+     <androidx.appcompat.widget.AppCompatTextView
+         android:id="@+id/about_dialog_textview"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:background="?attr/selectableItemBackground"
+         android:clickable="true"
+         android:gravity="center"
+         android:focusable="true"
+         android:padding="24dp"
+         android:text="About"
+         android:textSize="24sp"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toBottomOf="@+id/settings_dialog_textview" /> -->
+
+    <View
+        android:id="@+id/separator1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/transparent_dark"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <include android:id="@+id/upgrade"
+        layout="@layout/view_upgrade"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/separator1"/>
+    <View
+        android:id="@+id/separator2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/transparent_dark"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upgrade" />
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/separator2"
+        app:itemIconPadding="24dp"
+        app:menu="@menu/menu_drawer"
+        app:itemBackground="?attr/navigation_item_background"
+        android:theme="@style/NavigationDrawerStyle" />
+</androidx.constraintlayout.widget.ConstraintLayout>

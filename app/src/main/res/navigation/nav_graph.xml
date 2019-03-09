@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="na.komi.kodesh.ui.main.MainFragment" >
+        <action
+            android:id="@+id/toPreface"
+            app:destination="@id/prefaceFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/mainFragment" />
+        <action
+            android:id="@+id/toSettings"
+            app:destination="@id/settingsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/mainFragment" />
+        <action
+            android:id="@+id/toAbout"
+            app:destination="@id/aboutFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/mainFragment" />
+        <action
+            android:id="@+id/toSearch"
+            app:destination="@id/searchFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="na.komi.kodesh.ui.about.AboutFragment"
+        android:label="AboutFragment" />
+    <fragment
+        android:id="@+id/prefaceFragment"
+        android:name="na.komi.kodesh.ui.preface.PrefaceFragment"
+        android:label="PrefaceFragment" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="na.komi.kodesh.ui.setting.SettingsFragment"
+        android:label="PreferenceFragment" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="na.komi.kodesh.ui.search.SearchFragment"
+        android:label="SearchFragment" />
+</navigation>

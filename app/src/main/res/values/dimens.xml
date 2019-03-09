@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- on devices older than API 19, we don't need to pad top
+       of nav drawer since nav drawer won't go "under" status bar
+       https://is.gd/8rrjTL
+       -->
+    <dimen name="nav_drawer_top_padding">24dp</dimen>
+
+    <dimen name="largeTextSize">20sp</dimen>
+    <dimen name="regularTextSize">16sp</dimen>
+    <dimen name="smallTextSize">14sp</dimen>
+    <dimen name="smallerTextSize">12sp</dimen>
+    <dimen name="tinyTextSize">10sp</dimen>
+
+
+    <!-- standard metrics -->
+    <dimen name="spacing_normal">8dp</dimen>
+    <dimen name="padding_normal">16dp</dimen>
+
+    <!-- text input layout seems to add 4dp of extra padding. The following account for this -->
+    <dimen name="padding_normal_til">12dp</dimen>
+    <dimen name="til_margin_fix">-4dp</dimen>
+
+    <!-- avatar should be a 40dp asset in a 48dp touch target & optically aligned with standard padding -->
+    <dimen name="avatar_size">40dp</dimen>
+    <dimen name="avatar_bounds">48dp</dimen>
+    <dimen name="avatar_padding">4dp</dimen> <!-- (avatar_bounds - avatar_size) / 2 -->
+    <dimen name="avatar_margin">12dp</dimen> <!-- padding_normal - avatar_padding -->
+    <dimen name="avatar_ripple_radius">20dp</dimen> <!-- avatar_size / 2 -->
+    <dimen name="comment_actions_height">40dp</dimen>
+    <dimen name="comment_like_margin_adjustment">-8dp</dimen>
+</resources>
