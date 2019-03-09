@@ -222,14 +222,15 @@ class ViewPager3 : RecyclerView {
         override fun onScaleEnd(detector: ScaleGestureDetector?) {
             super.onScaleEnd(detector)
             //log e "mScaleFactor $mScaleFactor fontSize: $fontSize"
-            Prefs.scaleFactor = mScaleFactor
+            if (firstVisibleItem != null && lastVisibleItem != null && childLM?.findViewByPosition(firstVisibleItem!!) !is LayoutedTextView) {
+                reset()
+                return
+            }
 
+            Prefs.scaleFactor = mScaleFactor
             Prefs.mainFontSize = fontSize
 
             childRV?.adapter?.let {
-
-                // Dont update if we are seeing the drop cap. Because we are updating it by setTExtSize
-                // This prevents the relayout adjustment after calling notifydatasetcahnged
                 if (firstVisibleItem != 0) {
                     it.notifyItemRangeChanged(lastVisibleItem!!, childLM!!.itemCount)
 
@@ -244,10 +245,6 @@ class ViewPager3 : RecyclerView {
                 }
 
             }
-            childRV = null
-            firstVisibleChildView = null
-            firstVisibleItem = null
-            lastVisibleItem = null
             //}
 
 
@@ -258,6 +255,13 @@ class ViewPager3 : RecyclerView {
 
         }
 
+        fun reset(){
+            childRV = null
+            firstVisibleChildView = null
+            firstVisibleItem = null
+            lastVisibleItem = null
+
+        }
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
