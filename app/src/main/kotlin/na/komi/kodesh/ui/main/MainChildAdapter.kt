@@ -75,23 +75,11 @@ class MainChildAdapter(
 
     private val onlyAplhaNumericRegex by lazy { """\p{Alnum}""".toRegex() }
 
-    fun setFontSize(size: Float) {
-        fontSize = size
-        origTextSize = size
-
-        //notifyItemRangeChanged(firstVisibleItem,lastVisibleItem)
-        //notifyDataSetChanged()
-    }
-
-    private var fontSize = Prefs.mainFontSize
-    private var origTextSize = -1f
-
     inner class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
         var verseView: LayoutedTextView = child_tv_item
         private var origLeftPadding = -1
         private var origRightPadding = -1
         private var origTopPadding = -1
-        private var bigTextSize = 0f
         private val leadingMarginSpan by lazy { LeadingMarginSpan3() }
 
         var p: Paint? = null
@@ -120,9 +108,6 @@ class MainChildAdapter(
 
             if (origRightPadding == -1)
                 origRightPadding = verseView.paddingRight
-
-            if (origTextSize == -1f)
-                origTextSize = verseView.textSize
 
             if (sp(verseView.textSize) != TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_SP,

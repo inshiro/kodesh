@@ -180,16 +180,17 @@ class ViewPager3 : RecyclerView {
 
 
             fontSize = defaultSize * mScaleFactor
-            (childRV?.adapter as? MainChildAdapter)?.setFontSize(fontSize)
 
             if (firstVisibleItem != null && lastVisibleItem != null)
                 for (i in firstVisibleItem!!..lastVisibleItem!!) {
-                    (childRV?.findViewHolderForAdapterPosition(i) as? MainChildAdapter.ViewHolder)?.verseView?.let {
+
+                    // Change text size on pinch
+                    (childLM?.findViewByPosition(i) as? LayoutedTextView)?.let {
 
                         // Account  for Drop Cap
                         it.setTextSize(
                                 TypedValue.COMPLEX_UNIT_SP,
-                                if (it.text.length > 1) fontSize else fontSize * 4
+                                if (!it.showDropCap && it.text.length > 1) fontSize else fontSize * 4
                         )
 
                     }
@@ -206,21 +207,18 @@ class ViewPager3 : RecyclerView {
         }
 
         override fun onScaleBegin(detector: ScaleGestureDetector?): Boolean {
-            //Log.e(TAG, "onScaleBegin")
+            //log e "onScaleBegin"
 
             //log e "previous: $mScaleFactor current: ${Prefs.scaleFactor}"
             mScaleFactor = Prefs.scaleFactor
             prevScaleFactor = mScaleFactor
             threshHold = false
 
-            firstVisibleChildView = lm.findFirstVisibleItemPosition()
-            childRV = lm.findViewByPosition(firstVisibleChildView!!) as? RecyclerView
+            firstVisibleChildView = lm.findFirstVisibleItemPosition().also { if (it>=0) childRV = lm.findViewByPosition(it) as? RecyclerView}
 
             firstVisibleItem = childLM?.findFirstVisibleItemPosition()
             lastVisibleItem = childLM?.findLastVisibleItemPosition()
 
-            //log d "firstVisibleItem: $firstVisibleItem lastVisibleItem: $lastVisibleItem"
-            (childRV?.adapter as? MainChildAdapter)?.setFontSize(fontSize)
             return super.onScaleBegin(detector)
 
         }
@@ -232,9 +230,7 @@ class ViewPager3 : RecyclerView {
 
             Prefs.mainFontSize = fontSize
 
-            //childRV?.post {
-            (childRV?.adapter as? MainChildAdapter)?.let {
-                it.setFontSize(fontSize)
+            childRV?.adapter?.let {
 
                 // Dont update if we are seeing the drop cap. Because we are updating it by setTExtSize
                 // This prevents the relayout adjustment after calling notifydatasetcahnged
