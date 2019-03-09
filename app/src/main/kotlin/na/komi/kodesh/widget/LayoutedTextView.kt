@@ -9,8 +9,10 @@ import android.text.Layout
 import android.text.Spannable
 import android.text.StaticLayout
 import android.text.TextPaint
+import android.text.style.ForegroundColorSpan
 import android.text.style.LeadingMarginSpan
 import android.util.AttributeSet
+import androidx.annotation.ColorInt
 import androidx.appcompat.widget.AppCompatTextView
 import na.komi.kodesh.Prefs
 import na.komi.kodesh.util.log
@@ -132,8 +134,15 @@ class LayoutedTextView : AppCompatTextView {
                 moveY += paint.fontMetrics.descent/3
 
                 tp.textSize = paint.textSize * 4
-                canvas.drawText(dropCapText, x + paddingLeft.toFloat(), moveY, tp)
+                tp.color = paint.color
+
                 val ss = text as Spannable
+                val redSpans = ss.getSpans(0,1, ForegroundColorSpan::class.java)
+                for(redSpan in redSpans){
+                    tp.color = redSpan.foregroundColor
+                }
+
+                canvas.drawText(dropCapText, x + paddingLeft.toFloat(), moveY, tp)
                 val spans = ss.getSpans(0,ss.length, LeadingMarginSpan3::class.java)
                 for(span in spans){
                     span.setMargin(tp.measureText(dropCapText).toInt() + MARGIN_PADDING)

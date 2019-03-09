@@ -95,7 +95,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
          * https://stackoverflow.com/a/37873884
          * https://stackoverflow.com/a/36793341
          */
-        navigationView.let { it ->
+        navigationView.let {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
                 it.setOnApplyWindowInsetsListener(object : View.OnApplyWindowInsetsListener {
                     override fun onApplyWindowInsets(v: View, insets: WindowInsets): WindowInsets {
