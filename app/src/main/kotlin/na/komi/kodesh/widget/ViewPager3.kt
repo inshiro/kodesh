@@ -64,6 +64,7 @@ class ViewPager3 : RecyclerView {
     private var downX = 0f
     private var downY = 0f
     private var intercept = false
+    private var hasNestedRecyclerView = true
     private val X_SWIPE_BUFFER_AREA = 15
     override fun onInterceptTouchEvent(e: MotionEvent?): Boolean {
         /**
@@ -105,7 +106,8 @@ class ViewPager3 : RecyclerView {
     private var zoomEnabled = true
     private fun initialize() {
         defaultSize = 5f
-        mScaleDetector = ScaleGestureDetector(context, ScaleListener())
+        if (hasNestedRecyclerView)
+            mScaleDetector = ScaleGestureDetector(context, ScaleListener())
     }
 
 
