@@ -188,13 +188,7 @@ class ViewPager3 : RecyclerView {
 
                     // Change text size on pinch
                     (childLM?.findViewByPosition(i) as? LayoutedTextView)?.let {
-
-                        // Account  for Drop Cap
-                        it.setTextSize(
-                                TypedValue.COMPLEX_UNIT_SP,
-                                if (!it.showDropCap && it.text.length > 1) fontSize else fontSize * 4
-                        )
-
+                        it.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize)
                     }
                 }
 
