@@ -95,7 +95,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
          * https://stackoverflow.com/a/37873884
          * https://stackoverflow.com/a/36793341
          */
-        navigationView.let {
+        navigationView.let { it ->
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
                 it.setOnApplyWindowInsetsListener(object : View.OnApplyWindowInsetsListener {
                     override fun onApplyWindowInsets(v: View, insets: WindowInsets): WindowInsets {
@@ -106,27 +106,30 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
 
             //it.itemBackground = AppCompatResources.getColorStateList(this, R.drawable.nav_item_background)
             //it.itemTextColor = AppCompatResources.getColorStateList(this, R.color.nav_item_text)
-            it.setNavigationItemSelectedListener {
+            it.setNavigationItemSelectedListener { item ->
                 mBottomSheetBehavior.close()
                 setLowProfileStatusBar()
                 // Prevent pressing self
-                val id = it.itemId
+                val id = item.itemId
                 if (id == R.id.action_find_in_page) {
                     navigationView.snackbar("Find in page")
                     return@setNavigationItemSelectedListener true
                 }
-                if (!it.isChecked) {
-                    // We do this becuase we have to follow the NavGraph
-                    if (navController.currentDestination?.id != R.id.mainFragment)
-                        navController.popBackStack(R.id.mainFragment, false)
-                    when (id) {
-                        R.id.action_read -> {
+
+                if (!item.isChecked) {
+                    // We do this because we have to follow the NavGraph
+                    it.postDelayed({
+                        if (navController.currentDestination?.id != R.id.mainFragment)
+                            navController.popBackStack(R.id.mainFragment, false)
+                        when (id) {
+                            R.id.action_read -> {
+                            }
+                            R.id.action_preface -> navController.navigate(R.id.toPreface)
+                            R.id.action_search -> navController.navigate(R.id.toSearch)
+                            R.id.action_settings -> navController.navigate(R.id.toSettings)
+                            R.id.action_about -> navController.navigate(R.id.toAbout)
                         }
-                        R.id.action_preface -> navController.navigate(R.id.toPreface)
-                        R.id.action_search -> navController.navigate(R.id.toSearch)
-                        R.id.action_settings -> navController.navigate(R.id.toSettings)
-                        R.id.action_about -> navController.navigate(R.id.toAbout)
-                    }
+                    },200)
                     true
                 } else {
                     //log d "pressed checked item"
