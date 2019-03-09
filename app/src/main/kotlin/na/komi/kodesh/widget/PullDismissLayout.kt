@@ -78,7 +78,7 @@ class PullDismissLayout : FrameLayout {
             if (dragHelper!!.viewDragState == ViewDragHelper.STATE_IDLE && dragHelper!!.checkTouchSlop(ViewDragHelper.DIRECTION_VERTICAL)) {
 
                 val child = getChildAt(0)
-                if (child != null && !listener!!.onShouldInterceptTouchEvent()) {
+                if (child != null && listener!=null && !listener!!.onShouldInterceptTouchEvent()) {
                     dragHelper!!.captureChildView(child, event.getPointerId(0))
                     return dragHelper!!.viewDragState == ViewDragHelper.STATE_DRAGGING
                 }
