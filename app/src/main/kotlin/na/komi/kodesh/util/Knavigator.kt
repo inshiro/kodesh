@@ -22,9 +22,11 @@ internal object Logger {
     infix fun i(msg: String) {
         Knavigator.logger?.i(msg)
     }
+
     infix fun w(msg: String) {
         Knavigator.logger?.w(msg)
     }
+
     infix fun e(msg: String) {
         Knavigator.logger?.e(msg)
     }
@@ -65,8 +67,8 @@ class Knavigator {
     lateinit var fragmentManager: FragmentManager
 
 
-
-    @IdRes var container: Int = -1
+    @IdRes
+    var container: Int = -1
     private var fragInit = false
     private var mainFragment = ""
     private val animationStart = android.R.animator.fade_in
@@ -89,32 +91,33 @@ class Knavigator {
     fun Fragment.addToBackStack() = fragmentList.add(name)
     fun Fragment.removeFromBackStack() = fragmentList.remove(name)
     fun Fragment.isInitialized() = this@Knavigator.fragmentManager.backStackEntryCount > 0 && this.isAdded
-    fun getCurrentFragment() = fragmentManager.findFragmentByTag(fragmentList[fragmentList.lastIndex])
+    fun getCurrentFragment() =
+        if (fragmentList.lastIndex < 0) null else fragmentManager.findFragmentByTag(fragmentList[fragmentList.lastIndex])
 
     fun navigate(fragment: Fragment, visibilty: Int = defaultMode) {
         if (mainFragment.isNotEmpty() && fragmentList.isEmpty())
             show(fragment, visibilty)
         else
-        getCurrentFragment()?.let {  currentFragment ->
-            hide(currentFragment, visibilty)
-            show(fragment, visibilty)
-        }
+            getCurrentFragment()?.let { currentFragment ->
+                hide(currentFragment, visibilty)
+                show(fragment, visibilty)
+            }
     }
 
     fun add(fragment: Fragment) {
         // Account for when we have no fragments. When the back stack is 0.
         //if (initialized(fragment)) return
         if (!fragment.isAdded)
-        fragmentManager.beginTransaction()
-            .setCustomAnimations(animationStart, animationEnd)
-            .add(container, fragment, fragment::class.java.simpleName)
-            //.addToBackStack(TAG)
-            .commitAllowingStateLoss().also { Logger i "Adding fragment ${fragment::class.java}" }
+            fragmentManager.beginTransaction()
+                .setCustomAnimations(animationStart, animationEnd)
+                .add(container, fragment, fragment::class.java.simpleName)
+                //.addToBackStack(TAG)
+                .commitAllowingStateLoss().also { Logger i "Adding fragment ${fragment::class.java}" }
 
 
     }
 
-    fun show(fragment: Fragment, visibilty: Int = defaultMode, isMainFragment:Boolean = false) {
+    fun show(fragment: Fragment, visibilty: Int = defaultMode, isMainFragment: Boolean = false) {
         val tempFragment = fragmentManager.findFragmentByTag(fragment.name)
         val fragment = tempFragment ?: fragment
         fragment.addToBackStack()
@@ -184,7 +187,7 @@ class Knavigator {
         fragment.removeFromBackStack()
     }
 
-    fun canGoBack() = backCount != 0
+    fun canGoBack() = backCount > 0
 
 
     fun goBack() {
@@ -210,6 +213,7 @@ class Knavigator {
         infix fun e(msg: String)
 
     }
+
     companion object {
 
         /**
