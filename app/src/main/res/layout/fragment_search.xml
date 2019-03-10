@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:attr/windowBackground"
     android:paddingTop="@dimen/nav_drawer_top_padding">
 
     <com.google.android.material.textfield.TextInputLayout

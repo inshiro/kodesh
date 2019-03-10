@@ -12,6 +12,7 @@ import na.komi.kodesh.model.MainRepository
 import na.komi.kodesh.ui.find.FindInPageFragment
 import na.komi.kodesh.ui.internal.BaseActivity
 import na.komi.kodesh.ui.internal.BottomSheetBehavior2
+import na.komi.kodesh.ui.preface.PrefaceFragment
 import na.komi.kodesh.util.Knavigator
 import na.komi.kodesh.util.close
 import na.komi.kodesh.util.viewModel
@@ -26,7 +27,7 @@ import org.rewedigital.katana.dsl.compact.singleton
 import org.rewedigital.katana.dsl.get
 
 /**
- * Modules do not need to be cached since Components hold
+ * Modules do not need to be cached since MainComponents hold
  * all the instances.
  */
 object Modules {
@@ -44,46 +45,10 @@ object Modules {
     }
 }
 
-/**
- * See [Component]
- * As long as the same Component reference is used for injection, the same
- * singleton instances are reused. Once the Component is eligible for garbage collection so are the instances hold by
- * this component. The developer is responsible for holding a Component reference and releasing it when necessary. This
- * design was chosen in contrast to other DI libraries that for instance work with a global, singleton state to prevent
- * accidental memory leaks.
- */
-object Components {
-    private var _mainComponent: Component? = null
-    val mainComponent
-        get() = _mainComponent ?: createComponent(
-                modules = listOf(Modules.mainModule)// + Modules.modules,
-        ).also { _mainComponent = it }
-
-    val navComponent by lazy {
-        createComponent(
-            modules = listOf(
-                createModule {
-                    singleton { Knavigator() }
-                }))
-    }
-    val fragComponent by lazy {
-        createComponent(
-            modules = listOf(
-                createModule {
-                    singleton { FindInPageFragment() }
-                    singleton { MainFragment() }
-                }))
-    }
-    // TODO Destroy lazy instances
-    fun destroyInstance() {
-        _mainComponent = null
-        Modules.destroyInstance()
-    }
-}
 
 class MainActivity : BaseActivity() {
 
-    val component by lazy { Components.mainComponent }
+    val component by lazy { MainComponents.mainComponent }
 
     override val layout: Int = R.layout.activity_main
 
@@ -98,7 +63,7 @@ class MainActivity : BaseActivity() {
         return super.dispatchTouchEvent(ev)
     }
 
-    val mainFragment : MainFragment by Components.fragComponent.inject()
+    val mainFragment : MainFragment by MainComponents.fragComponent.inject()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         PreferenceManager.setDefaultValues(this, R.xml.styling_preferences, false)
@@ -110,7 +75,7 @@ class MainActivity : BaseActivity() {
         super.onDestroy()
         if (isFinishing && !isChangingConfigurations) {
             ApplicationDatabase.destroyInstance()
-            Components.destroyInstance()
+            MainComponents.destroyInstance()
         }
     }
 

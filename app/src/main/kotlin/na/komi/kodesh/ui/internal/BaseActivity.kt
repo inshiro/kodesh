@@ -1,5 +1,6 @@
 package na.komi.kodesh.ui.internal
 
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -15,8 +16,13 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
 import na.komi.kodesh.Prefs
 import na.komi.kodesh.R
+import na.komi.kodesh.ui.about.AboutFragment
 import na.komi.kodesh.ui.find.FindInPageFragment
-import na.komi.kodesh.ui.main.Components
+import na.komi.kodesh.ui.main.MainComponents
+import na.komi.kodesh.ui.main.MainFragment
+import na.komi.kodesh.ui.preface.PrefaceFragment
+import na.komi.kodesh.ui.search.SearchFragment
+import na.komi.kodesh.ui.setting.SettingsFragment
 import na.komi.kodesh.util.*
 import na.komi.kodesh.widget.LayoutedTextView
 import kotlin.coroutines.CoroutineContext
@@ -68,8 +74,12 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
     }
 
     private var toolbarTitle: AppCompatTextView? = null
-    val knavigator: Knavigator  by Components.navComponent.inject()
-    private val findInPageFragment: FindInPageFragment by Components.fragComponent.inject()
+    val knavigator: Knavigator  by MainComponents.navComponent.inject()
+    private val findInPageFragment: FindInPageFragment by MainComponents.fragComponent.inject()
+    private val prefaceFragment: PrefaceFragment by MainComponents.fragComponent.inject()
+    private val searchFragment: SearchFragment by MainComponents.fragComponent.inject()
+    private val settingsFragment: SettingsFragment by MainComponents.fragComponent.inject()
+    private val aboutFragment: AboutFragment by MainComponents.fragComponent.inject()
 
     private val isLargeLayout
         get() = resources.getBoolean(R.bool.large_layout)
@@ -98,7 +108,6 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
         }
 
         knavigator.fragmentManager = supportFragmentManager
-        knavigator.container = R.id.container_main
 
         // When we press back it pops it
         supportFragmentManager.addOnBackStackChangedListener {
@@ -122,12 +131,18 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             it.setNavigationItemSelectedListener { item ->
                 mBottomSheetBehavior.close()
                 setLowProfileStatusBar()
+                knavigator.container = R.id.nav_main_container
                 when (item.itemId) {
+                    R.id.action_read -> {}
                     R.id.action_find_in_page -> {
+                        knavigator.container = R.id.container_main
                         knavigator.show(findInPageFragment)
                         //item.isEnabled = false
                     }
-                    R.id.action_about -> knavigator.hide(findInPageFragment)
+                    R.id.action_preface -> knavigator.navigate(prefaceFragment)
+                    R.id.action_search -> knavigator.navigate(searchFragment)
+                    R.id.action_settings -> knavigator.navigate(settingsFragment)
+                    R.id.action_about -> knavigator.navigate(aboutFragment)
 
                 }
                 !item.isChecked
@@ -182,67 +197,35 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
     private lateinit var mBottomSheetBehavior: BottomSheetBehavior2<ConstraintLayout>
     private lateinit var mBottomSheetContainer: ConstraintLayout
 
-
     /*
-        private fun getBitmapFromView(view: View, activity: AppCompatActivity, callback: (Bitmap) -> Unit) {
-            activity.window?.let { window ->
-                val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
-                val locationOfViewInWindow = IntArray(2)
-                view.getLocationInWindow(locationOfViewInWindow)
-                try {
-                    PixelCopy(window, Rect(locationOfViewInWindow[0], locationOfViewInWindow[1], locationOfViewInWindow[0] + view.width, locationOfViewInWindow[1] + view.height), bitmap, { copyResult ->
-                        if (copyResult == PixelCopy.SUCCESS) {
-                            callback(bitmap)
-                        }
-                        // possible to handle other result codes ...
-                    }, Handler())
-                } catch (e: IllegalArgumentException) {
-                    // PixelCopy may throw IllegalArgumentException, make sure to handle it
-                    e.printStackTrace()
-                }
-            }
-        }
-        fun runCircleAnimation() {
-            val size = ViewGroup.LayoutParams.MATCH_PARENT
-            val decorView = getWindow().getDecorView() as ViewGroup
-            val v1 = getBitmapFromView(decorView)
-            val imageView = ImageView(this)
-            imageView.setImageDrawable(BitmapDrawable(resources, v1))
-            decorView.addView(imageView, ViewGroup.LayoutParams(size, size))
-            val animator = imageView.animate().alpha(0).setDuration(300)
-            animator.setListener(object: AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    super.onAnimationEnd(animation)
-                    decorView.removeView(imageView)
-                }
-                override fun onAnimationStart(animation: Animator) {
-                    super.onAnimationStart(animation)
-                }
-            })
-            animator.start()
-        }*/
-    /*
-    override fun onStart() {
-        super.onStart()
-        val a =
-            supportFragmentManager.findFragmentByTag(MainFragment::class.java.name) //.findFragmentById(R.id.nav_host_fragment) //
-        val v = a!!.view!!
-        //ViewCompat.setBackground(v, ColorDrawable(ContextCompat.getColor(this, R.color.default_background_color)))
-        mBottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            val min = 0.5f
-            val multiplier = 1f + min
+       override fun onStart() {
+           super.onStart()
+           val a = supportFragmentManager.findFragmentByTag(MainFragment::class.java.simpleName)
+           val v = a?.view
+           v?.setBackgroundColor(Color.BLACK)
+       }
 
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
+       override fun onStart() {
+           super.onStart()
+           val a =
+               supportFragmentManager.findFragmentByTag(MainFragment::class.java.name) //.findFragmentById(R.id.nav_host_fragment) //
+           val v = a!!.view!!
+           //ViewCompat.setBackground(v, ColorDrawable(ContextCompat.getColor(this, R.color.default_background_color)))
+           mBottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+               val min = 0.5f
+               val multiplier = 1f + min
 
-            }
+               override fun onStateChanged(bottomSheet: View, newState: Int) {
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                val alpha = Math.abs(slideOffset - 1f)
-                v.alpha = (alpha + min) / multiplier // Prevent from hitting 0, then normalize
-            }
+               }
 
-        })
-    }*/
+               override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                   val alpha = Math.abs(slideOffset - 1f)
+                   v.alpha = (alpha + min) / multiplier // Prevent from hitting 0, then normalize
+               }
+
+           })
+       }*/
 
     override fun onBackPressed() {
         //  if (findNavController(R.id.nav_host_fragment).currentDestination?.id != R.id.mainFragment)

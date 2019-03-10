@@ -1,8 +1,10 @@
 package na.komi.kodesh.util
 
+import android.graphics.Color
 import android.os.Handler
 import android.util.Log
 import androidx.annotation.IdRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 
@@ -92,6 +94,17 @@ class Knavigator() {
     fun Fragment.addToBackStack() = fragmentList.add(name)
     fun Fragment.removeFromBackStack() = fragmentList.remove(name)
     fun Fragment.isInitialized() = this@Knavigator.fragmentManager.backStackEntryCount > 0 && this.isAdded
+    fun getCurrentFragment() = fragmentManager.findFragmentByTag(fragmentList[fragmentList.lastIndex])
+
+    fun navigate(fragment: Fragment, visibilty: Int = defaultMode) {
+        if (mainFragment.isNotEmpty() && fragmentList.isEmpty())
+            show(fragment, visibilty)
+        else
+        getCurrentFragment()?.let {  currentFragment ->
+            hide(currentFragment, visibilty)
+            show(fragment, visibilty)
+        }
+    }
 
     fun add(fragment: Fragment) {
         // Account for when we have no fragments. When the back stack is 0.
@@ -111,7 +124,9 @@ class Knavigator() {
         fragment.addToBackStack()
         if (isMainFragment) {
             mainFragment = fragment.name
-            fragment.removeFromBackStack() // If home fragment do not record in backstack
+            fragment.removeFromBackStack()
+            // If home fragment, do not record in backstack
+            // Though, we still have in our list of fragments in supportFragmentManager
         }
         if (!fragment.isInitialized() && !fragment.isVisible && tempFragment == null) {
             //fragInit = true
@@ -135,7 +150,6 @@ class Knavigator() {
         }
         fragmentTransaction.commitAllowingStateLoss()
         logger d "$visibiltyTag fragment ${fragment.name}"
-        displayFragments()
     }
 
     /**
@@ -151,6 +165,7 @@ class Knavigator() {
      * https://stackoverflow.com/a/38305887
      */
     fun hide(fragment: Fragment, visibilty: Int = defaultMode) {
+        // TODO SetonHideListener
         val tempFragment = fragmentManager.findFragmentByTag(fragment.name)
         val fragment = tempFragment ?: fragment
         if (!fragment.isVisible) return
@@ -177,8 +192,7 @@ class Knavigator() {
 
 
     fun goBack() {
-        displayFragments()
-        val fragment = fragmentManager.findFragmentByTag(fragmentList[fragmentList.lastIndex])
+        val fragment = getCurrentFragment()
         if (fragment != null)
             hide(fragment).also { logger i "OnBackPressed last fragment was ${fragment.name}" }
 

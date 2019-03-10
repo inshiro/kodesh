@@ -51,6 +51,11 @@ class SettingsFragment : BasePreferenceFragment() {
                 }
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        view?.setBackgroundColor(android.R.attr.windowBackground)
+    }
+
     private fun restartActivity() {
         activity?.let {
             /*val intent = Intent(it, MainActivity::class.java)

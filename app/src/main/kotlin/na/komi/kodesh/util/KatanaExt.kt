@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import na.komi.kodesh.ui.main.Components
+import na.komi.kodesh.ui.main.MainComponents
 import na.komi.kodesh.ui.main.MainActivity
 import org.rewedigital.katana.KatanaTrait
 import org.rewedigital.katana.Module

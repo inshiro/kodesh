@@ -9,12 +9,12 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
 import na.komi.kodesh.R
-import na.komi.kodesh.ui.main.Components
+import na.komi.kodesh.ui.main.MainComponents
 import na.komi.kodesh.util.Knavigator
 
 class FindInPageFragment : Fragment() {
 
-    private val knavigator: Knavigator  by Components.navComponent.inject()
+    private val knavigator: Knavigator  by MainComponents.navComponent.inject()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_find_in_page, container, false)
