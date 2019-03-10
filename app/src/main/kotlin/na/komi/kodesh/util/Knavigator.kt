@@ -71,6 +71,7 @@ class Knavigator() {
 
     @IdRes var container: Int = -1
     private var fragInit = false
+    private var mainFragment = ""
     private val animationStart = android.R.animator.fade_in
     private val animationEnd = android.R.animator.fade_out
     private val handler by lazy { Handler() }
@@ -104,15 +105,19 @@ class Knavigator() {
 
     }
 
-    fun show(fragment: Fragment, visibilty: Int = defaultMode) {
+    fun show(fragment: Fragment, visibilty: Int = defaultMode, isMainFragment:Boolean = false) {
         val tempFragment = fragmentManager.findFragmentByTag(fragment.name)
-        if (!fragInit && !fragment.isInitialized() && !fragment.isVisible && tempFragment == null) {
-            fragInit = true
+        val fragment = tempFragment ?: fragment
+        fragment.addToBackStack()
+        if (isMainFragment) {
+            mainFragment = fragment.name
+            fragment.removeFromBackStack() // If home fragment do not record in backstack
+        }
+        if (!fragment.isInitialized() && !fragment.isVisible && tempFragment == null) {
+            //fragInit = true
             add(fragment)
-            fragment.addToBackStack()
             return
         }
-        val fragment = tempFragment ?: fragment
 
         val fragmentTransaction = fragmentManager.beginTransaction()
             .setCustomAnimations(animationStart, animationEnd)
@@ -130,7 +135,7 @@ class Knavigator() {
         }
         fragmentTransaction.commitAllowingStateLoss()
         logger d "$visibiltyTag fragment ${fragment.name}"
-        fragment.addToBackStack()
+        displayFragments()
     }
 
     /**
@@ -166,12 +171,13 @@ class Knavigator() {
         fragmentTransaction.commitAllowingStateLoss()
         logger d "$visibiltyTag fragment ${fragment.name}"
         fragment.removeFromBackStack()
-
     }
 
     fun canGoBack() = backCount != 0
 
+
     fun goBack() {
+        displayFragments()
         val fragment = fragmentManager.findFragmentByTag(fragmentList[fragmentList.lastIndex])
         if (fragment != null)
             hide(fragment).also { logger i "OnBackPressed last fragment was ${fragment.name}" }

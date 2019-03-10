@@ -9,8 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.navigation.findNavController
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -70,7 +68,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
     }
 
     private var toolbarTitle: AppCompatTextView? = null
-    private val knavigator: Knavigator  by Components.navComponent.inject()
+    val knavigator: Knavigator  by Components.navComponent.inject()
     private val findInPageFragment: FindInPageFragment by Components.fragComponent.inject()
 
     private val isLargeLayout
@@ -85,7 +83,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
         }
         setContentView(layout)
 
-        val navController = findNavController(R.id.nav_host_fragment)
+        //val navController = findNavController(R.id.nav_host_fragment)
         navigationView = findViewById(R.id.navigation_view)
 
         mBottomSheetContainer = findViewById(R.id.main_bottom_container)
@@ -223,10 +221,11 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             })
             animator.start()
         }*/
+    /*
     override fun onStart() {
         super.onStart()
         val a =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) //findFragmentByTag(MainFragment::class.java.name)
+            supportFragmentManager.findFragmentByTag(MainFragment::class.java.name) //.findFragmentById(R.id.nav_host_fragment) //
         val v = a!!.view!!
         //ViewCompat.setBackground(v, ColorDrawable(ContextCompat.getColor(this, R.color.default_background_color)))
         mBottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
@@ -243,7 +242,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             }
 
         })
-    }
+    }*/
 
     override fun onBackPressed() {
         //  if (findNavController(R.id.nav_host_fragment).currentDestination?.id != R.id.mainFragment)

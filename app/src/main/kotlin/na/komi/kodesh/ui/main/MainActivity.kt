@@ -71,6 +71,7 @@ object Components {
             modules = listOf(
                 createModule {
                     singleton { FindInPageFragment() }
+                    singleton { MainFragment() }
                 }))
     }
     // TODO Destroy lazy instances
@@ -97,9 +98,12 @@ class MainActivity : BaseActivity() {
         return super.dispatchTouchEvent(ev)
     }
 
+    val mainFragment : MainFragment by Components.fragComponent.inject()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         PreferenceManager.setDefaultValues(this, R.xml.styling_preferences, false)
+        knavigator.container = R.id.nav_main_container
+        knavigator.show(mainFragment, isMainFragment = true)
     }
 
     override fun onDestroy() {
