@@ -19,6 +19,9 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.recyclerview_child_content_main.*
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import na.komi.kodesh.Application
 import na.komi.kodesh.Prefs
 import na.komi.kodesh.R
@@ -40,8 +43,7 @@ class MainChildAdapter(
 ) :
     RecyclerView.Adapter<MainChildAdapter.ViewHolder>() {
     private val list = mutableListOf<Bible>()
-
-    private val uiScope by lazy { CoroutineScope(coroutineContext) }
+    private val cleanList by lazy { mutableListOf<String>()  }
 
     init {
         setHasStableIds(true)
@@ -69,11 +71,25 @@ class MainChildAdapter(
         list.clear()
         list.addAll(newList)
         notifyDataSetChanged()
+        GlobalScope.launch(Dispatchers.IO) {
+            cleanList.clear()
+            var text:String
+            list.mapTo(cleanList) {
+                text = it.verseText!!.replace(periscopeDelimeter,"") .replace(italicDelimeter,"")
+                if (vm.kjvStyling) {
+                    val kjv = Formatting.kjvList[it.id - 1]
+                    text =  Formatting.diffText(text, kjv)
+                }
+                text
+            }
+        }
     }
 
     private val spannableFactory by lazy { MySpannableFactory() }
 
     private val onlyAplhaNumericRegex by lazy { """\p{Alnum}""".toRegex() }
+    private val periscopeDelimeter by lazy { """\\<.*?\\>""".toRegex() }
+    private val italicDelimeter by lazy { """\\[|\\]""".toRegex() }
 
     inner class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
         var verseView: LayoutedTextView = child_tv_item

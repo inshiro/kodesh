@@ -9,6 +9,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewPropertyAnimator
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.get
@@ -17,6 +18,7 @@ import com.google.android.material.R
 import com.google.android.material.animation.AnimationUtils
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
+import na.komi.kodesh.util.log
 import kotlin.math.max
 import kotlin.math.min
 
@@ -155,10 +157,21 @@ class BottomSheetBehavior2<V : View>(context: Context, attrs: AttributeSet) :
     override fun layoutDependsOn(parent: CoordinatorLayout, child: V, dependency: View): Boolean {
         if (dependency is Snackbar.SnackbarLayout) {
             updateSnackbar(child, dependency)
-        }
+        } else if (dependency is ConstraintLayout)
+            updateSearchBar(child,dependency)
         return super.layoutDependsOn(parent, child, dependency)
     }
 
+    private fun updateSearchBar(child: View, searchLayout: ConstraintLayout) {
+        if (searchLayout.layoutParams is CoordinatorLayout.LayoutParams) {
+            val params = searchLayout.layoutParams as CoordinatorLayout.LayoutParams
+
+            params.anchorId = child.id
+            params.anchorGravity = Gravity.TOP
+            params.gravity = Gravity.TOP
+            searchLayout.layoutParams = params
+        }
+    }
     private fun updateSnackbar(child: View, snackbarLayout: Snackbar.SnackbarLayout) {
         if (snackbarLayout.layoutParams is CoordinatorLayout.LayoutParams) {
             val params = snackbarLayout.layoutParams as CoordinatorLayout.LayoutParams

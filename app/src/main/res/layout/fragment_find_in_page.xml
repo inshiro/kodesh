@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="?attr/colorPrimaryVariant"
+    app:layout_anchorGravity="top">
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/find_edit_text"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:background="@null"
+        android:clickable="true"
+        android:focusable="true"
+        android:hint="Find in page"
+        android:paddingLeft="16dp"
+        app:layout_constraintEnd_toStartOf="@id/find_results_text_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:searchIcon="@null" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/find_results_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="12dp"
+        android:textColor="?textColor"
+        app:layout_constraintEnd_toStartOf="@id/find_divider"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="0/0" />
+
+    <View
+        android:id="@+id/find_divider"
+        android:layout_width="2dp"
+        android:layout_height="24dp"
+        android:background="@color/transparent_dark"
+        app:layout_constraintBottom_toBottomOf="@id/find_up_botton"
+        app:layout_constraintRight_toLeftOf="@id/find_up_botton"
+        app:layout_constraintStart_toStartOf="@id/find_up_botton"
+        app:layout_constraintTop_toTopOf="@id/find_up_botton" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/find_up_botton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:tint="@color/mtrl_on_primary_disabled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/find_results_text_view"
+        app:layout_constraintRight_toLeftOf="@id/find_down_botton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_up" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/find_down_botton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:tint="@color/mtrl_on_primary_disabled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/close_botton"
+        app:layout_constraintLeft_toRightOf="@id/close_botton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_down" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/close_botton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:tint="?textColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/find_down_botton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/kod_close_menu" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import na.komi.kodesh.Prefs
 import na.komi.kodesh.R
 import na.komi.kodesh.model.Bible
+import na.komi.kodesh.ui.internal.BaseActivity
 import na.komi.kodesh.ui.internal.BaseKatanaFragment
 import na.komi.kodesh.ui.internal.FragmentToolbar
 import na.komi.kodesh.ui.navigate.NavigateDialogFragment
@@ -177,6 +178,7 @@ class MainFragment : BaseKatanaFragment() {
                 setTitle(position)
                 Prefs.VP_Position = position
                 currentIndex = position
+                //(activity as? MainActivity)?.displayFindInPage(false)
                 /*ScrollListener.reset()
                 rv.doOnLayout {
                     ScrollListener.height = it.measuredHeight

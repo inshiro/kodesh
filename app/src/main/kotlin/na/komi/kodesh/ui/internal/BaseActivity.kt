@@ -12,9 +12,13 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
 import na.komi.kodesh.Prefs
 import na.komi.kodesh.R
+import na.komi.kodesh.ui.find.FindInPageFragment
+import na.komi.kodesh.ui.main.Components
 import na.komi.kodesh.util.*
 import na.komi.kodesh.widget.LayoutedTextView
 import kotlin.coroutines.CoroutineContext
@@ -34,11 +38,11 @@ import kotlin.coroutines.CoroutineContext
 abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener {
 
     //open lateinit var job: Job
-    open val job  = SupervisorJob()
+    open val job = SupervisorJob()
     override val coroutineContext: CoroutineContext
         get() = ContextHelper.dispatcher + job
 
-   // open fun defaultJob(): Job = SupervisorJob()
+    // open fun defaultJob(): Job = SupervisorJob()
 
     abstract val layout: Int
     //abstract val navigationView: NavigationView
@@ -47,12 +51,12 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
 
     fun getNavigationView() = navigationView
 
-    private var toolbar: Toolbar?= null
-    fun getToolbar() :Toolbar? = toolbar ?: findViewById<Toolbar>(R.id.toolbar_main).also{ toolbar = it }
+    private var toolbar: Toolbar? = null
+    fun getToolbar(): Toolbar? = toolbar ?: findViewById<Toolbar>(R.id.toolbar_main).also { toolbar = it }
 
-    fun getToolbarTitleView() :AppCompatTextView? {
+    fun getToolbarTitleView(): AppCompatTextView? {
         //var toolbarTitle:AppCompatTextView? = null
-        if (toolbarTitle!=null ) return  toolbarTitle
+        if (toolbarTitle != null) return toolbarTitle
         getToolbar()?.let {
             for (i in 0 until it.childCount) {
                 val child = it.getChildAt(i)
@@ -64,7 +68,11 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
         }
         return toolbarTitle
     }
+
     private var toolbarTitle: AppCompatTextView? = null
+    private val knavigator: Knavigator  by Components.navComponent.inject()
+    private val findInPageFragment: FindInPageFragment by Components.fragComponent.inject()
+
     private val isLargeLayout
         get() = resources.getBoolean(R.bool.large_layout)
 
@@ -91,6 +99,15 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             mBottomSheetBehavior.toggle()
         }
 
+        knavigator.fragmentManager = supportFragmentManager
+        knavigator.container = R.id.container_main
+
+        // When we press back it pops it
+        supportFragmentManager.addOnBackStackChangedListener {
+            val l = supportFragmentManager.fragments
+            val current = l[l.lastIndex]::class.java.simpleName
+            supportFragmentManager.fragments.map { it::class.java.simpleName }.joinToString(",").also { log d it }
+        }
         /**
          * https://stackoverflow.com/a/37873884
          * https://stackoverflow.com/a/36793341
@@ -104,41 +121,58 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                 })
             }
 
-            //it.itemBackground = AppCompatResources.getColorStateList(this, R.drawable.nav_item_background)
-            //it.itemTextColor = AppCompatResources.getColorStateList(this, R.color.nav_item_text)
             it.setNavigationItemSelectedListener { item ->
                 mBottomSheetBehavior.close()
                 setLowProfileStatusBar()
-                // Prevent pressing self
-                val id = item.itemId
-                if (id == R.id.action_find_in_page) {
-                    navigationView.snackbar("Find in page")
-                    return@setNavigationItemSelectedListener true
-                }
+                when (item.itemId) {
+                    R.id.action_find_in_page -> {
+                        knavigator.show(findInPageFragment)
+                        //item.isEnabled = false
+                    }
+                    R.id.action_about -> knavigator.hide(findInPageFragment)
 
-                if (!item.isChecked) {
-                    // We do this because we have to follow the NavGraph
-                    it.postDelayed({
-                        if (navController.currentDestination?.id != R.id.mainFragment)
-                            navController.popBackStack(R.id.mainFragment, false)
-                        when (id) {
-                            R.id.action_read -> {
-                            }
-                            R.id.action_preface -> navController.navigate(R.id.toPreface)
-                            R.id.action_search -> navController.navigate(R.id.toSearch)
-                            R.id.action_settings -> navController.navigate(R.id.toSettings)
-                            R.id.action_about -> navController.navigate(R.id.toAbout)
-                        }
-                    },200)
-                    true
-                } else {
-                    //log d "pressed checked item"
-                    false
                 }
+                !item.isChecked
             }
+            /*     it.setNavigationItemSelectedListener { item ->
+                     mBottomSheetBehavior.close()
+                     setLowProfileStatusBar()
+                     // Prevent pressing self
+                     if (!item.isChecked) {
+                         displayFindInPage(false)
+                         it.postDelayed({
+                             if (navController.currentDestination?.id != R.id.mainFragment)
+                                 navController.popBackStack(R.id.mainFragment, false)
+                             when (item.itemId) {
+                                 R.id.action_read -> {}
+                                 R.id.action_find_in_page -> {
+                                     if (!findInPageFragment.isAdded)
+                                         supportFragmentManager.beginTransaction()
+                                             .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                                             .add(R.id.container_main, findInPageFragment, FindInPageFragment::class.java.simpleName)
+                                             .addToBackStack(FindInPageFragment::class.java.simpleName)
+                                             .commit()
+                                     else displayFindInPage()
+                                     item.isEnabled = false
+                                 }
+                                 R.id.action_preface -> navController.navigate(R.id.toPreface)
+                                 R.id.action_search -> navController.navigate(R.id.toSearch)
+                                 R.id.action_settings -> navController.navigate(R.id.toSettings)
+                                 R.id.action_about -> navController.navigate(R.id.toAbout)
+                             }
+                         }, 200)
+                         true
+                     } else {
+                         //log d "pressed checked item"
+                         false
+                     }
+                 }
+            */
+
         }
 
     }
+
 
     override fun onDestroy() {
         super.onDestroy()
@@ -212,10 +246,12 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
     }
 
     override fun onBackPressed() {
-      //  if (findNavController(R.id.nav_host_fragment).currentDestination?.id != R.id.mainFragment)
-       //     bottomSheetContainer.invalidate()
+        //  if (findNavController(R.id.nav_host_fragment).currentDestination?.id != R.id.mainFragment)
+        //     bottomSheetContainer.invalidate()
         if (mBottomSheetBehavior.state == BottomSheetBehavior2.STATE_EXPANDED)
             mBottomSheetBehavior.setState(BottomSheetBehavior2.STATE_COLLAPSED)
+        else if (knavigator.canGoBack())
+            knavigator.goBack()
         else
             super.onBackPressed()
     }
