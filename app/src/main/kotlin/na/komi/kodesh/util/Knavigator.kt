@@ -104,6 +104,7 @@ class Knavigator {
     fun add(fragment: Fragment) {
         // Account for when we have no fragments. When the back stack is 0.
         //if (initialized(fragment)) return
+        if (!fragment.isAdded)
         fragmentManager.beginTransaction()
             .setCustomAnimations(animationStart, animationEnd)
             .add(container, fragment, fragment::class.java.simpleName)

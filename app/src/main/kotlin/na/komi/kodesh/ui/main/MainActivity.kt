@@ -68,6 +68,7 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         PreferenceManager.setDefaultValues(this, R.xml.styling_preferences, false)
         knavigator.container = R.id.nav_main_container
+        knavigator.defaultMode = Knavigator.SPARING_SINGLETON
         knavigator.show(mainFragment, isMainFragment = true)
     }
 

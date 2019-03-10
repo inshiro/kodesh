@@ -134,8 +134,14 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                 setLowProfileStatusBar()
                 knavigator.defaultMode = Knavigator.FACTORY
                 knavigator.container = R.id.nav_main_container
+                // Prevent pressing self
+                if (!item.isChecked) {
                 when (item.itemId) {
-                    R.id.action_read -> {}
+                    R.id.action_read -> {
+                        val f = knavigator.getCurrentFragment()
+                        if (f!=null && f::class.java.simpleName != MainFragment::class.java.simpleName)
+                            knavigator.hide(f)
+                    }
                     R.id.action_find_in_page -> {
                         knavigator.defaultMode = Knavigator.SPARING_SINGLETON
                         knavigator.container = R.id.container_main
@@ -147,6 +153,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                     R.id.action_settings -> knavigator.navigate(settingsFragment)
                     R.id.action_about -> knavigator.navigate(aboutFragment)
 
+                }
                 }
                 !item.isChecked
             }
