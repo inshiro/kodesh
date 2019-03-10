@@ -9,6 +9,31 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 
 
+/**
+ * for internal use.
+ */
+internal object Logger {
+    private const val TAG = "KNAVIGATOR"
+
+    infix fun d(msg: String) {
+        Knavigator.logger?.d(msg)
+    }
+
+    infix fun i(msg: String) {
+        Knavigator.logger?.i(msg)
+    }
+    infix fun w(msg: String) {
+        Knavigator.logger?.w(msg)
+    }
+    infix fun e(msg: String) {
+        Knavigator.logger?.e(msg)
+    }
+
+}
+
+/**
+ * implementation. for outside use.
+ */
 object KnavigatorLogger : Knavigator.Logger {
 
     private const val TAG = "KNAVIGATOR"
@@ -21,43 +46,17 @@ object KnavigatorLogger : Knavigator.Logger {
         Log.i(TAG, msg)
     }
 
-    override fun debug(msg: String) {
-        Log.d(TAG, msg)
-    }
-
-    override fun info(msg: String) {
-        Log.i(TAG, msg)
-    }
-
-    override fun warn(msg: String) {
+    override fun w(msg: String) {
         Log.w(TAG, msg)
     }
 
-    override fun error(msg: String, throwable: Throwable?) {
-        if (throwable != null) {
-            Log.e(TAG, msg, throwable)
-        } else {
-            Log.e(TAG, msg)
-        }
+    override fun e(msg: String) {
+        Log.e(TAG, msg)
     }
 }
 
-class Knavigator() {
+class Knavigator {
 
-    interface Logger {
-
-        infix fun d(msg: String)
-        infix fun i(msg: String)
-
-        fun debug(msg: String)
-
-        fun info(msg: String)
-
-        fun warn(msg: String)
-
-        fun error(msg: String, throwable: Throwable? = null)
-
-    }
 
     /**
      * Define your fragments so you only create singletons using Dependency Injections
@@ -65,10 +64,6 @@ class Knavigator() {
      */
     lateinit var fragmentManager: FragmentManager
 
-    /**
-     * Pass an implementation of [Logger] here to enable Katana's logging functionality
-     */
-    var logger: Logger = KnavigatorLogger
 
 
     @IdRes var container: Int = -1
@@ -113,7 +108,7 @@ class Knavigator() {
             .setCustomAnimations(animationStart, animationEnd)
             .add(container, fragment, fragment::class.java.simpleName)
             //.addToBackStack(TAG)
-            .commitAllowingStateLoss().also { logger i "Adding fragment ${fragment::class.java}" }
+            .commitAllowingStateLoss().also { Logger i "Adding fragment ${fragment::class.java}" }
 
 
     }
@@ -149,7 +144,7 @@ class Knavigator() {
             }
         }
         fragmentTransaction.commitAllowingStateLoss()
-        logger d "$visibiltyTag fragment ${fragment.name}"
+        Logger d "$visibiltyTag fragment ${fragment.name}"
     }
 
     /**
@@ -184,7 +179,7 @@ class Knavigator() {
             }
         }
         fragmentTransaction.commitAllowingStateLoss()
-        logger d "$visibiltyTag fragment ${fragment.name}"
+        Logger d "$visibiltyTag fragment ${fragment.name}"
         fragment.removeFromBackStack()
     }
 
@@ -194,7 +189,7 @@ class Knavigator() {
     fun goBack() {
         val fragment = getCurrentFragment()
         if (fragment != null)
-            hide(fragment).also { logger i "OnBackPressed last fragment was ${fragment.name}" }
+            hide(fragment).also { Logger i "OnBackPressed last fragment was ${fragment.name}" }
 
         // Detach/remove all fragments
     }
@@ -202,12 +197,24 @@ class Knavigator() {
     fun displayFragments() {
         handler.postDelayed({
             fragmentManager.fragments.joinToString(", ") { it::class.java.simpleName }
-                .also { logger i "Currently have: $it" }
+                .also { Logger i "Currently have: $it" }
         }, 100)
     }
 
+    interface Logger {
+
+        infix fun d(msg: String)
+        infix fun i(msg: String)
+        infix fun w(msg: String)
+        infix fun e(msg: String)
+
+    }
     companion object {
 
+        /**
+         * Pass an implementation of [Logger] here to enable Katana's logging functionality
+         */
+        var logger: Logger? = null
         /**
          * Hide-Show = SINGLETON
          * Detach-Attach = SPARING SINGLETON

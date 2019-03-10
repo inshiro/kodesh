@@ -108,6 +108,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
         }
 
         knavigator.fragmentManager = supportFragmentManager
+        Knavigator.logger = KnavigatorLogger
 
         // When we press back it pops it
         supportFragmentManager.addOnBackStackChangedListener {
@@ -131,10 +132,12 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             it.setNavigationItemSelectedListener { item ->
                 mBottomSheetBehavior.close()
                 setLowProfileStatusBar()
+                knavigator.defaultMode = Knavigator.FACTORY
                 knavigator.container = R.id.nav_main_container
                 when (item.itemId) {
                     R.id.action_read -> {}
                     R.id.action_find_in_page -> {
+                        knavigator.defaultMode = Knavigator.SPARING_SINGLETON
                         knavigator.container = R.id.container_main
                         knavigator.show(findInPageFragment)
                         //item.isEnabled = false
