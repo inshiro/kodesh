@@ -18,6 +18,7 @@ Features
 - Absolutely no permissions needed
 - Clean and elegant Material design
 
+#
 See the [wiki](https://github.com/inshiro/Kodesh/wiki) for some developer insights!
 
 License
