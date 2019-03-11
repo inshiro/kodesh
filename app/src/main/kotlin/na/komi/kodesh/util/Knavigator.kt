@@ -1,10 +1,8 @@
 package na.komi.kodesh.util
 
-import android.graphics.Color
 import android.os.Handler
 import android.util.Log
 import androidx.annotation.IdRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 
@@ -31,6 +29,10 @@ internal object Logger {
         Knavigator.logger?.e(msg)
     }
 
+    infix fun v(msg: String) {
+        Knavigator.logger?.v(msg)
+    }
+
 }
 
 /**
@@ -55,8 +57,14 @@ object KnavigatorLogger : Knavigator.Logger {
     override fun e(msg: String) {
         Log.e(TAG, msg)
     }
+    override fun v(msg: String) {
+        Log.v(TAG, msg)
+    }
 }
 
+/**
+ * An easy to use, simple yet powerful Fragment Navigator.
+ */
 class Knavigator {
 
 
@@ -77,8 +85,8 @@ class Knavigator {
     private val fragmentList by lazy { mutableListOf<String>() }
     private val VisibiltyTag by lazy {
         arrayOf(
-            arrayOf("Showing", "Attaching", "Adding"),
-            arrayOf("Hiding", "Detaching", "Removing")
+            arrayOf("Adding", "Attaching", "Showing"),
+            arrayOf("Removing", "Detaching", "Hiding")
         )
     }
     var defaultMode = SPARING_SINGLETON
@@ -91,32 +99,125 @@ class Knavigator {
     fun Fragment.addToBackStack() = fragmentList.add(name)
     fun Fragment.removeFromBackStack() = fragmentList.remove(name)
     fun Fragment.isInitialized() = this@Knavigator.fragmentManager.backStackEntryCount > 0 && this.isAdded
-    fun getCurrentFragment() =
-        if (fragmentList.lastIndex < 0) null else fragmentManager.findFragmentByTag(fragmentList[fragmentList.lastIndex])
 
-    fun navigate(fragment: Fragment, visibilty: Int = defaultMode) {
-        if (mainFragment.isNotEmpty() && fragmentList.isEmpty())
-            show(fragment, visibilty)
-        else
-            getCurrentFragment()?.let { currentFragment ->
-                hide(currentFragment, visibilty)
-                show(fragment, visibilty)
-            }
+    fun getCurrentFragment() =
+        if (fragmentStack.lastIndex < 0) null else fragmentManager.findFragmentByTag(fragmentStack[fragmentStack.lastIndex].name)
+
+    fun navigate(fragment: Fragment, mode: Int = defaultMode, inBackStack: Boolean = true) {
+        // If in backstack you can hide it
+        if (fragmentStack.lastIndex >= 0 && fragmentStack[fragmentStack.lastIndex].inBackStack)
+            hide(getCurrentFragment()!!)
+        show(fragment, mode, inBackStack)
+
     }
 
     fun add(fragment: Fragment) {
         // Account for when we have no fragments. When the back stack is 0.
         //if (initialized(fragment)) return
-        if (!fragment.isAdded)
-            fragmentManager.beginTransaction()
-                .setCustomAnimations(animationStart, animationEnd)
-                .add(container, fragment, fragment::class.java.simpleName)
-                //.addToBackStack(TAG)
-                .commitAllowingStateLoss().also { Logger i "Adding fragment ${fragment::class.java}" }
+        //if (!fragment.isAdded)
+        fragmentManager.beginTransaction()
+            .setCustomAnimations(animationStart, animationEnd)
+            .add(container, fragment, fragment::class.java.simpleName)
+            //.addToBackStack(TAG)
+            .commitNowAllowingStateLoss()
 
 
     }
 
+
+    private fun Fragment.addStack(enter: Int, exit: Int, inBackStack: Boolean) {
+        fragmentStack.add(KnavigatorFragment(name, enter, exit, inBackStack))
+    }
+
+    private fun Fragment.removeStack() {
+        for (idx in 0 until fragmentStack.size)
+            if (fragmentStack[idx].name == name) {
+                fragmentStack.removeAt(idx); return
+            }
+    }
+
+    /**
+     * Show a fragment.
+     * @param mode add-remove (0), attach-detach (1), hide-show (2)
+     * @param inBackStack register this fragment in the backstack
+     */
+    fun show(fragment: Fragment, mode: Int = defaultMode, inBackStack: Boolean = true) {
+        val tempFragment = fragmentManager.findFragmentByTag(fragment.name)
+        val frag = tempFragment ?: fragment
+        if (!frag.isAdded){//!fragment.isAdded) { // !fragmentList.contains(fragment.name) fragmentStack.map { it.name == frag.name }.isEmpty() &&
+            add(frag)
+            frag.addStack(mode, mode, inBackStack)
+            Logger i "${VisibiltyTag[0][0]} fragment ${frag::class.java}"
+            displayFragments()
+            return
+        } else if (frag.isDetached) {
+            fragmentManager.beginTransaction()
+                .setCustomAnimations(animationStart, animationEnd)
+                .attach(frag)
+                .commitNowAllowingStateLoss()
+            //frag.addStack(mode, mode, inBackStack)
+            Logger i "${VisibiltyTag[0][1]} fragment ${frag::class.java}"
+            displayFragments()
+            return
+        } else if (!frag.isVisible /* user hint visible*/) {
+            fragmentManager.beginTransaction()
+                .setCustomAnimations(animationStart, animationEnd)
+                .show(frag)
+                .commitNowAllowingStateLoss()
+            //frag.addStack(mode, mode, inBackStack)
+            Logger i "${VisibiltyTag[0][2]}  fragment ${frag::class.java}"
+            displayFragments()
+            return
+        } else {
+            Logger e "ERROR showing ${frag::class.java}"
+            return
+        }
+    }
+
+    /**
+     * Hide a fragment.
+     * @param mode add-remove (0), attach-detach (1), hide-show (2)
+     * @param inBackStack register this fragment in the backstack
+     */
+    fun hide(fragment: Fragment) {
+        val tempFragment = fragmentManager.findFragmentByTag(fragment.name)
+        val frag = tempFragment ?: fragment
+        if (!frag.isAdded) { // !fragmentList.contains(fragment.name)
+            Logger w "Tried to hide but fragment ${frag::class.java} is NOT added"
+            return
+        }
+        var visibiltyTag = ""
+        val transaction = fragmentManager.beginTransaction()
+            .setCustomAnimations(animationStart, animationEnd)
+        when (getCurrentFragmentInStack().exit) {
+            FACTORY -> {
+                transaction.remove(frag); visibiltyTag = VisibiltyTag[1][0]
+                frag.removeStack()
+            }
+            SPARING_SINGLETON -> {
+                transaction.detach(frag); visibiltyTag = VisibiltyTag[1][1]
+            }
+            SINGLETON -> {
+                transaction.show(frag); visibiltyTag = VisibiltyTag[1][2]
+            }
+        }
+        transaction.commitNowAllowingStateLoss()
+        Logger i "$visibiltyTag fragment ${frag::class.java}"
+    }
+
+    /**
+     * PopBackStack reverts the last transaction.
+     * Recalling the last fragment. If the last fragment is gone, it'll be recreated.
+     * Thus we must manage our own backstack because this allows us to properly use
+     * detach and attach.
+     * This prevents re-adding fragments due to un-intended behavior.
+     *
+     * We avoid using popBackStack becuase it reverts the last transaction.
+     * Transactions are pseudo code. And not concrete implementations such
+     * as add, remove, detach, attach, hide, show.
+     * https://stackoverflow.com/a/38305887
+     */
+/*
     fun show(fragment: Fragment, visibilty: Int = defaultMode, isMainFragment: Boolean = false) {
         val tempFragment = fragmentManager.findFragmentByTag(fragment.name)
         val fragment = tempFragment ?: fragment
@@ -151,18 +252,6 @@ class Knavigator {
         Logger d "$visibiltyTag fragment ${fragment.name}"
     }
 
-    /**
-     * PopBackStack reverts the last transaction.
-     * Recalling the last fragment. If the last fragment is gone, it'll be recreated.
-     * Thus we must manage our own backstack because this allows us to properly use
-     * detach and attach.
-     * This prevents re-adding fragments due to un-intended behavior.
-     *
-     * We avoid using popBackStack becuase it reverts the last transaction.
-     * Transactions are pseudo code. And not concrete implementations such
-     * as add, remove, detach, attach, hide, show.
-     * https://stackoverflow.com/a/38305887
-     */
     fun hide(fragment: Fragment, visibilty: Int = defaultMode) {
         // TODO SetonHideListener
         val tempFragment = fragmentManager.findFragmentByTag(fragment.name)
@@ -186,22 +275,32 @@ class Knavigator {
         Logger d "$visibiltyTag fragment ${fragment.name}"
         fragment.removeFromBackStack()
     }
-
-    fun canGoBack() = backCount > 0
-
+*/
+    fun canGoBack() =
+        if (fragmentStack.lastIndex >= 0 && fragmentStack.size == 1 && !fragmentStack[fragmentStack.lastIndex].inBackStack) false else fragmentStack.size > 0
 
     fun goBack() {
+        fragmentStack.joinToString(", ") { it.name }
+            .also { Logger v "goBack: [$it]" }
         val fragment = getCurrentFragment()
         if (fragment != null)
-            hide(fragment).also { Logger i "OnBackPressed last fragment was ${fragment.name}" }
+            hide(fragment).also { Logger i "BackPressed. Last fragment was ${fragment.name}" }
 
         // Detach/remove all fragments
     }
 
+    data class KnavigatorFragment(val name: String, val enter: Int, val exit: Int, val inBackStack: Boolean = false)
+
+    private val fragmentStack = mutableListOf<KnavigatorFragment>()
+    fun getCurrentFragmentInStack() = fragmentStack[fragmentStack.lastIndex]
+    fun getFragments() = Logger i fragmentStack.toString()
+    /**
+     * Try not to call this. Use internal stack.
+     */
     fun displayFragments() {
         handler.postDelayed({
             fragmentManager.fragments.joinToString(", ") { it::class.java.simpleName }
-                .also { Logger i "Currently have: $it" }
+                .also { Logger v "Currently have: [$it]" }
         }, 100)
     }
 
@@ -211,6 +310,7 @@ class Knavigator {
         infix fun i(msg: String)
         infix fun w(msg: String)
         infix fun e(msg: String)
+        infix fun v(msg: String)
 
     }
 
@@ -225,8 +325,8 @@ class Knavigator {
          * Detach-Attach = SPARING SINGLETON
          * Add-Remove =  FACTORY
          */
-        val SINGLETON: Int = 1
-        val SPARING_SINGLETON: Int = 2
-        val FACTORY: Int = 3
+        val SINGLETON: Int = 2
+        val SPARING_SINGLETON: Int = 1
+        val FACTORY: Int = 0
     }
 }
