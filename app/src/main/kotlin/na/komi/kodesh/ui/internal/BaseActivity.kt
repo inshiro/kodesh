@@ -1,6 +1,5 @@
 package na.komi.kodesh.ui.internal
 
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -10,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -132,70 +132,38 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             it.setNavigationItemSelectedListener { item ->
                 mBottomSheetBehavior.close()
                 setLowProfileStatusBar()
-                knavigator.defaultMode = Knavigator.FACTORY
                 knavigator.container = R.id.nav_main_container
                 // Prevent pressing self
                 if (!item.isChecked) {
-                when (item.itemId) {
-                    R.id.action_read -> {
-                        val f = knavigator.currentFragment
-                        if (f!=null && f::class.java.simpleName != MainFragment::class.java.simpleName)
-                            knavigator.hide(f)
-                    }
-                    R.id.action_find_in_page -> {
-                        knavigator.defaultMode = Knavigator.SPARING_SINGLETON
-                        knavigator.container = R.id.container_main
-                        knavigator.show(findInPageFragment)
-                        //item.isEnabled = false
-                    }
-                    R.id.action_preface -> knavigator.navigate(prefaceFragment)
-                    R.id.action_search -> knavigator.navigate(searchFragment)
-                    R.id.action_settings -> knavigator.navigate(settingsFragment)
-                    R.id.action_about -> knavigator.navigate(aboutFragment)
+                    when (item.itemId) {
+                        R.id.action_read -> {
+                            val f = knavigator.currentFragment
+                            if (f != null && f::class.java.simpleName != MainFragment::class.java.simpleName)
+                                knavigator.hide(f)
+                        }
+                        R.id.action_find_in_page -> {
+                            knavigator.container = R.id.container_main
+                            knavigator.show(findInPageFragment, modular = true)
+                            //item.isEnabled = false
+                        }
+                        R.id.action_preface -> knavigator.navigate(prefaceFragment)
+                        R.id.action_search -> knavigator.navigate(searchFragment)
+                        R.id.action_settings -> knavigator.navigate(settingsFragment)
+                        R.id.action_about -> knavigator.navigate(aboutFragment)
 
-                }
+                    }
                 }
                 !item.isChecked
             }
-            /*     it.setNavigationItemSelectedListener { item ->
-                     mBottomSheetBehavior.close()
-                     setLowProfileStatusBar()
-                     // Prevent pressing self
-                     if (!item.isChecked) {
-                         displayFindInPage(false)
-                         it.postDelayed({
-                             if (navController.currentDestination?.id != R.id.mainFragment)
-                                 navController.popBackStack(R.id.mainFragment, false)
-                             when (item.itemId) {
-                                 R.id.action_read -> {}
-                                 R.id.action_find_in_page -> {
-                                     if (!findInPageFragment.isAdded)
-                                         supportFragmentManager.beginTransaction()
-                                             .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
-                                             .add(R.id.container_main, findInPageFragment, FindInPageFragment::class.java.simpleName)
-                                             .addToBackStack(FindInPageFragment::class.java.simpleName)
-                                             .commit()
-                                     else displayFindInPage()
-                                     item.isEnabled = false
-                                 }
-                                 R.id.action_preface -> navController.navigate(R.id.toPreface)
-                                 R.id.action_search -> navController.navigate(R.id.toSearch)
-                                 R.id.action_settings -> navController.navigate(R.id.toSettings)
-                                 R.id.action_about -> navController.navigate(R.id.toAbout)
-                             }
-                         }, 200)
-                         true
-                     } else {
-                         //log d "pressed checked item"
-                         false
-                     }
-                 }
-            */
-
+                knavigator.setOnHideListener(object : Knavigator.OnHideListener {
+                    override fun onBackPressed(isModular: Boolean) {
+                        val fragment = knavigator.currentFragment
+                        if (fragment is MainFragment) navigationView.setCheckedItem(R.id.action_read)
+                    }
+                })
         }
 
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
@@ -213,38 +181,43 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
            val a = supportFragmentManager.findFragmentByTag(MainFragment::class.java.simpleName)
            val v = a?.view
            v?.setBackgroundColor(Color.BLACK)
-       }
+       }*/
 
        override fun onStart() {
            super.onStart()
-           val a =
-               supportFragmentManager.findFragmentByTag(MainFragment::class.java.name) //.findFragmentById(R.id.nav_host_fragment) //
-           val v = a!!.view!!
            //ViewCompat.setBackground(v, ColorDrawable(ContextCompat.getColor(this, R.color.default_background_color)))
            mBottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
                val min = 0.5f
                val multiplier = 1f + min
 
+               var f = knavigator.currentFragment?.let {
+                   if (it is MainFragment) it
+                   else null
+               }
+               var v = f?.view
                override fun onStateChanged(bottomSheet: View, newState: Int) {
-
+                   if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+                       knavigator.currentFragment?.let {
+                           if (it is MainFragment) f = it
+                       }
+                   }
                }
 
                override fun onSlide(bottomSheet: View, slideOffset: Float) {
                    val alpha = Math.abs(slideOffset - 1f)
-                   v.alpha = (alpha + min) / multiplier // Prevent from hitting 0, then normalize
+                   v?.alpha = (alpha + min) / multiplier // Prevent from hitting 0, then normalize
                }
 
            })
-       }*/
+       }
 
     override fun onBackPressed() {
         //  if (findNavController(R.id.nav_host_fragment).currentDestination?.id != R.id.mainFragment)
         //     bottomSheetContainer.invalidate()
-        when {
-            mBottomSheetBehavior.state == BottomSheetBehavior2.STATE_EXPANDED -> mBottomSheetBehavior.setState(BottomSheetBehavior2.STATE_COLLAPSED)
-            knavigator.canGoBack -> knavigator.goBack()
-            else -> super.onBackPressed()
-        }
+        if (mBottomSheetBehavior.state == BottomSheetBehavior2.STATE_EXPANDED)
+            mBottomSheetBehavior.state = BottomSheetBehavior2.STATE_COLLAPSED
+        else if (!knavigator.goBack())
+            super.onBackPressed()
     }
 
     fun setupStatusBar() {

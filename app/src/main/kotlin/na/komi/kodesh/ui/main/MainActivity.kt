@@ -70,7 +70,6 @@ class MainActivity : BaseActivity() {
         PreferenceManager.setDefaultValues(this, R.xml.styling_preferences, false)
         if (savedInstanceState == null) {
             knavigator.container = R.id.nav_main_container
-            knavigator.defaultMode = Knavigator.SPARING_SINGLETON
             knavigator.show(mainFragment, inBackStack = false)
         }
     }
