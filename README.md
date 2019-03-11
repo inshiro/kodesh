@@ -18,24 +18,7 @@ Features
 - Absolutely no permissions needed
 - Clean and elegant Material design
 
-
-Technologies
-======
-- Kotlin
-- Kotlin Coroutines
-- Architecture components
-	- Room
-	- MVVM
-	- Paging
-	- Navigation
-	- ViewModel
-	- LiveData
-- [Katana](https://github.com/rewe-digital/katana)
-- Noteworthy technologies
-	- ViewPager3
-	- BottomSheetBehavior with AppBarLayout hide behavior
-	- RecyclerView smooth scrollbars with varying item heights
-
+See the [wiki](https://github.com/inshiro/Kodesh/wiki) for some developer insights!
 
 License
 -------

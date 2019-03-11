@@ -3,7 +3,9 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
-// Version Naming Scheme: is.gd/j8L2Wm AND is.gd/IfAfAX
+/**
+ * Version Naming Scheme: is.gd/j8L2Wm AND is.gd/IfAfAX
+ */
 ext.versionRelease = 1
 ext.versionBreaking = 0
 ext.versionFeature = 0
@@ -132,12 +134,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
 
-    /** Navigation **/
-    def nav_version = "1.0.0-rc02"
-    implementation "android.arch.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "android.arch.navigation:navigation-ui-ktx:$nav_version"
-    androidTestImplementation "android.arch.navigation:navigation-testing-ktx:1.0.0-alpha06"
-
     /** Room **/
     def room_version  = "2.1.0-alpha04"
     implementation "androidx.room:room-runtime:$room_version"
@@ -152,7 +148,6 @@ dependencies {
     implementation "org.rewedigital.katana:katana-android:$katana_version"
 
     /** Imaging **/
-    //implementation "com.flaviofaria:kenburnsview:1.0.7"
     implementation "com.github.MikeOrtiz:TouchImageView:2.1.1"
 
     /** Kotlin Coroutines **/

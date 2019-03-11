@@ -27,6 +27,7 @@ class FindInPageFragment : Fragment() {
             val editText = view.findViewById<AppCompatEditText>(R.id.find_edit_text)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                 editText.showSoftInputOnFocus = true
+            editText.requestFocus()
 
             knavigator.fragmentManager = requireActivity().supportFragmentManager
 
