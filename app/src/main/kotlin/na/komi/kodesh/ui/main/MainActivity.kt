@@ -15,6 +15,7 @@ import na.komi.kodesh.ui.internal.BottomSheetBehavior2
 import na.komi.kodesh.ui.preface.PrefaceFragment
 import na.komi.kodesh.util.Knavigator
 import na.komi.kodesh.util.close
+import na.komi.kodesh.util.log
 import na.komi.kodesh.util.viewModel
 import org.rewedigital.katana.Component
 import org.rewedigital.katana.Module

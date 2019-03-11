@@ -138,7 +138,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                 if (!item.isChecked) {
                 when (item.itemId) {
                     R.id.action_read -> {
-                        val f = knavigator.getCurrentFragment()
+                        val f = knavigator.currentFragment
                         if (f!=null && f::class.java.simpleName != MainFragment::class.java.simpleName)
                             knavigator.hide(f)
                     }
@@ -240,12 +240,11 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
     override fun onBackPressed() {
         //  if (findNavController(R.id.nav_host_fragment).currentDestination?.id != R.id.mainFragment)
         //     bottomSheetContainer.invalidate()
-        if (mBottomSheetBehavior.state == BottomSheetBehavior2.STATE_EXPANDED)
-            mBottomSheetBehavior.setState(BottomSheetBehavior2.STATE_COLLAPSED)
-        else if (knavigator.canGoBack())
-            knavigator.goBack()
-        else
-            super.onBackPressed()
+        when {
+            mBottomSheetBehavior.state == BottomSheetBehavior2.STATE_EXPANDED -> mBottomSheetBehavior.setState(BottomSheetBehavior2.STATE_COLLAPSED)
+            knavigator.canGoBack -> knavigator.goBack()
+            else -> super.onBackPressed()
+        }
     }
 
     fun setupStatusBar() {
