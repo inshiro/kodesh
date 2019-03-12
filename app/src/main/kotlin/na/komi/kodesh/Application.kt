@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.Context
 import android.content.res.Resources
 import androidx.core.app.ActivityManagerCompat
+import com.squareup.leakcanary.LeakCanary
 import na.komi.kodesh.model.Preferences
 import org.rewedigital.katana.Component
 import org.rewedigital.katana.Katana
@@ -42,6 +43,9 @@ class Application : Application() {
         super.onCreate()
         instance = this
         preferences = Preferences(this)
+
+        if (BuildConfig.DEBUG)
+            LeakCanary.install(this)
 
         setupKatana()
     }

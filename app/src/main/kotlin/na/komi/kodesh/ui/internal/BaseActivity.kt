@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.CoroutineScope
@@ -40,27 +41,25 @@ import kotlin.coroutines.CoroutineContext
  * The default job can be overridden within [defaultJob]
  */
 abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener {
-
-    //open lateinit var job: Job
+    abstract val layout: Int
     open val job = SupervisorJob()
     override val coroutineContext: CoroutineContext
         get() = ContextHelper.dispatcher + job
+    val knavigator: Knavigator  by MainComponents.navComponent.inject()
 
-    // open fun defaultJob(): Job = SupervisorJob()
+    val bottomSheetBehavior: BottomSheetBehavior2<ConstraintLayout>
+        get() = BottomSheetBehavior2.from(bottomSheetContainer)
+    val bottomSheetContainer: ConstraintLayout
+        get() = findViewById(R.id.main_bottom_container)
 
-    abstract val layout: Int
-    //abstract val navigationView: NavigationView
-    // abstract val toolbar: Toolbar
-    private lateinit var navigationView: NavigationView
 
-    fun getNavigationView() = navigationView
+    private val isLargeLayout
+        get() = resources.getBoolean(R.bool.large_layout)
 
-    private var toolbar: Toolbar? = null
-    fun getToolbar(): Toolbar? = toolbar ?: findViewById<Toolbar>(R.id.toolbar_main).also { toolbar = it }
+    fun getNavigationView(): NavigationView = findViewById(R.id.navigation_view)
+    fun getToolbar(): Toolbar? = findViewById(R.id.toolbar_main)
 
     fun getToolbarTitleView(): AppCompatTextView? {
-        //var toolbarTitle:AppCompatTextView? = null
-        if (toolbarTitle != null) return toolbarTitle
         getToolbar()?.let {
             for (i in 0 until it.childCount) {
                 val child = it.getChildAt(i)
@@ -70,19 +69,8 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                 }
             }
         }
-        return toolbarTitle
+        return null
     }
-
-    private var toolbarTitle: AppCompatTextView? = null
-    val knavigator: Knavigator  by MainComponents.navComponent.inject()
-    private val findInPageFragment: FindInPageFragment by MainComponents.fragComponent.inject()
-    private val prefaceFragment: PrefaceFragment by MainComponents.fragComponent.inject()
-    private val searchFragment: SearchFragment by MainComponents.fragComponent.inject()
-    private val settingsFragment: SettingsFragment by MainComponents.fragComponent.inject()
-    private val aboutFragment: AboutFragment by MainComponents.fragComponent.inject()
-
-    private val isLargeLayout
-        get() = resources.getBoolean(R.bool.large_layout)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,12 +82,12 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
         setContentView(layout)
 
         //val navController = findNavController(R.id.nav_host_fragment)
-        navigationView = findViewById(R.id.navigation_view)
-
-        mBottomSheetContainer = findViewById(R.id.main_bottom_container)
+        val navigationView: NavigationView = getNavigationView()
+        val toolbar = getToolbar()
+        val mBottomSheetContainer: ConstraintLayout = findViewById(R.id.main_bottom_container)
         toolbar?.inflateMenu(R.menu.toolbar_menu_main)
 
-        mBottomSheetBehavior = BottomSheetBehavior2.from(mBottomSheetContainer)
+        val mBottomSheetBehavior = BottomSheetBehavior2.from(mBottomSheetContainer)
         mBottomSheetBehavior.peekHeight = toolbar?.measuredHeight?.let { if (it <= 0) 147 else it } ?: 147
         mBottomSheetBehavior.state = BottomSheetBehavior2.STATE_COLLAPSED
 
@@ -107,14 +95,53 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             mBottomSheetBehavior.toggle()
         }
 
-        knavigator.fragmentManager = supportFragmentManager
-        Knavigator.logger = KnavigatorLogger
-
-        // When we press back it pops it
-        supportFragmentManager.addOnBackStackChangedListener {
-            val l = supportFragmentManager.fragments
-            val current = l[l.lastIndex]::class.java.simpleName
-            supportFragmentManager.fragments.map { it::class.java.simpleName }.joinToString(",").also { log d it }
+        val mainFragment by lazy {
+            supportFragmentManager.findFragmentByTag(MainFragment::class.java.simpleName) as? MainFragment
+                ?: MainFragment()
+        }
+        knavigator setFragmentManager supportFragmentManager
+        if (savedInstanceState == null) {
+            Knavigator.logger = KnavigatorLogger
+            knavigator.container = R.id.nav_main_container
+            knavigator.show(mainFragment, addToBackStack = false)
+        }
+        /*if (savedInstanceState == null) {
+            findInPageFragment = FindInPageFragment()
+            prefaceFragment = PrefaceFragment()
+            searchFragment = SearchFragment()
+            settingsFragment = SettingsFragment()
+            aboutFragment = AboutFragment()
+        } else {
+            findInPageFragment =
+                supportFragmentManager.findFragmentByTag(FindInPageFragment::class.java.simpleName) as? FindInPageFragment ?: FindInPageFragment()
+            prefaceFragment =
+                supportFragmentManager.findFragmentByTag(PrefaceFragment::class.java.simpleName) as? PrefaceFragment ?: PrefaceFragment()
+            searchFragment =
+                supportFragmentManager.findFragmentByTag(SearchFragment::class.java.simpleName) as? SearchFragment ?: SearchFragment()
+            settingsFragment =
+                supportFragmentManager.findFragmentByTag(SettingsFragment::class.java.simpleName) as? SettingsFragment ?: SettingsFragment()
+            aboutFragment =
+                supportFragmentManager.findFragmentByTag(AboutFragment::class.java.simpleName) as? AboutFragment ?: AboutFragment()
+        }*/
+        val findInPageFragment by lazy {
+            supportFragmentManager.findFragmentByTag(FindInPageFragment::class.java.simpleName) as? FindInPageFragment
+                ?: FindInPageFragment()
+        }
+        val prefaceFragment by lazy {
+            supportFragmentManager.findFragmentByTag(PrefaceFragment::class.java.simpleName) as? PrefaceFragment
+                ?: PrefaceFragment()
+        }
+        val searchFragment by lazy {
+            supportFragmentManager.findFragmentByTag(SearchFragment::class.java.simpleName) as? SearchFragment
+                ?: SearchFragment()
+        }
+        val settingsFragment by lazy {
+            supportFragmentManager.findFragmentByTag(SettingsFragment::class.java.simpleName) as? SettingsFragment
+                ?: SettingsFragment()
+        }
+        val aboutFragment by lazy {
+            supportFragmentManager.findFragmentByTag(AboutFragment::class.java.simpleName) as? AboutFragment
+                ?: AboutFragment()
         }
         /**
          * https://stackoverflow.com/a/37873884
@@ -133,20 +160,25 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                 mBottomSheetBehavior.close()
                 setLowProfileStatusBar()
                 knavigator.container = R.id.nav_main_container
+                knavigator.defaultMode = Knavigator.FACTORY
                 // Prevent pressing self
                 if (!item.isChecked) {
                     when (item.itemId) {
                         R.id.action_read -> {
-                            val f = knavigator.currentFragment
+                            /*
+                            val f = knavigator.current
                             if (f != null && f::class.java.simpleName != MainFragment::class.java.simpleName)
-                                knavigator.hide(f)
+                                knavigator.hide(f)*/
+                            knavigator.navigate(mainFragment)
                         }
                         R.id.action_find_in_page -> {
                             knavigator.container = R.id.container_main
                             knavigator.show(findInPageFragment, modular = true)
                             //item.isEnabled = false
                         }
-                        R.id.action_preface -> knavigator.navigate(prefaceFragment)
+                        R.id.action_preface -> {
+                            knavigator.navigate(prefaceFragment)
+                        }
                         R.id.action_search -> knavigator.navigate(searchFragment)
                         R.id.action_settings -> knavigator.navigate(settingsFragment)
                         R.id.action_about -> knavigator.navigate(aboutFragment)
@@ -155,12 +187,13 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                 }
                 !item.isChecked
             }
-                knavigator.setOnHideListener(object : Knavigator.OnHideListener {
-                    override fun onBackPressed(isModular: Boolean) {
-                        val fragment = knavigator.currentFragment
-                        if (fragment is MainFragment) navigationView.setCheckedItem(R.id.action_read)
-                    }
-                })
+
+            knavigator.setOnHideListener(object : Knavigator.OnNavigateListener {
+                override fun onBackPressed(isModular: Boolean) {
+                    val fragment = knavigator.current
+                    if (fragment is MainFragment) navigationView.setCheckedItem(R.id.action_read)
+                }
+            })
         }
 
     }
@@ -170,11 +203,6 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
         coroutineContext.cancelChildren()
     }
 
-    val bottomSheetBehavior by lazy { mBottomSheetBehavior }
-    val bottomSheetContainer by lazy { mBottomSheetContainer }
-    private lateinit var mBottomSheetBehavior: BottomSheetBehavior2<ConstraintLayout>
-    private lateinit var mBottomSheetContainer: ConstraintLayout
-
     /*
        override fun onStart() {
            super.onStart()
@@ -183,37 +211,38 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
            v?.setBackgroundColor(Color.BLACK)
        }*/
 
-       override fun onStart() {
-           super.onStart()
-           //ViewCompat.setBackground(v, ColorDrawable(ContextCompat.getColor(this, R.color.default_background_color)))
-           mBottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-               val min = 0.5f
-               val multiplier = 1f + min
+    override fun onStart() {
+        super.onStart()
+        //ViewCompat.setBackground(v, ColorDrawable(ContextCompat.getColor(this, R.color.default_background_color)))
+        bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            val min = 0.5f
+            val multiplier = 1f + min
 
-               var f = knavigator.currentFragment?.let {
-                   if (it is MainFragment) it
-                   else null
-               }
-               var v = f?.view
-               override fun onStateChanged(bottomSheet: View, newState: Int) {
-                   if (newState == BottomSheetBehavior.STATE_DRAGGING) {
-                       knavigator.currentFragment?.let {
-                           if (it is MainFragment) f = it
-                       }
-                   }
-               }
+            var f = knavigator.current?.let {
+                if (it is MainFragment) it
+                else null
+            }
+            var v = f?.view
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+                    knavigator.current?.let {
+                        if (it is MainFragment) f = it
+                    }
+                }
+            }
 
-               override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                   val alpha = Math.abs(slideOffset - 1f)
-                   v?.alpha = (alpha + min) / multiplier // Prevent from hitting 0, then normalize
-               }
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                val alpha = Math.abs(slideOffset - 1f)
+                v?.alpha = (alpha + min) / multiplier // Prevent from hitting 0, then normalize
+            }
 
-           })
-       }
+        })
+    }
 
     override fun onBackPressed() {
         //  if (findNavController(R.id.nav_host_fragment).currentDestination?.id != R.id.mainFragment)
         //     bottomSheetContainer.invalidate()
+        val mBottomSheetBehavior = bottomSheetBehavior
         if (mBottomSheetBehavior.state == BottomSheetBehavior2.STATE_EXPANDED)
             mBottomSheetBehavior.state = BottomSheetBehavior2.STATE_COLLAPSED
         else if (!knavigator.goBack())

@@ -1,8 +1,11 @@
 package na.komi.kodesh.ui.search
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.core.view.children
 import androidx.lifecycle.Observer
 import androidx.paging.PagedList
@@ -15,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import na.komi.kodesh.Application
 import na.komi.kodesh.R
 import na.komi.kodesh.model.Bible
 import na.komi.kodesh.ui.internal.BaseKatanaFragment
@@ -61,12 +65,21 @@ class SearchFragment : BaseKatanaFragment() {
         }
     }
 
+
+    fun InputMethodManager.showKeyboard() {
+        toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    }
+
+    fun InputMethodManager.hideKeyboard(view:View) {
+        hideSoftInputFromWindow(view.windowToken, 0);
+    }
     fun setupRecyclerView() {
         val rv: RecyclerView = view!!.recycler_view_search
         val adapter = SearchAdapter()
         val editText: TextInputEditText = view!!.text_input_edit_text as TextInputEditText
         var job = Job()
         val SEARCH_DEBOUNCE_MS = 300.toLong()
+        val imm by lazy { requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager }
 
         rv.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 
@@ -82,8 +95,8 @@ class SearchFragment : BaseKatanaFragment() {
         }
 
         editText.setOnFocusChangeListener { v, hasFocus ->
-            if (hasFocus) showKeyboard()
-            else v.hideKeyboard()
+            if (hasFocus) imm.showKeyboard()
+            else imm.hideKeyboard(v)//.v.hideKeyboard()
         }
 
         editText.addTextChangedListener(object : TextWatcher {

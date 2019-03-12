@@ -165,7 +165,7 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:1.1.0"
 
     /** Leak Canary **/
-    /*debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
-    /releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'*/
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
 
 }

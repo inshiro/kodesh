@@ -53,24 +53,24 @@ class MainActivity : BaseActivity() {
 
     override val layout: Int = R.layout.activity_main
 
+    val behavior by lazy { bottomSheetBehavior }
+    val container by lazy { bottomSheetContainer }
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-        if (bottomSheetBehavior.state == BottomSheetBehavior2.STATE_EXPANDED) {
+        if (behavior.state == BottomSheetBehavior2.STATE_EXPANDED) {
             val viewRect = Rect()
-            bottomSheetContainer.getGlobalVisibleRect(viewRect)
+            container.getGlobalVisibleRect(viewRect)
             if (ev != null && !viewRect.contains(ev.rawX.toInt(), ev.rawY.toInt())) {
-                bottomSheetBehavior.close()
+                behavior.close()
             }
         }
         return super.dispatchTouchEvent(ev)
     }
 
-    val mainFragment : MainFragment by MainComponents.fragComponent.inject()
+    //val mainFragment : MainFragment by MainComponents.fragComponent.inject()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        PreferenceManager.setDefaultValues(this, R.xml.styling_preferences, false)
         if (savedInstanceState == null) {
-            knavigator.container = R.id.nav_main_container
-            knavigator.show(mainFragment, inBackStack = false)
+            PreferenceManager.setDefaultValues(this, R.xml.styling_preferences, false)
         }
     }
 
@@ -79,6 +79,8 @@ class MainActivity : BaseActivity() {
         if (isFinishing && !isChangingConfigurations) {
             ApplicationDatabase.destroyInstance()
             MainComponents.destroyInstance()
+            MainComponents.destroyFragInstance()
+            System.gc()
         }
     }
 

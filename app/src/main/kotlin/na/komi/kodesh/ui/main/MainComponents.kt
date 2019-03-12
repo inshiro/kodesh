@@ -9,6 +9,7 @@ import na.komi.kodesh.util.Knavigator
 import org.rewedigital.katana.Component
 import org.rewedigital.katana.createComponent
 import org.rewedigital.katana.createModule
+import org.rewedigital.katana.dsl.compact.factory
 import org.rewedigital.katana.dsl.compact.singleton
 
 
@@ -36,23 +37,26 @@ object MainComponents {
                 })).also { _navComponent= it }
 
     private var _fragComponent: Component?=null
-    val fragComponent
-        get()=
-            _fragComponent ?: createComponent(
-                modules = listOf(
-                    createModule {
-                        singleton { MainFragment() }
-                        singleton { PrefaceFragment() }
-                        singleton { SearchFragment() }
-                        singleton { FindInPageFragment() }
-                        singleton { SettingsFragment() }
-                        singleton { AboutFragment() }
-                    })).also { _fragComponent= it }
+     val fragComponent
+         get()=
+             _fragComponent ?: createComponent(
+                 modules = listOf(
+                     createModule {
+                         singleton { MainFragment() }
+                         factory { PrefaceFragment() }
+                         factory { SearchFragment() }
+                         factory { FindInPageFragment() }
+                         factory { SettingsFragment() }
+                         factory { AboutFragment() }
+                     })).also { _fragComponent= it }
 
     fun destroyInstance() {
         _mainComponent = null
-        _fragComponent = null
         _navComponent = null
         Modules.destroyInstance()
+    }
+    fun destroyFragInstance () {
+        _fragComponent = null
+
     }
 }

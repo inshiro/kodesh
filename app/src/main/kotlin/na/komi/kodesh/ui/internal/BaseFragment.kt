@@ -41,24 +41,10 @@ interface InjectListener {
 
 abstract class BaseFragment : Fragment(), CoroutineScope, TitleListener, InjectListener {
 
-    private val fragmentDelegate: KatanaFragmentDelegate<BaseFragment>
-
-    init {
-        fragmentDelegate = fragmentDelegate { activity -> onInject(activity) }
-    }
-
-    open val job = SupervisorJob()
-
-    // open fun defaultJob(): Job = SupervisorJob()
+    open val job by lazy { SupervisorJob() }
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job//ContextHelper.dispatcher + job
-
-    private var toolbar: Toolbar? = null
-    private var toolbarTitle: AppCompatTextView? = null
-    private var bottomSheetContainer: ConstraintLayout? = null
-    private var navigationView: NavigationView? = null
-    private lateinit var mBottomSheetBehavior: BottomSheetBehavior2<ConstraintLayout>
 
     abstract val layout: Int
 
@@ -66,14 +52,6 @@ abstract class BaseFragment : Fragment(), CoroutineScope, TitleListener, InjectL
         return inflater.inflate(layout, container, false)
     }
 
-    private val imm by lazy { Application.instance.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager }
-    fun showKeyboard() {
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-    }
-
-    fun View.hideKeyboard() {
-        imm.hideSoftInputFromWindow(this.windowToken, 0);
-    }
 
     /**
      * getBottomSheetBehavior
@@ -86,7 +64,7 @@ abstract class BaseFragment : Fragment(), CoroutineScope, TitleListener, InjectL
 
     fun getToolbarTitleView(): AppCompatTextView? = act()?.getToolbarTitleView()
 
-    fun getNavigationView(): NavigationView = navigationView!!
+    fun getNavigationView(): NavigationView =  act()?.getNavigationView()!!
 
     fun getToolbar(): Toolbar? = act()?.getToolbar()
 
@@ -103,11 +81,6 @@ abstract class BaseFragment : Fragment(), CoroutineScope, TitleListener, InjectL
     private val builder by lazy { ToolbarBuilder() }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         //super.onViewCreated(view, savedInstanceState)
-        (activity as? AppCompatActivity)?.apply {
-            bottomSheetContainer = findViewById(builder.bottomSheet)
-            navigationView = findViewById(builder.navigationView)
-
-        }
         getToolbar()?.let {
             if (builder.title != -1)
                 it.title = getString(builder.title)
@@ -118,11 +91,11 @@ abstract class BaseFragment : Fragment(), CoroutineScope, TitleListener, InjectL
         }
 
 
-        if (builder.menuItems != null && builder.menuClicks != null && toolbar != null)
+        if (builder.menuItems != null && builder.menuClicks != null && getToolbar() != null)
             if (builder.menuItems!!.isNotEmpty() && builder.menuClicks!!.isNotEmpty()) {
-                val menu = toolbar!!.menu
+                val menu = getToolbar()?.menu
                 for ((index, menuItemId) in builder.menuItems!!.withIndex()) {
-                    menu.findItem(menuItemId)?.setOnMenuItemClickListener(builder.menuClicks!![index])
+                    menu?.findItem(menuItemId)?.setOnMenuItemClickListener(builder.menuClicks!![index])
                 }
             }
 
@@ -130,7 +103,7 @@ abstract class BaseFragment : Fragment(), CoroutineScope, TitleListener, InjectL
             for (a in it.menu.children)
                 a.isVisible = true
         }
-        getNavigationView().let {
+        getNavigationView()?.let {
             it.setCheckedItem(R.id.action_read)
             for (a in it.menu.children)
                 a.isEnabled = true
@@ -139,7 +112,6 @@ abstract class BaseFragment : Fragment(), CoroutineScope, TitleListener, InjectL
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        fragmentDelegate.onActivityCreated()
         getToolbarTitleView()?.onClick {
             onToolbarTitleClick()
         }

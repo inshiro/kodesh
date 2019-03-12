@@ -29,7 +29,7 @@ class FindInPageFragment : Fragment() {
                 editText.showSoftInputOnFocus = true
             editText.requestFocus()
 
-            knavigator.fragmentManager = requireActivity().supportFragmentManager
+            knavigator setFragmentManager  requireActivity().supportFragmentManager
 
             closeButton.setOnClickListener {
                 knavigator.hide(this)

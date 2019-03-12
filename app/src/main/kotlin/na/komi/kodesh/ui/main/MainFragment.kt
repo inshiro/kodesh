@@ -71,36 +71,11 @@ class MainFragment : BaseKatanaFragment() {
 
     private fun setupRecyclerView(view: View) {
         val rv = view.findViewById(R.id.pager_main) as ViewPager3
-        //log d "hasNestedScroling Parent: ${ViewCompat.hasNestedScrollingParent(rv)}"
-        //ViewCompat.setNestedScrollingEnabled(rv, true)
-
         rv.isNestedScrollingEnabled = true
-        /*rv.apply {
-            layoutManager = CustomLinearLayoutManager(rv.context, RecyclerView.HORIZONTAL, false).apply {
-                isItemPrefetchEnabled = true
-                initialPrefetchItemCount = 3
-            }
-        }*/
-
         val adapter = MainPageAdapter(viewModel, coroutineContext)
-        //navController.addOnDestinationChangedListener { controller, destination, arguments ->
-        //if (R.id.mainFragment == destination.id)
-
-        // navcontroller livedata
-        // https://is.gd/xdsx7K
-        // if (viewModel.mBundleRecyclerViewState == null)
-        //rv.visibility = View.INVISIBLE
-        // if (firstInit) firstInit = false
-        //TimeBench.startPaged = System.currentTimeMillis()
         viewModel.pagesList.toSingleEvent().observe(viewLifecycleOwner, Observer<PagedList<Bible>?> { pagedList ->
             pagedList?.let {
-                //log d "Submit pagedlist"
                 adapter.submitList(pagedList)
-                /*TimeBench.endPaged = System.currentTimeMillis() - TimeBench.startPaged
-                    TimeBench.startPaged = 0L
-                    log d "TimeBench.endPaged: ${TimeBench.endPaged}"*/
-
-
                 val lm = rv.layoutManager as LinearLayoutManager
                 val p = Prefs.VP_Position
                 val y = Prefs.currentScroll
