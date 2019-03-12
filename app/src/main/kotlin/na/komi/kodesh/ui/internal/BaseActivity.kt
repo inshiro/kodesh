@@ -27,6 +27,7 @@ import na.komi.kodesh.util.*
 import na.komi.kodesh.util.knavigator.Knavigator
 import na.komi.kodesh.widget.LayoutedTextView
 import kotlin.coroutines.CoroutineContext
+
 /**
  *
  * Base activity for any activity that would have extended [AppCompatActivity]
@@ -103,24 +104,6 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             knavigator.container = R.id.nav_main_container
             knavigator.show(mainFragment, addToBackStack = false)
         }
-        /*if (savedInstanceState == null) {
-            findInPageFragment = FindInPageFragment()
-            prefaceFragment = PrefaceFragment()
-            searchFragment = SearchFragment()
-            settingsFragment = SettingsFragment()
-            aboutFragment = AboutFragment()
-        } else {
-            findInPageFragment =
-                supportFragmentManager.findFragmentByTag(FindInPageFragment::class.java.simpleName) as? FindInPageFragment ?: FindInPageFragment()
-            prefaceFragment =
-                supportFragmentManager.findFragmentByTag(PrefaceFragment::class.java.simpleName) as? PrefaceFragment ?: PrefaceFragment()
-            searchFragment =
-                supportFragmentManager.findFragmentByTag(SearchFragment::class.java.simpleName) as? SearchFragment ?: SearchFragment()
-            settingsFragment =
-                supportFragmentManager.findFragmentByTag(SettingsFragment::class.java.simpleName) as? SettingsFragment ?: SettingsFragment()
-            aboutFragment =
-                supportFragmentManager.findFragmentByTag(AboutFragment::class.java.simpleName) as? AboutFragment ?: AboutFragment()
-        }*/
         val findInPageFragment by lazy {
             supportFragmentManager.findFragmentByTag(FindInPageFragment::class.java.simpleName) as? FindInPageFragment
                 ?: FindInPageFragment()
@@ -141,6 +124,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             supportFragmentManager.findFragmentByTag(AboutFragment::class.java.simpleName) as? AboutFragment
                 ?: AboutFragment()
         }
+        var prevTitle: CharSequence? = null
         /**
          * https://stackoverflow.com/a/37873884
          * https://stackoverflow.com/a/36793341
@@ -158,6 +142,10 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                 mBottomSheetBehavior.close()
                 setLowProfileStatusBar()
                 knavigator.container = R.id.nav_main_container
+
+                if (knavigator.current is MainFragment)
+                    prevTitle = getToolbarTitleView()?.text
+
                 // Prevent pressing self
                 if (!item.isChecked) {
                     when (item.itemId) {
@@ -167,7 +155,8 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                             if (f != null && f::class.java.simpleName != MainFragment::class.java.simpleName)
                                 knavigator.hide(f)*/
                             knavigator navigate mainFragment
-                            navigationView.menu.findItem(R.id.action_find_in_page).isEnabled=true
+                            navigationView.menu.findItem(R.id.action_find_in_page).isEnabled = true
+                            getToolbar()?.title = prevTitle
                         }
                         R.id.action_find_in_page -> {
                             knavigator.container = R.id.container_main
@@ -191,7 +180,8 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                     val fragment = knavigator.current
                     if (fragment is MainFragment) {
                         navigationView.setCheckedItem(R.id.action_read)
-                        navigationView.menu.findItem(R.id.action_find_in_page).isEnabled=true
+                        navigationView.menu.findItem(R.id.action_find_in_page).isEnabled = true
+                        getToolbar()?.title = prevTitle
                     }
                 }
             })
