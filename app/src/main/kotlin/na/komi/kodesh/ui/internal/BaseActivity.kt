@@ -191,7 +191,10 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             knavigator.setOnHideListener(object : Knavigator.OnNavigateListener {
                 override fun onBackPressed(isModular: Boolean) {
                     val fragment = knavigator.current
-                    if (fragment is MainFragment) navigationView.setCheckedItem(R.id.action_read)
+                    if (fragment is MainFragment) {
+                        navigationView.setCheckedItem(R.id.action_read)
+                        navigationView.menu.findItem(R.id.action_find_in_page).isEnabled=true
+                    }
                 }
             })
         }
