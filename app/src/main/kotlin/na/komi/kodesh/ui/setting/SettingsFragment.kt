@@ -8,6 +8,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.preference.ListPreference
 import androidx.preference.Preference
+import androidx.preference.PreferenceFragment
+import androidx.preference.PreferenceFragmentCompat
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,12 +17,11 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
 import na.komi.kodesh.Prefs
 import na.komi.kodesh.R
-import na.komi.kodesh.ui.internal.BasePreferenceFragment
 import na.komi.kodesh.ui.main.MainActivity
 import na.komi.kodesh.util.onClick
 import kotlin.coroutines.CoroutineContext
 
-class SettingsFragment : BasePreferenceFragment(), CoroutineScope {
+class SettingsFragment : PreferenceFragmentCompat(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
@@ -37,11 +38,9 @@ class SettingsFragment : BasePreferenceFragment(), CoroutineScope {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val bgColor by lazy {
-            val typedValue = TypedValue()
-            requireContext().theme.resolveAttribute(android.R.attr.windowBackground, typedValue, true)
-            typedValue.resourceId
-        }
+        val typedValue = TypedValue()
+        requireContext().theme.resolveAttribute(android.R.attr.windowBackground, typedValue, true)
+        val bgColor = typedValue.resourceId
         view.setBackgroundColor(ContextCompat.getColor(requireContext(), bgColor))
     }
 
