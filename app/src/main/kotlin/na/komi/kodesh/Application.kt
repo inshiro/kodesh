@@ -1,19 +1,16 @@
 package na.komi.kodesh
 
-import android.app.ActivityManager
 import android.app.Application
 import android.content.Context
 import android.content.res.Resources
-import androidx.core.app.ActivityManagerCompat
 import com.squareup.leakcanary.LeakCanary
 import na.komi.kodesh.model.Preferences
-import org.rewedigital.katana.Component
+import na.komi.kodesh.util.knavigator.Knavigator
+import na.komi.kodesh.util.knavigator.log.KnavigatorLogger
 import org.rewedigital.katana.Katana
 import org.rewedigital.katana.android.AndroidKatanaLogger
 import org.rewedigital.katana.android.environment.AndroidEnvironmentContext
 import org.rewedigital.katana.android.modules.APPLICATION_CONTEXT
-import org.rewedigital.katana.android.modules.createApplicationModule
-import org.rewedigital.katana.createComponent
 import org.rewedigital.katana.createModule
 import org.rewedigital.katana.dsl.compact.factory
 import org.rewedigital.katana.dsl.get
@@ -44,8 +41,10 @@ class Application : Application() {
         instance = this
         preferences = Preferences(this)
 
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             LeakCanary.install(this)
+            Knavigator.logger = KnavigatorLogger
+        }
 
         setupKatana()
     }

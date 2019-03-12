@@ -3,27 +3,17 @@ package na.komi.kodesh.ui.main
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.MotionEvent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import na.komi.kodesh.Application
 import na.komi.kodesh.R
 import na.komi.kodesh.model.ApplicationDatabase
 import na.komi.kodesh.model.MainRepository
-import na.komi.kodesh.ui.find.FindInPageFragment
 import na.komi.kodesh.ui.internal.BaseActivity
 import na.komi.kodesh.ui.internal.BottomSheetBehavior2
-import na.komi.kodesh.ui.preface.PrefaceFragment
-import na.komi.kodesh.util.Knavigator
 import na.komi.kodesh.util.close
-import na.komi.kodesh.util.log
 import na.komi.kodesh.util.viewModel
-import org.rewedigital.katana.Component
 import org.rewedigital.katana.Module
-import org.rewedigital.katana.android.modules.ACTIVITY
-import org.rewedigital.katana.android.modules.createActivityModule
-import org.rewedigital.katana.createComponent
 import org.rewedigital.katana.createModule
-import org.rewedigital.katana.dsl.compact.factory
 import org.rewedigital.katana.dsl.compact.singleton
 import org.rewedigital.katana.dsl.get
 

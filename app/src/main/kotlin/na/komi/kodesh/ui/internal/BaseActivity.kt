@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.CoroutineScope
@@ -25,9 +24,9 @@ import na.komi.kodesh.ui.preface.PrefaceFragment
 import na.komi.kodesh.ui.search.SearchFragment
 import na.komi.kodesh.ui.setting.SettingsFragment
 import na.komi.kodesh.util.*
+import na.komi.kodesh.util.knavigator.Knavigator
 import na.komi.kodesh.widget.LayoutedTextView
 import kotlin.coroutines.CoroutineContext
-
 /**
  *
  * Base activity for any activity that would have extended [AppCompatActivity]
@@ -101,7 +100,6 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
         }
         knavigator setFragmentManager supportFragmentManager
         if (savedInstanceState == null) {
-            Knavigator.logger = KnavigatorLogger
             knavigator.container = R.id.nav_main_container
             knavigator.show(mainFragment, addToBackStack = false)
         }
@@ -160,7 +158,6 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                 mBottomSheetBehavior.close()
                 setLowProfileStatusBar()
                 knavigator.container = R.id.nav_main_container
-                knavigator.defaultMode = Knavigator.FACTORY
                 // Prevent pressing self
                 if (!item.isChecked) {
                     when (item.itemId) {
@@ -170,6 +167,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                             if (f != null && f::class.java.simpleName != MainFragment::class.java.simpleName)
                                 knavigator.hide(f)*/
                             knavigator navigate mainFragment
+                            navigationView.menu.findItem(R.id.action_find_in_page).isEnabled=true
                         }
                         R.id.action_find_in_page -> {
                             knavigator.container = R.id.container_main

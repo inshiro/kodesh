@@ -5,7 +5,7 @@ import na.komi.kodesh.ui.find.FindInPageFragment
 import na.komi.kodesh.ui.preface.PrefaceFragment
 import na.komi.kodesh.ui.search.SearchFragment
 import na.komi.kodesh.ui.setting.SettingsFragment
-import na.komi.kodesh.util.Knavigator
+import na.komi.kodesh.util.knavigator.Knavigator
 import org.rewedigital.katana.Component
 import org.rewedigital.katana.createComponent
 import org.rewedigital.katana.createModule

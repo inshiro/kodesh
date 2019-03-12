@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:tools="http://schemas.android.com/tools">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -15,9 +16,9 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimaryVariant"
-            tools:title="@string/app_name"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            tools:title="@string/app_name">
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -36,7 +37,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimaryVariant"
+            android:clickable="true"
             android:fitsSystemWindows="false"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:scrollbarStyle="outsideOverlay"
             android:scrollbars="vertical"
             android:theme="@style/NavigationDrawerStyle"

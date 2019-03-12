@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import na.komi.kodesh.R
 import na.komi.kodesh.ui.main.MainActivity
 import na.komi.kodesh.ui.main.MainComponents
-import na.komi.kodesh.util.Knavigator
+import na.komi.kodesh.util.knavigator.Knavigator
 
 class FindInPageFragment : Fragment() {
 
