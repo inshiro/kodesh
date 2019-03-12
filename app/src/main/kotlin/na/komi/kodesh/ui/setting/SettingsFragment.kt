@@ -1,13 +1,18 @@
 package na.komi.kodesh.ui.setting
 
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.View
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import com.google.android.material.navigation.NavigationView
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
 import na.komi.kodesh.Prefs
 import na.komi.kodesh.R
 import na.komi.kodesh.ui.internal.BasePreferenceFragment
@@ -15,7 +20,7 @@ import na.komi.kodesh.ui.main.MainActivity
 import na.komi.kodesh.util.onClick
 import kotlin.coroutines.CoroutineContext
 
-class SettingsFragment : BasePreferenceFragment(),CoroutineScope {
+class SettingsFragment : BasePreferenceFragment(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
@@ -25,14 +30,21 @@ class SettingsFragment : BasePreferenceFragment(),CoroutineScope {
         super.onDestroy()
         coroutineContext.cancelChildren()
     }
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.setBackgroundColor(android.R.attr.windowBackground)
+        val bgColor by lazy {
+            val typedValue = TypedValue()
+            requireContext().theme.resolveAttribute(android.R.attr.windowBackground, typedValue, true)
+            typedValue.resourceId
+        }
+        view.setBackgroundColor(ContextCompat.getColor(requireContext(), bgColor))
     }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         (requireActivity() as MainActivity).let {
@@ -62,8 +74,8 @@ class SettingsFragment : BasePreferenceFragment(),CoroutineScope {
                     }
                     restartActivity()
                     true
-                }else
-                false
+                } else
+                    false
             }
     }
 
