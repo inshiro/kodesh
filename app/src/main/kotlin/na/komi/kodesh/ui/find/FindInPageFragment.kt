@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
 import na.komi.kodesh.R
+import na.komi.kodesh.ui.main.MainActivity
 import na.komi.kodesh.ui.main.MainComponents
 import na.komi.kodesh.util.Knavigator
 
@@ -37,5 +38,10 @@ class FindInPageFragment : Fragment() {
 
 
         }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        (activity as? MainActivity)?.getNavigationView()?.menu?.findItem(R.id.action_find_in_page)?.isEnabled = true
     }
 }

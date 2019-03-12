@@ -55,7 +55,7 @@ class Knavigator : Navigator {
         System.gc()
     }
 
-    override fun navigate(fragment: Fragment) {
+    override infix fun navigate(fragment: Fragment) {
         /**
          * From this fragment to there
          * hide in between, including modular ones.
@@ -432,7 +432,7 @@ interface Navigator {
      * Set the [FragmentManager] scoped to the [Activity]. This changes every on configuration change.
      * Be sure to re-set it when that occurs.
      */
-    infix fun setFragmentManager(fm: FragmentManager)
+     fun setFragmentManager(fm: FragmentManager)
 
     /**
      * Add a [Fragment] to the stack.
@@ -443,7 +443,7 @@ interface Navigator {
      * @see [navigate]
      * @param fragment Target [Fragment] to add.
      */
-    infix fun add(fragment: Fragment): Any?
+     fun add(fragment: Fragment): Any?
 
 
     /**
@@ -481,7 +481,7 @@ interface Navigator {
      * @see [hide]
      * @param fragment Target [Fragment] to remove.
      */
-    infix fun remove(fragment: Fragment)
+     fun remove(fragment: Fragment)
 
 
     /**
@@ -497,7 +497,7 @@ interface Navigator {
      * @param inBackStack Register this fragment in the backstack. Default to true.
      *
      */
-    infix fun navigate(fragment: Fragment)
+     fun navigate(fragment: Fragment)
 
 
     /**
@@ -507,7 +507,7 @@ interface Navigator {
      * @param addToBackStack Register this [fragment] to be able to back press. Default to `true`.
      * @param modular Inclusive on navigation. (Will be hidden on [navigate])
      */
-    infix fun show(fragment: Fragment)
+     fun show(fragment: Fragment)
 
 
     /**
@@ -527,7 +527,7 @@ interface Navigator {
      * @param addToBackStack Register this [fragment] to be able to back press. Default to `true`.
      * @param modular Inclusive on navigation. (Will be hidden on [navigate])
      */
-    infix fun hide(fragment: Fragment)
+     fun hide(fragment: Fragment)
 
 
     /**

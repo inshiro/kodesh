@@ -169,19 +169,19 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                             val f = knavigator.current
                             if (f != null && f::class.java.simpleName != MainFragment::class.java.simpleName)
                                 knavigator.hide(f)*/
-                            knavigator.navigate(mainFragment)
+                            knavigator navigate mainFragment
                         }
                         R.id.action_find_in_page -> {
                             knavigator.container = R.id.container_main
                             knavigator.show(findInPageFragment, modular = true)
-                            //item.isEnabled = false
+                            item.isEnabled = false
                         }
                         R.id.action_preface -> {
-                            knavigator.navigate(prefaceFragment)
+                            knavigator navigate prefaceFragment
                         }
-                        R.id.action_search -> knavigator.navigate(searchFragment)
-                        R.id.action_settings -> knavigator.navigate(settingsFragment)
-                        R.id.action_about -> knavigator.navigate(aboutFragment)
+                        R.id.action_search -> knavigator navigate searchFragment
+                        R.id.action_settings -> knavigator navigate settingsFragment
+                        R.id.action_about -> knavigator navigate aboutFragment
 
                     }
                 }
