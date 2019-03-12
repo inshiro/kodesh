@@ -2,6 +2,8 @@ package na.komi.kodesh.ui.internal
 
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.view.WindowInsets
 import android.widget.TextView
@@ -11,9 +13,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.*
 import na.komi.kodesh.Prefs
 import na.komi.kodesh.R
 import na.komi.kodesh.ui.about.AboutFragment
@@ -72,6 +72,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
         return null
     }
 
+    var prevTitle: CharSequence? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         when (Prefs.themeId) {
@@ -103,7 +104,32 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
         if (savedInstanceState == null) {
             knavigator.container = R.id.nav_main_container
             knavigator.show(mainFragment, addToBackStack = false)
+        } else {
+            if (knavigator.current is SettingsFragment) {
+                launch {
+                    val title= getString(R.string.settings_title)
+                    getToolbar()?.title = title
+                    getToolbarTitleView()?.text = title
+                    getToolbarTitleView()?.addTextChangedListener(object :TextWatcher {
+                        override fun afterTextChanged(s: Editable?) {
+                        }
+
+                        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                        }
+
+                        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                            getToolbarTitleView()?.removeTextChangedListener(this)
+                            prevTitle = s
+                            getToolbar()?.title = title
+                            getToolbarTitleView()?.text = title
+                        }
+
+                    })
+                }
+            }
+
         }
+
         val findInPageFragment by lazy {
             supportFragmentManager.findFragmentByTag(FindInPageFragment::class.java.simpleName) as? FindInPageFragment
                 ?: FindInPageFragment()
@@ -124,7 +150,6 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             supportFragmentManager.findFragmentByTag(AboutFragment::class.java.simpleName) as? AboutFragment
                 ?: AboutFragment()
         }
-        var prevTitle: CharSequence? = null
         /**
          * https://stackoverflow.com/a/37873884
          * https://stackoverflow.com/a/36793341
@@ -181,7 +206,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                     if (fragment is MainFragment) {
                         navigationView.setCheckedItem(R.id.action_read)
                         navigationView.menu.findItem(R.id.action_find_in_page).isEnabled = true
-                        getToolbar()?.title = prevTitle
+                        getToolbar()?.title = prevTitle ?: getString(R.string.app_name)
                     }
                 }
             })

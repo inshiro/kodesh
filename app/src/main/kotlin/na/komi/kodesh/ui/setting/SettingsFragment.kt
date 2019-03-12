@@ -7,20 +7,34 @@ import androidx.core.view.children
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import com.google.android.material.navigation.NavigationView
+import kotlinx.coroutines.*
 import na.komi.kodesh.Prefs
 import na.komi.kodesh.R
 import na.komi.kodesh.ui.internal.BasePreferenceFragment
 import na.komi.kodesh.ui.main.MainActivity
 import na.komi.kodesh.util.onClick
+import kotlin.coroutines.CoroutineContext
 
-class SettingsFragment : BasePreferenceFragment() {
+class SettingsFragment : BasePreferenceFragment(),CoroutineScope {
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
 
+    private val job = SupervisorJob()
+
+    override fun onDestroy() {
+        super.onDestroy()
+        coroutineContext.cancelChildren()
+    }
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.setBackgroundColor(android.R.attr.windowBackground)
+    }
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
         (requireActivity() as MainActivity).let {
             it.findViewById<Toolbar>(R.id.toolbar_main).let { toolbar ->
                 for (a in toolbar.menu.children)
@@ -33,14 +47,14 @@ class SettingsFragment : BasePreferenceFragment() {
                 navigationView.menu.findItem(R.id.action_find_in_page).isEnabled = false
                 navigationView.setCheckedItem(R.id.action_settings)
             }
-            it.getToolbarTitleView()?.onClick {
+            it.getToolbarTitleView()?.onClick {}
 
-            }
         }
         val mListPreference = preferenceManager.findPreference("THEME_ID") as ListPreference
         mListPreference.value = Prefs.themeId.toString()
         mListPreference.onPreferenceChangeListener =
-                Preference.OnPreferenceChangeListener { _, newValue ->
+            Preference.OnPreferenceChangeListener { pref, newValue ->
+                if (mListPreference.value != newValue) {
                     when (newValue) {
                         "0" -> Prefs.themeId = 0
                         "1" -> Prefs.themeId = 1
@@ -48,12 +62,9 @@ class SettingsFragment : BasePreferenceFragment() {
                     }
                     restartActivity()
                     true
-                }
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        view?.setBackgroundColor(android.R.attr.windowBackground)
+                }else
+                false
+            }
     }
 
     private fun restartActivity() {

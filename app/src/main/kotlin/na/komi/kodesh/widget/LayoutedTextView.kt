@@ -123,8 +123,8 @@ class LayoutedTextView : AppCompatTextView {
             if (canvas != null) {
                // if (drawn) return
                 //var moveY = y+height-(top+Math.abs(paint.descent()))
-                drawCount++
-                log w "onDraw $drawCount"
+                //drawCount++
+                //log w "onDraw $drawCount"
 
 
                 var moveY = y + height - (top + Math.abs(paint.descent()))

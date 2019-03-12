@@ -68,12 +68,12 @@ class Knavigator : Navigator {
     private var currentTransaction: FragmentTransaction? = null
     private var ALLOW_COMMIT = true
 
-    fun commit() {
+    private fun commit() {
         currentTransaction?.commit()
         currentTransaction = null
     }
 
-    fun commitNow() {
+    private fun commitNow() {
         currentTransaction?.commitNow()
         currentTransaction = null
     }
