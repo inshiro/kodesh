@@ -307,11 +307,11 @@ class MainFragment : BaseKatanaFragment() {
 
     private val stylingDialog by lazy { StylingDialogFragment() }
 
-    private fun openNavDialog() {
+     fun openNavDialog() {
         navigationDialog.show(childFragmentManager, navigationDialog.javaClass.simpleName)
     }
 
-    private fun openStylingDialog() {
+     fun openStylingDialog() {
         stylingDialog.show(childFragmentManager, stylingDialog.javaClass.simpleName)
     }
 

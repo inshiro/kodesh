@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.children
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.*
@@ -204,9 +205,22 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                 override fun onBackPressed(isModular: Boolean) {
                     val fragment = knavigator.current
                     if (fragment is MainFragment) {
-                        navigationView.setCheckedItem(R.id.action_read)
-                        navigationView.menu.findItem(R.id.action_find_in_page).isEnabled = true
-                        getToolbar()?.title = prevTitle ?: getString(R.string.app_name)
+                        getToolbar()?.also { tb->
+                            tb.title  = prevTitle ?: getString(R.string.app_name)
+                            for (a in tb.menu.children)
+                                a.isVisible = true
+                            tb.menu.findItem(R.id.styling).setOnMenuItemClickListener {
+                                fragment.openStylingDialog()
+                             true
+                            }
+                        }
+                        getToolbarTitleView()?.onClick { fragment.openNavDialog() }
+                        getNavigationView().let { nv->
+                            nv.setCheckedItem(R.id.action_read)
+                            for (a in nv.menu.children)
+                                a.isEnabled = true
+                        }
+
                     }
                 }
             })
