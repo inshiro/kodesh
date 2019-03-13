@@ -18,7 +18,8 @@
 #
 See the [wiki](https://github.com/inshiro/Kodesh/wiki) for some developer insights!
 
-# License
+License
+-------
 
     Copyright 2019 inshiro
 
