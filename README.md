@@ -1,7 +1,7 @@
-<p><img align="left" src="https://i.postimg.cc/gJFb5CR2/ic-launcher.png" > <h1>Kodesh</h1>An app for reading the scriptures.<br><br><br><br></p>
+<p><img align="left" src="https://i.postimg.cc/gJFb5CR2/ic-launcher.png" > <h1>Kodesh</h1>An app for reading the scriptures.<br><br><br><br><br></p>
 
-Features
-======
+# Features
+
 - Verse stylings
 	- KJV mode
 	- Drop cap
@@ -18,8 +18,7 @@ Features
 #
 See the [wiki](https://github.com/inshiro/Kodesh/wiki) for some developer insights!
 
-License
--------
+# License
 
     Copyright 2019 inshiro
 
