@@ -9,8 +9,6 @@
     android:clipChildren="false"
     android:focusable="true"
     android:clipToPadding="true"
-    android:clickable="true"
-    android:background="?attr/selectableItemBackground"
     android:lineSpacingMultiplier="1.17"
     android:paddingLeft="24dp"
     android:paddingRight="24dp"

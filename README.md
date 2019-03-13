@@ -1,7 +1,4 @@
-
-Kodesh
-======
-An app for reading the scriptures.
+<p><img align="left" src="https://i.postimg.cc/gJFb5CR2/ic-launcher.png" > <h1>Kodesh</h1>An app for reading the scriptures.<br><br><br></p>
 
 Features
 ======

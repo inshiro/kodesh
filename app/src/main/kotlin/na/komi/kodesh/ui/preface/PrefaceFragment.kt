@@ -113,10 +113,6 @@ class PrefaceFragment : BaseKatanaFragment() {
     private val imageDialog by lazy { PrefaceImageFragment() }
 
     private fun openImageDialog() {
-        /*childFragmentManager.beginTransaction()
-            .add(imageDialog,PrefaceImageFragment::class.java.simpleName)
-            .addToBackStack(null)
-            .commit()*/
         imageDialog.show(childFragmentManager, imageDialog.javaClass.simpleName)
     }
 
