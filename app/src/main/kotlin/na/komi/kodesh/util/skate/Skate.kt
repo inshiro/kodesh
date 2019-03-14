@@ -1,18 +1,90 @@
-package na.komi.kodesh.util.knavigator
+package na.komi.kodesh.util.skate
 
+import android.app.Activity
+import android.os.Bundle
 import android.os.Handler
+import android.os.Parcelable
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import na.komi.kodesh.util.knavigator.log.Logger
+import kotlinx.android.parcel.Parcelize
+import na.komi.kodesh.util.log
+import na.komi.kodesh.util.skate.log.Logger
 import java.util.Stack
 
+class Skate : Navigator {
 
-/**
- * An easy to use, simple yet powerful Fragment Navigator.
- */
-class Knavigator : Navigator {
+    internal fun serializeList(list: ArrayList<SkateFragment>) {
+        stack.clear()
+        stack.addAll(list)
+    }
+
+    private var _stack: Stack<SkateFragment>? = Stack()
+
+    val stack
+        get() = _stack!!
+
+    companion object {
+
+        @Volatile
+        private var _instance: Skate? = null
+
+        @Synchronized
+        private fun getInstance() =
+            _instance ?: synchronized(Skate::class.java) { _instance ?: Skate().also { _instance = it } }
+
+        @Suppress("unused")
+        private fun readResolve() = getInstance()
+
+        operator fun invoke(): Skate {
+
+            log w "/SKATE Skate instance null?: $${_instance == null}"
+            if (_instance != null)
+                throw RuntimeException("Use startSkating() method to get the single instance of this class.")
+
+            return getInstance()
+        }
+
+
+        /**
+         * Pass an implementation of [Logger] here to enable Katana's logging functionality
+         */
+        var logger: Logger? = null
+
+        /**
+         * The mode to Add-Remove.
+         *
+         * Saves the most memory.
+         */
+        val FACTORY: Int = 0
+
+
+        /**
+         * The mode to Detach-Attach.
+         *
+         * A balance between saving memory and speed.
+         */
+        val SPARING_SINGLETON: Int = 1
+
+
+        /**
+         * The mode to Hide-Show.
+         *
+         * Uses the most memory but also the fastest.
+         */
+        val SINGLETON: Int = 2
+    }
+
+    interface ActivityLifecycleCallbacks {
+        fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {}
+        fun onActivityStarted(activity: Activity?) {}
+        fun onActivityResumed(activity: Activity?) {}
+        fun onActivityPaused(activity: Activity?) {}
+        fun onActivityStopped(activity: Activity?) {}
+        fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) {}
+        fun onActivityDestroyed(activity: Activity?) {}
+    }
 
     @IdRes
     override var container: Int = -1
@@ -21,24 +93,20 @@ class Knavigator : Navigator {
     private val animationEnd = android.R.animator.fade_out
     private val handler by lazy { Handler() }
 
-    private var SYNCHRONOUS = false
+    override val current: Fragment?
+        get() = currentlyVisibleFragment()
 
-    private var listener: OnNavigateListener? = null
+    override var fragmentManager: FragmentManager? = null
 
-    private var _fragmentManager: FragmentManager? = null
-
-    private val fragmentManager: FragmentManager
-        get() = _fragmentManager!!
+    private val internalFragmentManager: FragmentManager
+        get() = fragmentManager ?: throw NullPointerException("Please set the fragment manager")
 
     private val Fragment.name
         get() = this::class.java.simpleName
 
-    override val current: Fragment?
-        get() = currentlyVisibleFragment()
 
-    override val stack by lazy {
-        Stack<KnavigatorFragment>()
-    }
+    val back: Boolean
+        get() = goBack()
 
     /**
      * [Fragment] wrapper to allow real state change listening.
@@ -46,26 +114,18 @@ class Knavigator : Navigator {
      * @param inBackStack Whether this fragment added to back stack or not.
      * @param modular Hide this fragment as well on [navigate]
      */
-    data class KnavigatorFragment(
+    @Parcelize
+    data class SkateFragment(
         var tag: String,
         var state: State,
         var inBackStack: Boolean = true,
         var modular: Boolean = false
-    )
-
-    override infix fun setFragmentManager(fm: FragmentManager) {
-        _fragmentManager = null
-        _fragmentManager = fm
-    }
-
-    fun setOnHideListener(listener: OnNavigateListener) {
-        this.listener = null
-        this.listener = listener
-    }
+    ) : Parcelable
 
     private fun State.isVisible() = this == State.ADDED || this == State.ATTACHED || this == State.SHOWING
 
     private var currentTransaction: FragmentTransaction? = null
+
     private var ALLOW_COMMIT = true
 
     private fun commit() {
@@ -80,17 +140,13 @@ class Knavigator : Navigator {
 
     private fun checkAndCreateTransaction() {
         if (currentTransaction == null)
-            currentTransaction = fragmentManager.beginTransaction()
+            currentTransaction = internalFragmentManager.beginTransaction()
     }
 
-    override fun navigate(fragment: Fragment) {
-        /**
-         * From this fragment to there
-         * hide in between, including modular ones.
-         * Show destination.
-         */
+    infix fun to(fragment: Fragment) = navigate(fragment)
 
-        val list = fragmentManager.fragments
+    override fun navigate(fragment: Fragment) {
+        val list = internalFragmentManager.fragments
         list.reverse()
 
         //SYNCHRONOUS = true
@@ -136,11 +192,11 @@ class Knavigator : Navigator {
         }
 
         if (index != -1) {
-            stack.add(index, KnavigatorFragment(name, State.ADDED, addToBackStack, modular))
+            stack.add(index, SkateFragment(name, State.ADDED, addToBackStack, modular))
             return
         }
         stack.push(
-            KnavigatorFragment(
+            SkateFragment(
                 name,
                 when (mode) {
                     FACTORY -> State.ADDED
@@ -201,7 +257,7 @@ class Knavigator : Navigator {
         val prefix = "Found as"
         var state = State.REMOVED
         if (show) {
-            if (!frag.isAdded) {
+            if (!frag.isVisible) {
                 when {
                     frag.isDetached -> {
                         Logger assert "$prefix detached"
@@ -219,14 +275,18 @@ class Knavigator : Navigator {
                             SINGLETON -> state = State.SHOWING.also { Logger debug "Show $tag" }
                         }
                     }
-                    else -> {
+                    !frag.isAdded -> {
                         Logger assert "$prefix removed"
                         state = State.ADDED
                         Logger debug "Add $tag"
                     }
+                    else -> {
+                        Logger error "ERROR trying to show $tag"
+                        return State.ERROR
+                    }
                 }
             } else {
-                Logger error "[Already Added] $tag"
+                Logger error "[Already showing] $tag"
                 return State.ERROR
             }
             return state
@@ -272,13 +332,13 @@ class Knavigator : Navigator {
     override fun show(fragment: Fragment, mode: Int, addToBackStack: Boolean, modular: Boolean) {
         Logger verbose "== COMMENCE SHOW == "
 
-        val frag = fragmentManager.findFragmentByTag(fragment.name) ?: fragment
+        val frag = internalFragmentManager.findFragmentByTag(fragment.name) ?: fragment
 
         val state = parseState(frag, mode)
 
         if (state == State.ERROR) return
 
-        //val transaction = fragmentManager.beginTransaction().setCustomAnimations(animationStart, animationEnd)
+        //val transaction = internalFragmentManager.beginTransaction().setCustomAnimations(animationStart, animationEnd)
         checkAndCreateTransaction()
 
         frag.push(mode, addToBackStack, modular)
@@ -303,7 +363,7 @@ class Knavigator : Navigator {
     override fun hide(fragment: Fragment, mode: Int, addToBackStack: Boolean, modular: Boolean) {
         Logger verbose "== COMMENCE HIDE == "
 
-        val frag = fragmentManager.findFragmentByTag(fragment.name) ?: fragment
+        val frag = internalFragmentManager.findFragmentByTag(fragment.name) ?: fragment
 
         val state = parseState(frag, mode, false)
 
@@ -312,7 +372,7 @@ class Knavigator : Navigator {
         if (!modular)
             ALLOW_COMMIT = true
 
-        //val transaction = fragmentManager.beginTransaction().setCustomAnimations(animationStart, animationEnd)
+        //val transaction = internalFragmentManager.beginTransaction().setCustomAnimations(animationStart, animationEnd)
 
         checkAndCreateTransaction()
 
@@ -332,11 +392,14 @@ class Knavigator : Navigator {
 
     }
 
-    private inline fun currentlyVisibleFragment(goingBack:Boolean=false,action: (fragment: Fragment, kfragment: KnavigatorFragment) -> Unit = { _, _ -> }): Fragment? {
-        stack.lastOrNull { it.state.isVisible() && if (goingBack) it.inBackStack else true}?.also { KFragment ->
+    private inline fun currentlyVisibleFragment(
+        goingBack: Boolean = false,
+        action: (fragment: Fragment, kfragment: SkateFragment) -> Unit = { _, _ -> }
+    ): Fragment? {
+        stack.lastOrNull { it.state.isVisible() && if (goingBack) it.inBackStack else true }?.also { KFragment ->
 
             // If it's in this list, it means it's visible.. cause ¯\_(?)_/¯
-            fragmentManager.fragments.lastOrNull { it.name == KFragment.tag }?.also { fragment ->
+            internalFragmentManager.fragments.lastOrNull { it.name == KFragment.tag }?.also { fragment ->
                 action(fragment, KFragment)
                 return fragment
             }
@@ -361,9 +424,24 @@ class Knavigator : Navigator {
     @Suppress("unused")
     private fun displayFragments() {
         handler.postDelayed({
-            fragmentManager.fragments.joinToString(", ") { it::class.java.simpleName }
+            internalFragmentManager.fragments.joinToString(", ") { it::class.java.simpleName }
                 .also { Logger verbose "Currently have: [$it]" }
         }, 100)
+    }
+
+
+    private var listener: OnNavigateListener? = null
+
+    fun setOnNavigateListener(listener: OnNavigateListener) {
+        this.listener = null
+        this.listener = listener
+    }
+
+    internal fun clear() {
+        _instance = null
+        fragmentManager = null
+        listener = null
+        _stack = null
     }
 
     interface OnNavigateListener {
@@ -398,31 +476,5 @@ class Knavigator : Navigator {
         ADDED, ATTACHED, SHOWING, REMOVED, DETACHED, HIDDEN, ERROR
     }
 
-    companion object {
-        /**
-         * Pass an implementation of [Logger] here to enable Katana's logging functionality
-         */
-        var logger: Logger? = null
-
-        /**
-         * The mode to Add-Remove.
-         *
-         * You should use this in conjunction with [setRetainInstance] set to `true` in your [Fragment]
-         * as this saves the most memory.
-         */
-        val FACTORY: Int = 0
-
-
-        /**
-         * The mode to Detach-Attach.
-         */
-        val SPARING_SINGLETON: Int = 1
-
-
-        /**
-         * The mode to Hide-Show.
-         */
-        val SINGLETON: Int = 2
-    }
 }
 

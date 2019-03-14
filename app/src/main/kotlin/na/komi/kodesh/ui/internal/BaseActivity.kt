@@ -1,9 +1,11 @@
 package na.komi.kodesh.ui.internal
 
+import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowInsets
 import android.widget.TextView
@@ -14,18 +16,23 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.launch
+import na.komi.kodesh.BuildConfig
 import na.komi.kodesh.Prefs
 import na.komi.kodesh.R
 import na.komi.kodesh.ui.about.AboutFragment
 import na.komi.kodesh.ui.find.FindInPageFragment
-import na.komi.kodesh.ui.main.MainComponents
 import na.komi.kodesh.ui.main.MainFragment
 import na.komi.kodesh.ui.preface.PrefaceFragment
 import na.komi.kodesh.ui.search.SearchFragment
 import na.komi.kodesh.ui.setting.SettingsFragment
 import na.komi.kodesh.util.*
-import na.komi.kodesh.util.knavigator.Knavigator
+import na.komi.kodesh.util.skate.Skate
+import na.komi.kodesh.util.skate.extension.startSkating
+import na.komi.kodesh.util.skate.log.SkateLogger
 import na.komi.kodesh.widget.LayoutedTextView
 import kotlin.coroutines.CoroutineContext
 
@@ -43,21 +50,32 @@ import kotlin.coroutines.CoroutineContext
  */
 abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener {
     abstract val layout: Int
+
     open val job = SupervisorJob()
+    private lateinit var skate:Skate
+
     override val coroutineContext: CoroutineContext
         get() = ContextHelper.dispatcher + job
-    val knavigator: Knavigator  by MainComponents.navComponent.inject()
+
 
     val bottomSheetBehavior: BottomSheetBehavior2<ConstraintLayout>
         get() = BottomSheetBehavior2.from(bottomSheetContainer)
+
     val bottomSheetContainer: ConstraintLayout
         get() = findViewById(R.id.main_bottom_container)
 
-
+    @Suppress("unused")
     private val isLargeLayout
         get() = resources.getBoolean(R.bool.large_layout)
 
+    private val behavior by lazy { bottomSheetBehavior }
+
+    val container by lazy { bottomSheetContainer }
+
+    var prevTitle: CharSequence? = null
+
     fun getNavigationView(): NavigationView = findViewById(R.id.navigation_view)
+
     fun getToolbar(): Toolbar? = findViewById(R.id.toolbar_main)
 
     fun getToolbarTitleView(): AppCompatTextView? {
@@ -73,9 +91,21 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
         return null
     }
 
-    var prevTitle: CharSequence? = null
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (behavior.state == BottomSheetBehavior2.STATE_EXPANDED) {
+            val viewRect = Rect()
+            container.getGlobalVisibleRect(viewRect)
+            if (ev != null && !viewRect.contains(ev.rawX.toInt(), ev.rawY.toInt())) {
+                behavior.close()
+            }
+        }
+        return super.dispatchTouchEvent(ev)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         when (Prefs.themeId) {
             1 -> setTheme(R.style.Theme_Shrine_Dark)
             2 -> setTheme(R.style.Theme_Shrine_Black)
@@ -97,21 +127,30 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             mBottomSheetBehavior.toggle()
         }
 
+
         val mainFragment by lazy {
             supportFragmentManager.findFragmentByTag(MainFragment::class.java.simpleName) as? MainFragment
                 ?: MainFragment()
         }
-        knavigator setFragmentManager supportFragmentManager
+
+        skate = startSkating(savedInstanceState)
+
+        skate.fragmentManager = supportFragmentManager
+
+        if (BuildConfig.DEBUG && Skate.logger == null)
+            Skate.logger = SkateLogger
+
         if (savedInstanceState == null) {
-            knavigator.container = R.id.nav_main_container
-            knavigator.show(mainFragment, addToBackStack = false)
+            skate.container = R.id.nav_main_container
+            skate.show(mainFragment, addToBackStack = false)
+
         } else {
-            if (knavigator.current is SettingsFragment) {
+            if (skate.current is SettingsFragment) {
                 launch {
-                    val title= getString(R.string.settings_title)
+                    val title = getString(R.string.settings_title)
                     getToolbar()?.title = title
                     getToolbarTitleView()?.text = title
-                    getToolbarTitleView()?.addTextChangedListener(object :TextWatcher {
+                    getToolbarTitleView()?.addTextChangedListener(object : TextWatcher {
                         override fun afterTextChanged(s: Editable?) {
                         }
 
@@ -131,6 +170,10 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
 
         }
 
+        /**
+         * We're using the same Fragment instance on this config(Portrait/Landscape)
+         * This preserves its state. Only on config change we create a new instance.
+         */
         val findInPageFragment by lazy {
             supportFragmentManager.findFragmentByTag(FindInPageFragment::class.java.simpleName) as? FindInPageFragment
                 ?: FindInPageFragment()
@@ -140,7 +183,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                 ?: PrefaceFragment()
         }
         val searchFragment by lazy {
-            supportFragmentManager.findFragmentByTag(SearchFragment::class.java.simpleName) as? SearchFragment
+            (supportFragmentManager.findFragmentByTag(SearchFragment::class.java.simpleName) as? SearchFragment)?.also { log d "D/KNAVIGATOR found SearchFragment" }
                 ?: SearchFragment()
         }
         val settingsFragment by lazy {
@@ -167,9 +210,11 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             it.setNavigationItemSelectedListener { item ->
                 mBottomSheetBehavior.close()
                 setLowProfileStatusBar()
-                knavigator.container = R.id.nav_main_container
+                skate.container = R.id.nav_main_container
+                skate.defaultMode = Skate.FACTORY
+                //skate.defaultMode = Skate.SPARING_SINGLETON
 
-                if (knavigator.current is MainFragment)
+                if (skate.current is MainFragment)
                     prevTitle = getToolbarTitleView()?.text
 
                 // Prevent pressing self
@@ -177,45 +222,43 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                     when (item.itemId) {
                         R.id.action_read -> {
                             /*
-                            val f = knavigator.current
+                            val f = skate.current
                             if (f != null && f::class.java.simpleName != MainFragment::class.java.simpleName)
-                                knavigator.hide(f)*/
-                            knavigator navigate mainFragment
+                                skate.hide(f)*/
+                            skate to mainFragment
                             navigationView.menu.findItem(R.id.action_find_in_page).isEnabled = true
                             getToolbar()?.title = prevTitle
                         }
                         R.id.action_find_in_page -> {
-                            knavigator.container = R.id.container_main
-                            knavigator.show(findInPageFragment, modular = true)
+                            skate.container = R.id.container_main
+                            skate.show(findInPageFragment, modular = true)
                             item.isEnabled = false
                         }
-                        R.id.action_preface -> {
-                            knavigator navigate prefaceFragment
-                        }
-                        R.id.action_search -> knavigator navigate searchFragment
-                        R.id.action_settings -> knavigator navigate settingsFragment
-                        R.id.action_about -> knavigator navigate aboutFragment
+                        R.id.action_preface -> skate to prefaceFragment
+                        R.id.action_search -> skate to searchFragment
+                        R.id.action_settings -> skate to settingsFragment
+                        R.id.action_about -> skate to aboutFragment
 
                     }
                 }
                 !item.isChecked
             }
 
-            knavigator.setOnHideListener(object : Knavigator.OnNavigateListener {
+            skate.setOnNavigateListener(object : Skate.OnNavigateListener {
                 override fun onBackPressed(isModular: Boolean) {
-                    val fragment = knavigator.current
+                    val fragment = skate.current
                     if (fragment is MainFragment) {
-                        getToolbar()?.also { tb->
-                            tb.title  = prevTitle ?: getString(R.string.app_name)
+                        getToolbar()?.also { tb ->
+                            tb.title = prevTitle ?: getString(R.string.app_name)
                             for (a in tb.menu.children)
                                 a.isVisible = true
                             tb.menu.findItem(R.id.styling).setOnMenuItemClickListener {
                                 fragment.openStylingDialog()
-                             true
+                                true
                             }
                         }
                         getToolbarTitleView()?.onClick { fragment.openNavDialog() }
-                        getNavigationView().let { nv->
+                        getNavigationView().let { nv ->
                             nv.setCheckedItem(R.id.action_read)
                             for (a in nv.menu.children)
                                 a.isEnabled = true
@@ -233,14 +276,6 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
         coroutineContext.cancelChildren()
     }
 
-    /*
-       override fun onStart() {
-           super.onStart()
-           val a = supportFragmentManager.findFragmentByTag(MainFragment::class.java.simpleName)
-           val v = a?.view
-           v?.setBackgroundColor(Color.BLACK)
-       }*/
-
     override fun onStart() {
         super.onStart()
         //ViewCompat.setBackground(v, ColorDrawable(ContextCompat.getColor(this, R.color.default_background_color)))
@@ -248,14 +283,14 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             val min = 0.5f
             val multiplier = 1f + min
 
-            var f = knavigator.current?.let {
+            var f = skate.current?.let {
                 if (it is MainFragment) it
                 else null
             }
             var v = f?.view
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_DRAGGING) {
-                    knavigator.current?.let {
+                    skate.current?.let {
                         if (it is MainFragment) f = it
                     }
                 }
@@ -275,10 +310,11 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
         val mBottomSheetBehavior = bottomSheetBehavior
         if (mBottomSheetBehavior.state == BottomSheetBehavior2.STATE_EXPANDED)
             mBottomSheetBehavior.state = BottomSheetBehavior2.STATE_COLLAPSED
-        else if (!knavigator.goBack())
+        else if (!skate.back)
             super.onBackPressed()
     }
 
+    @Suppress("unused")
     fun setupStatusBar() {
         //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) window.navigationBarColor =
         //    ContextCompat.getColor(this, R.color.colorAccent)

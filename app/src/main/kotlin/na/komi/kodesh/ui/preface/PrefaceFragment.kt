@@ -22,11 +22,13 @@ import na.komi.kodesh.ui.internal.FragmentToolbar
 import na.komi.kodesh.ui.internal.ItemDecorator
 import na.komi.kodesh.ui.internal.LinearLayoutManager2
 import na.komi.kodesh.ui.main.MainActivity
-import na.komi.kodesh.ui.main.MainComponents
 import na.komi.kodesh.ui.main.MainViewModel
-import na.komi.kodesh.util.*
-import na.komi.kodesh.util.knavigator.Knavigator
+import na.komi.kodesh.util.closestKatana
+import na.komi.kodesh.util.onClick
 import na.komi.kodesh.util.page.Fonts
+import na.komi.kodesh.util.skate.extension.startSkating
+import na.komi.kodesh.util.sp
+import na.komi.kodesh.util.viewModel
 import na.komi.kodesh.widget.LayoutedTextView
 import na.komi.kodesh.widget.NestedRecyclerView
 import na.komi.kodesh.widget.PullDismissLayout
@@ -39,7 +41,6 @@ class PrefaceFragment : BaseKatanaFragment() {
     override val layout: Int = R.layout.fragment_preface
     override val component: Component by closestKatana()
     private val viewModel:MainViewModel by viewModel()
-    private val knavigator: Knavigator  by MainComponents.navComponent.inject()
 
     override fun ToolbarBuilder(): FragmentToolbar {
         return FragmentToolbar(
@@ -51,10 +52,11 @@ class PrefaceFragment : BaseKatanaFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        val skate  by startSkating(savedInstanceState)
         val pull = view!!.findViewById<PullDismissLayout>(R.id.pull)
         pull.setListener(object :PullDismissLayout.Listener{
             override fun onDismissed() {
-                knavigator.hide(this@PrefaceFragment)
+                skate.hide(this@PrefaceFragment)
             }
 
             override fun onShouldInterceptTouchEvent(): Boolean {

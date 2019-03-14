@@ -1,4 +1,4 @@
-package na.komi.kodesh.util.knavigator
+package na.komi.kodesh.util.skate
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -14,7 +14,7 @@ interface Navigator {
     /**
      * Get the current list of fragments added.
      */
-    val stack: Stack<Knavigator.KnavigatorFragment>
+    //val stack: SerialStack<Skate.SkateFragment>
 
     /**
      * Specify the container to house the [Fragment]
@@ -30,7 +30,7 @@ interface Navigator {
      * Set the [FragmentManager] scoped to the [Activity]. This changes every on configuration change.
      * Be sure to re-set it when that occurs.
      */
-    infix fun setFragmentManager(fm: FragmentManager)
+    val fragmentManager: FragmentManager?
 
     /**
      * Add a [Fragment] to the stack.
@@ -75,7 +75,7 @@ interface Navigator {
     /**
      * Remove a [Fragment] from the stack.
      *
-     * This essentially calls [hide] with a `mode` of [Knavigator.FACTORY].
+     * This essentially calls [hide] with a `mode` of [Skate.FACTORY].
      * @see [hide]
      * @param fragment Target [Fragment] to remove.
      */

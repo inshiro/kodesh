@@ -12,12 +12,10 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
 import na.komi.kodesh.R
 import na.komi.kodesh.ui.main.MainActivity
-import na.komi.kodesh.ui.main.MainComponents
-import na.komi.kodesh.util.knavigator.Knavigator
+import na.komi.kodesh.util.skate.extension.startSkating
 
 class FindInPageFragment : Fragment() {
 
-    private val knavigator: Knavigator  by MainComponents.navComponent.inject()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_find_in_page, container, false)
@@ -27,12 +25,14 @@ class FindInPageFragment : Fragment() {
         toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
 
-    fun InputMethodManager.hideKeyboard(view:View) {
+    fun InputMethodManager.hideKeyboard(view: View) {
         hideSoftInputFromWindow(view.windowToken, 0);
     }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         view?.let { view ->
+             val skate by startSkating(savedInstanceState)
             val closeButton = view.findViewById<AppCompatImageButton>(R.id.close_botton)
             val editText = view.findViewById<AppCompatEditText>(R.id.find_edit_text)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
@@ -44,10 +44,11 @@ class FindInPageFragment : Fragment() {
             }
             editText.requestFocus()
 
-            knavigator setFragmentManager  requireActivity().supportFragmentManager
+            skate.fragmentManager = requireActivity().supportFragmentManager
 
             closeButton.setOnClickListener {
-                knavigator.hide(this)
+                (activity as MainActivity).getNavigationView().menu.findItem(R.id.action_find_in_page).isEnabled = true
+                skate hide this
             }
 
 

@@ -48,10 +48,16 @@ abstract class BaseFragment : Fragment(), CoroutineScope, TitleListener, InjectL
 
     abstract val layout: Int
 
+    init {
+        /**
+         * This retains the state on config change and does not call oncreate again.
+         * https://stackoverflow.com/a/18681837
+         */
+        retainInstance = true
+    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(layout, container, false)
     }
-
 
     /**
      * getBottomSheetBehavior
@@ -72,7 +78,6 @@ abstract class BaseFragment : Fragment(), CoroutineScope, TitleListener, InjectL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        retainInstance = true
     }
 
     //protected abstract fun onToolbarTitleClick() {}

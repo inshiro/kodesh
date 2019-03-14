@@ -1,1 +1,1 @@
-include ':app', ':knavigator'
+include ':app'

@@ -101,7 +101,7 @@ android {
     }
 }
 androidExtensions {
-    /** For Coroutines LayoutContainer **/
+    /** For Coroutines LayoutContainer and Parcelable **/
     experimental = true
 }
 

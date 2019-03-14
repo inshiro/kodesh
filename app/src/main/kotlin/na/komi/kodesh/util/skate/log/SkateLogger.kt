@@ -1,15 +1,15 @@
-package na.komi.kodesh.util.knavigator.log
+package na.komi.kodesh.util.skate.log
 
 import android.util.Log
-import na.komi.kodesh.util.knavigator.Knavigator
+import na.komi.kodesh.util.skate.Skate
 
 
 /**
  * implementation. for outside use.
  */
-object KnavigatorLogger : Knavigator.Logger {
+object SkateLogger : Skate.Logger {
 
-    private const val TAG = "KNAVIGATOR"
+    private const val TAG = "SKATE"
 
     override infix fun debug(msg: String) {
         Log.d(TAG, msg)

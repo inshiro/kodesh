@@ -5,8 +5,6 @@ import android.content.Context
 import android.content.res.Resources
 import com.squareup.leakcanary.LeakCanary
 import na.komi.kodesh.model.Preferences
-import na.komi.kodesh.util.knavigator.Knavigator
-import na.komi.kodesh.util.knavigator.log.KnavigatorLogger
 import org.rewedigital.katana.Katana
 import org.rewedigital.katana.android.AndroidKatanaLogger
 import org.rewedigital.katana.android.environment.AndroidEnvironmentContext
@@ -14,6 +12,9 @@ import org.rewedigital.katana.android.modules.APPLICATION_CONTEXT
 import org.rewedigital.katana.createModule
 import org.rewedigital.katana.dsl.compact.factory
 import org.rewedigital.katana.dsl.get
+import na.komi.kodesh.util.skate.Skate
+import na.komi.kodesh.util.skate.extension.startSkating
+import na.komi.kodesh.util.skate.log.SkateLogger
 
 val Prefs by lazy { na.komi.kodesh.Application.preferences }
 
@@ -43,11 +44,11 @@ class Application : Application() {
 
         if (BuildConfig.DEBUG) {
             LeakCanary.install(this)
-            Knavigator.logger = KnavigatorLogger
         }
 
         setupKatana()
     }
+
 
     private fun setupKatana() {
         // Installing logger for Katana
