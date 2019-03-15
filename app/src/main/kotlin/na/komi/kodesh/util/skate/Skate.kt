@@ -9,9 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import kotlinx.android.parcel.Parcelize
-import na.komi.kodesh.util.log
+import na.komi.kodesh.util.skate.global.SkateSingleton
 import na.komi.kodesh.util.skate.log.Logger
-import java.util.Stack
+import java.util.*
+
 
 class Skate : Navigator {
 
@@ -20,30 +21,18 @@ class Skate : Navigator {
         stack.addAll(list)
     }
 
-    private var _stack: Stack<SkateFragment>? = Stack()
 
-    val stack
-        get() = _stack!!
+    override val stack
+        get() = SkateSingleton._stack!!
 
     companion object {
-
-        @Volatile
-        private var _instance: Skate? = null
-
-        @Synchronized
-        private fun getInstance() =
-            _instance ?: synchronized(Skate::class.java) { _instance ?: Skate().also { _instance = it } }
-
-        @Suppress("unused")
-        private fun readResolve() = getInstance()
-
         operator fun invoke(): Skate {
+            //log w "/SKATE Skate instance null?: $${SkateSingleton._instance == null}"
 
-            log w "/SKATE Skate instance null?: $${_instance == null}"
-            if (_instance != null)
+            if (SkateSingleton._instance != null)
                 throw RuntimeException("Use startSkating() method to get the single instance of this class.")
 
-            return getInstance()
+            return SkateSingleton.getInstance()
         }
 
 
@@ -438,10 +427,10 @@ class Skate : Navigator {
     }
 
     internal fun clear() {
-        _instance = null
+
         fragmentManager = null
         listener = null
-        _stack = null
+        SkateSingleton.clear()
     }
 
     interface OnNavigateListener {

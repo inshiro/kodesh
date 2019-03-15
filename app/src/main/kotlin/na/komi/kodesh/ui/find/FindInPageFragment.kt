@@ -12,6 +12,8 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
 import na.komi.kodesh.R
 import na.komi.kodesh.ui.main.MainActivity
+import na.komi.kodesh.util.log
+import na.komi.kodesh.util.skate.Skate
 import na.komi.kodesh.util.skate.extension.startSkating
 
 class FindInPageFragment : Fragment() {

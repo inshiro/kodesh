@@ -20,11 +20,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
+import na.komi.kodesh.Application
 import na.komi.kodesh.BuildConfig
 import na.komi.kodesh.Prefs
 import na.komi.kodesh.R
 import na.komi.kodesh.ui.about.AboutFragment
 import na.komi.kodesh.ui.find.FindInPageFragment
+import na.komi.kodesh.ui.main.MainComponent
 import na.komi.kodesh.ui.main.MainFragment
 import na.komi.kodesh.ui.preface.PrefaceFragment
 import na.komi.kodesh.ui.search.SearchFragment
@@ -101,6 +103,18 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             }
         }
         return super.dispatchTouchEvent(ev)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        savedInstanceState?.getParcelable<MainComponent>("MAIN_COMPONENT")?.let {
+            MainComponent.mmainComponent = it.mmainComponent!!
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable("MAIN_COMPONENT", MainComponent)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -271,6 +285,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
 
     }
 
+
     override fun onDestroy() {
         super.onDestroy()
         coroutineContext.cancelChildren()
@@ -278,6 +293,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
 
     override fun onStart() {
         super.onStart()
+
         //ViewCompat.setBackground(v, ColorDrawable(ContextCompat.getColor(this, R.color.default_background_color)))
         bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             val min = 0.5f

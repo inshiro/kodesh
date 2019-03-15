@@ -14,7 +14,7 @@ interface Navigator {
     /**
      * Get the current list of fragments added.
      */
-    //val stack: SerialStack<Skate.SkateFragment>
+    val stack: Stack<Skate.SkateFragment>
 
     /**
      * Specify the container to house the [Fragment]

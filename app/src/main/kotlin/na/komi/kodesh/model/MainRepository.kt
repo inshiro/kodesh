@@ -9,6 +9,7 @@ import androidx.sqlite.db.SimpleSQLiteQuery
  * Java singleton
  */
 //class MainRepository private constructor(private val mainDao: MainDao) {
+
 class MainRepository constructor(private val mainDao: MainDao) {
 
     fun getAll() = mainDao.getAll()
