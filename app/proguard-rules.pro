@@ -27,3 +27,8 @@
 #-keepclasseswithmembers class **.R$* {
 #    public static final int define_*;
 #}
+#### No obfuscation
+#-dontobfuscate
+# -keep public class na.komi.kodesh.ui.** { *; }
+# -keep public class na.komi.kodesh.util.skate.** { *; }
+# -keepclassmembers class na.komi.kodesh.util.skate.** { *; }

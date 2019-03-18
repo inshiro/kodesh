@@ -127,6 +127,7 @@ dependencies {
     /** Katana **/
     def katana_version = '1.4.0'
     implementation "org.rewedigital.katana:katana-android:$katana_version"
+    implementation "org.rewedigital.katana:katana-androidx-viewmodel:$katana_version"
 
     /** Imaging **/
     implementation "com.github.MikeOrtiz:TouchImageView:2.1.1"

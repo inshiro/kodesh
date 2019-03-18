@@ -64,8 +64,8 @@ fun Fragment.startSkating(savedInstanceState: Bundle?) = lazy {
     skate
 }
 
-fun Fragment.getMode(mode: Int) = also { SkateSingleton.modes[this::class.java.simpleName] }
-fun Fragment.setMode(mode: Int) = also { SkateSingleton.modes.put(this::class.java.simpleName, mode) }
+fun Fragment.getMode(mode: Int) = also { SkateSingleton.modes[this::class.java] }
+fun Fragment.setMode(mode: Int) = also { SkateSingleton.modes.put(this::class.java, mode) }
 fun Fragment.show() = also {
     SkateSingleton.getInstance().show2(this)
 }

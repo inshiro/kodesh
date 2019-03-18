@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowInsets
@@ -22,23 +23,21 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 import na.komi.kodesh.Application
-import na.komi.kodesh.BuildConfig
 import na.komi.kodesh.Prefs
 import na.komi.kodesh.R
 import na.komi.kodesh.ui.about.AboutFragment
 import na.komi.kodesh.ui.find.FindInPageFragment
-import na.komi.kodesh.ui.main.MainComponent
 import na.komi.kodesh.ui.main.MainFragment
 import na.komi.kodesh.ui.preface.PrefaceFragment
 import na.komi.kodesh.ui.search.SearchFragment
 import na.komi.kodesh.ui.setting.SettingsFragment
+import na.komi.kodesh.ui.widget.LayoutedTextView
 import na.komi.kodesh.util.*
 import na.komi.kodesh.util.skate.Skate
-import na.komi.kodesh.util.skate.extension.startSkating
-import na.komi.kodesh.util.skate.log.SkateLogger
-import na.komi.kodesh.ui.widget.LayoutedTextView
 import na.komi.kodesh.util.skate.extension.setMode
 import na.komi.kodesh.util.skate.extension.show
+import na.komi.kodesh.util.skate.extension.startSkating
+import na.komi.kodesh.util.skate.log.SkateLogger
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -106,7 +105,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
         return super.dispatchTouchEvent(ev)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+    /*override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
         savedInstanceState?.getParcelable<MainComponent>("MAIN_COMPONENT")?.let {
             MainComponent.mmainComponent = it.mmainComponent!!
@@ -116,7 +115,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelable("MAIN_COMPONENT", MainComponent)
-    }
+    }*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -140,16 +139,13 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
 
 
         val mainFragment by lazy {
-            supportFragmentManager.findFragmentByTag(MainFragment::class.java.simpleName) as? MainFragment
+            supportFragmentManager.findFragmentByTag(MainFragment::class.java.name) as? MainFragment
                 ?: MainFragment().setMode(Skate.SINGLETON)
         }
 
         skate = startSkating(savedInstanceState)
 
         skate.fragmentManager = supportFragmentManager
-
-        if (BuildConfig.DEBUG && Skate.logger == null)
-            Skate.logger = SkateLogger
 
         if (savedInstanceState == null) {
             skate.container = R.id.nav_main_container
@@ -183,32 +179,31 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
 
         }
 
+
         /**
          * We're using the same Fragment instance on this config(Portrait/Landscape)
          * This preserves its state. Only on config change we create a new instance.
          */
         val findInPageFragment by lazy {
-            supportFragmentManager.findFragmentByTag(FindInPageFragment::class.java.simpleName) as? FindInPageFragment
+            supportFragmentManager.findFragmentByTag(FindInPageFragment::class.java.name) as? FindInPageFragment
                 ?: FindInPageFragment().setMode(Skate.SPARING)
         }
         val prefaceFragment by lazy {
-            supportFragmentManager.findFragmentByTag(PrefaceFragment::class.java.simpleName) as? PrefaceFragment
+            supportFragmentManager.findFragmentByTag(PrefaceFragment::class.java.name) as? PrefaceFragment
                 ?: PrefaceFragment()
         }
         val searchFragment by lazy {
-            (supportFragmentManager.findFragmentByTag(SearchFragment::class.java.simpleName) as? SearchFragment)?.also { log d "D/KNAVIGATOR found SearchFragment" }
+            (supportFragmentManager.findFragmentByTag(SearchFragment::class.java.name) as? SearchFragment)?.also { log d "D/KNAVIGATOR found SearchFragment" }
                 ?: SearchFragment()
         }
         val settingsFragment by lazy {
-            supportFragmentManager.findFragmentByTag(SettingsFragment::class.java.simpleName) as? SettingsFragment
+            supportFragmentManager.findFragmentByTag(SettingsFragment::class.java.name) as? SettingsFragment
                 ?: SettingsFragment().setMode(Skate.SPARING)
         }
         val aboutFragment by lazy {
-            supportFragmentManager.findFragmentByTag(AboutFragment::class.java.simpleName) as? AboutFragment
+            supportFragmentManager.findFragmentByTag(AboutFragment::class.java.name) as? AboutFragment
                 ?: AboutFragment()
         }
-
-
 
         toolbar?.post {
             getToolbar()?.let { tb ->
@@ -255,9 +250,18 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             it.setNavigationItemSelectedListener { item ->
                 mBottomSheetBehavior.close()
                 setLowProfileStatusBar()
-                skate.container = R.id.nav_main_container
-                skate.mode = Skate.FACTORY
-
+                //skate.container = R.id.nav_main_container
+                //skate.mode = Skate.FACTORY
+                mBottomSheetContainer.apply {
+                    clearFocus()
+                    isClickable = false
+                    isFocusableInTouchMode = false
+                }
+                it.apply {
+                    clearFocus()
+                    isClickable = false
+                    isFocusableInTouchMode = false
+                }
                 // Prevent pressing self
                 if (!item.isChecked) {
                     //if (item.itemId != R.id.action_read) skate.hide(mainFragment, Skate.SINGLETON)
@@ -296,10 +300,11 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
 
             skate.setOnNavigateListener(object : Skate.OnNavigateListener {
                 override fun onBackPressed(isModular: Boolean) {
-                    mainFragment.show()
+                    //Log.d("SKATE ","${skate.fragmentManager?.fragments}")
                     val fragment = skate.current
-                    if (fragment is MainFragment) {
-                        backToMain(fragment, findInPageFragment)
+                    if (fragment != null && fragment::class.java == MainFragment::class.java) {
+                        mainFragment.show()
+                        backToMain(fragment as MainFragment, findInPageFragment)
                     }
                 }
             })
@@ -310,8 +315,8 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
     fun backToMain(mainFragment: MainFragment, findInPageFragment: Fragment) {
         bottomSheetContainer.visibility = View.VISIBLE
         getToolbar()?.also { tb ->
-            tb.title = if (Prefs.title.isNotEmpty()) Prefs.title else  getString(R.string.app_name)
-            getToolbarTitleView()?.text = if (Prefs.title.isNotEmpty()) Prefs.title else  getString(R.string.app_name)
+            tb.title = if (Prefs.title.isNotEmpty()) Prefs.title else getString(R.string.app_name)
+            getToolbarTitleView()?.text = if (Prefs.title.isNotEmpty()) Prefs.title else getString(R.string.app_name)
             for (a in tb.menu.children)
                 a.isVisible = true
             tb.menu.findItem(R.id.styling).setOnMenuItemClickListener {
@@ -332,20 +337,16 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
         getNavigationView().let { nv ->
             nv.setCheckedItem(R.id.action_read)
             nv.menu.findItem(R.id.action_read).isChecked = true
+            nv.apply {
+                isClickable = true
+                isFocusableInTouchMode = true
+            }
         }
 
     }
     //internal typealias OnClick = (library: Library) -> Unit
 
     var navToFrag: Fragment? = null
-    fun navTo(fragment: Fragment) {
-        bottomSheetContainer.apply {
-            clearFocus()
-            isClickable = false
-            isFocusableInTouchMode = false
-        }
-        skate to fragment
-    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -364,7 +365,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                     if (navToFrag != null) {
-                        navTo(navToFrag!!)
+                        skate to navToFrag!!
                         navToFrag = null
                         bottomSheetContainer.apply {
                             isClickable = true

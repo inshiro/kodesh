@@ -44,14 +44,15 @@ class Application : Application() {
         preferences = Preferences(this)
 
         setupKatana()
-        /*
+
         if (!BuildConfig.DEBUG) return
+        Skate.logger = SkateLogger
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not init your app in this process.
             return
         }
-        LeakCanary.install(this)*/
+        LeakCanary.install(this)
     }
 
 

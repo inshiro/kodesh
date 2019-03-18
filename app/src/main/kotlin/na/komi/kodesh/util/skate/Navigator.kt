@@ -41,7 +41,7 @@ interface Navigator {
      * @see [navigate]
      * @param fragment Target [Fragment] to add.
      */
-    infix fun add(fragment: Fragment): Any?
+    //infix fun add(fragment: Fragment): Any?
 
 
     /**
@@ -56,7 +56,7 @@ interface Navigator {
      * @param addToBackStack Register this [fragment] to be able to back press. Default to `true`.
      * @param modular Inclusive on navigation. (Will be hidden on [navigate])
      */
-    fun add(fragment: Fragment, mode: Int = this.mode, addToBackStack: Boolean = true, modular: Boolean = false)
+    //fun add(fragment: Fragment, mode: Int = this.mode, addToBackStack: Boolean = true, modular: Boolean = false)
 
 
     /**
@@ -69,7 +69,7 @@ interface Navigator {
      * @param index Index position to insert [fragment] in.
      * @param fragment Target [Fragment] to add.
      */
-    fun add(index: Int, fragment: Fragment)
+    //fun add(index: Int, fragment: Fragment)
 
 
     /**
@@ -79,7 +79,7 @@ interface Navigator {
      * @see [hide]
      * @param fragment Target [Fragment] to remove.
      */
-    infix fun remove(fragment: Fragment)
+    //infix fun remove(fragment: Fragment)
 
 
     /**
@@ -95,7 +95,7 @@ interface Navigator {
      * @param inBackStack Register this fragment in the backstack. Default to true.
      *
      */
-    infix fun navigate(fragment: Fragment)
+    //infix fun navigate(fragment: Fragment)
 
 
     /**
@@ -105,7 +105,7 @@ interface Navigator {
      * @param addToBackStack Register this [fragment] to be able to back press. Default to `true`.
      * @param modular Inclusive on navigation. (Will be hidden on [navigate])
      */
-    infix fun show(fragment: Fragment)
+    //infix fun show(fragment: Fragment)
 
 
     /**
@@ -115,7 +115,7 @@ interface Navigator {
      * @param addToBackStack Register this [fragment] to be able to back press. Default to `true`.
      * @param modular Inclusive on navigation. (Will be hidden on [navigate])
      */
-    fun show(fragment: Fragment, mode: Int = this.mode, addToBackStack: Boolean = true, modular: Boolean = false)
+    //fun show(fragment: Fragment, mode: Int = this.mode, addToBackStack: Boolean = true, modular: Boolean = false)
 
 
     /**
@@ -125,7 +125,7 @@ interface Navigator {
      * @param addToBackStack Register this [fragment] to be able to back press. Default to `true`.
      * @param modular Inclusive on navigation. (Will be hidden on [navigate])
      */
-    infix fun hide(fragment: Fragment)
+    //infix fun hide(fragment: Fragment)
 
 
     /**
@@ -135,7 +135,7 @@ interface Navigator {
      * @param addToBackStack Register this [fragment] to be able to back press. Default to `true`.
      * @param modular Inclusive on navigation. (Will be hidden on [navigate])
      */
-    fun hide(fragment: Fragment, mode: Int = this.mode, addToBackStack: Boolean = true, modular: Boolean = false)
+    //fun hide(fragment: Fragment, mode: Int = this.mode, addToBackStack: Boolean = true, modular: Boolean = false)
 
 
     /**
@@ -145,7 +145,7 @@ interface Navigator {
      *
      * Handle back if we have any fragments in our backstack. If not, let system handle it.
      */
-    fun goBack(): Boolean
+    //fun goBack(): Boolean
 
     /**
      * PopBackStack reverts the last transaction.

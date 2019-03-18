@@ -90,13 +90,14 @@ class Skate : Navigator {
     var animationEnd = android.R.animator.fade_out
     private val handler by lazy { Handler() }
 
-    private val modes = SkateSingleton.modes
+    private val modes
+            get()= SkateSingleton.modes
 
     override val current: Fragment?
-        get() = fragmentManager?.fragments?.let { if (it.lastIndex-1>=0) it[it.lastIndex-1] else null}//currentlyVisibleFragment()
+        get() = internalFragmentManager.fragments.let { if (it.lastIndex-1>=0) it[it.lastIndex-1] else null}//currentlyVisibleFragment()
 
     val current2:Fragment?
-    get()= fragmentManager?.fragments?.lastOrNull()
+    get()= internalFragmentManager.fragments.lastOrNull()
 
     override var fragmentManager: FragmentManager? = null
 
@@ -104,18 +105,20 @@ class Skate : Navigator {
         get() = fragmentManager ?: throw NullPointerException("Please set the fragment manager")
 
     private val Fragment.name
-        get() = this::class.java.simpleName
+        get() = this::class.java
 
-    val myStack = Stack<String>()
+    val myStack
+            get()= SkateSingleton.myStack
 
     fun nav2(fragment: Fragment) {
         val list = internalFragmentManager.fragments
         list.reverse()
 
         //SYNCHRONOUS = true
+        currentTransaction=null
         ALLOW_COMMIT = false
         // Get all modular fragments and hide them. Stop when we reach a non modular one.
-        run loop@{
+        /*run loop@{
             list.forEach { fragment ->
                 if (stack.lastOrNull { it.tag == fragment.name }?.modular == true) {
                     hide2(fragment)
@@ -124,10 +127,10 @@ class Skate : Navigator {
                 }
             }
         }
-
+        */
 
         // Hide the current showing fragment
-        fragmentManager?.fragments?.lastOrNull()?.let {
+        current2?.let {
             hide2(it)
         }
 
@@ -141,22 +144,24 @@ class Skate : Navigator {
 
     fun show2(fragment: Fragment) {
         checkAndCreateTransaction()
+        @Suppress("NAME_SHADOWING")
+        val fragment = internalFragmentManager.findFragmentByTag(fragment.name.name) ?: fragment
 
         // Get the mode assigned to the fragment
         var mode = defaultMode
-        SkateSingleton.modes[fragment.name]?.let {
+        modes[fragment.name]?.let {
             mode = it
-        } ?: SkateSingleton.modes.put(fragment.name, defaultMode)
+        } ?: modes.put(fragment.name, mode)
 
         if (myStack.firstOrNull { it == fragment.name } == null) {
-            currentTransaction?.add(container, fragment, fragment.name)
+            currentTransaction?.add(container, fragment, fragment.name.name)
             myStack.push(fragment.name)
         } else
             when (mode) {
                 FACTORY -> {
 
                     if (myStack.firstOrNull { it == fragment.name } == null)
-                        currentTransaction?.add(container, fragment, fragment.name)
+                        currentTransaction?.add(container, fragment, fragment.name.name)
                 }
                 SPARING -> currentTransaction?.attach(fragment)
                 SINGLETON -> currentTransaction?.show(fragment)
@@ -187,12 +192,14 @@ class Skate : Navigator {
 
     fun hide2(fragment: Fragment) {
         checkAndCreateTransaction()
+        @Suppress("NAME_SHADOWING")
+        val fragment = internalFragmentManager.findFragmentByTag(fragment.name.name) ?: fragment
 
         // Get the mode assigned to the fragment
         var mode = defaultMode
-        SkateSingleton.modes[fragment.name]?.let {
+        modes[fragment.name]?.let {
             mode = it
-        } ?: SkateSingleton.modes.put(fragment.name, defaultMode)
+        } ?: modes.put(fragment.name, mode)
 
         when (mode) {
             FACTORY -> {
@@ -219,8 +226,8 @@ class Skate : Navigator {
     val back: Boolean
         get() = goBack2()
 
-    fun goBack2(): Boolean {
-        fragmentManager?.fragments?.let {
+    private fun goBack2(): Boolean {
+        internalFragmentManager.fragments.let {
             it.lastOrNull()?.let { fragment ->
                 hide2(fragment)
                 listener?.onBackPressed(false)
@@ -268,112 +275,7 @@ class Skate : Navigator {
 
     infix fun to(fragment: Fragment) = nav2(fragment)
 
-    override fun navigate(fragment: Fragment) {
-        val list = internalFragmentManager.fragments
-        list.reverse()
-
-        //SYNCHRONOUS = true
-        ALLOW_COMMIT = false
-        // Get all modular fragments and hide them. Stop when we reach a non modular one.
-        run loop@{
-            list.forEach { fragment ->
-                if (stack.lastOrNull { it.tag == fragment.name }?.modular == true) {
-                    hide(fragment)
-                } else {
-                    return@loop
-                }
-            }
-        }
-
-
-        // Hide the current showing fragment
-        goBack()
-
-        //SYNCHRONOUS = false
-        ALLOW_COMMIT = true
-
-        // Show the destination
-        show(fragment)
-    }
-
-    private fun Fragment.push(
-        mode: Int = defaultMode,
-        addToBackStack: Boolean = true,
-        modular: Boolean = false,
-        index: Int = -1
-    ) {
-        // If we already have an entry
-        stack.lastOrNull { it.tag == name }?.also {
-            it.state =
-                when (mode) {
-                    FACTORY -> State.ADDED
-                    SPARING -> State.ATTACHED
-                    else -> State.SHOWING
-                }
-            it.modular = modular
-            it.inBackStack = addToBackStack
-            return
-        }
-
-        if (index != -1) {
-            stack.add(index, SkateFragment(name, State.ADDED, addToBackStack, modular))
-            return
-        }
-        stack.push(
-            SkateFragment(
-                name,
-                when (mode) {
-                    FACTORY -> State.ADDED
-                    SPARING -> State.ATTACHED
-                    else -> State.SHOWING
-                },
-                addToBackStack,
-                modular
-            )
-        )
-    }
-
-    private fun Fragment.pop(
-        mode: Int = defaultMode,
-        addToBackStack: Boolean = true,
-        modular: Boolean = false
-    ) {
-        if (mode == FACTORY)
-            stack.lastOrNull { it.tag == name }?.let {
-                stack.remove(it)
-                return
-            }
-        stack.lastOrNull { it.tag == name }?.also {
-            it.state =
-                when (mode) {
-                    SPARING -> State.DETACHED
-                    else -> State.HIDDEN
-                }
-            it.modular = modular
-            it.inBackStack = addToBackStack
-            return
-        }
-    }
-
-
-    override infix fun add(fragment: Fragment) = fragment.push(FACTORY)
-
-    override fun add(index: Int, fragment: Fragment) {
-        if (index !in 0..stack.size) {
-            Logger error "ERROR adding fragment! index out of bounds"
-            return
-        }
-        fragment.push(FACTORY)
-    }
-
-    override fun add(
-        fragment: Fragment,
-        mode: Int,
-        addToBackStack: Boolean,
-        modular: Boolean
-    ) = fragment.push(mode, addToBackStack, modular)
-
-
+    /*
     override fun remove(fragment: Fragment) {
         hide(fragment, FACTORY)
     }
@@ -562,7 +464,7 @@ class Skate : Navigator {
         return ret != null
 
     }
-
+*/
     @Suppress("unused")
     private fun displayFragments() {
         handler.postDelayed({
