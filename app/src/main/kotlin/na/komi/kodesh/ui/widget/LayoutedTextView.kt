@@ -1,4 +1,4 @@
-package na.komi.kodesh.widget
+package na.komi.kodesh.ui.widget
 
 import android.content.Context
 import android.graphics.Canvas
@@ -12,7 +12,6 @@ import android.text.TextPaint
 import android.text.style.ForegroundColorSpan
 import android.text.style.LeadingMarginSpan
 import android.util.AttributeSet
-import androidx.annotation.ColorInt
 import androidx.appcompat.widget.AppCompatTextView
 import na.komi.kodesh.Prefs
 import na.komi.kodesh.util.log

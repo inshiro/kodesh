@@ -34,6 +34,7 @@ class Application : Application() {
     companion object {
         lateinit var instance: Application
         lateinit var preferences: Preferences
+        var init: Boolean = false
         //lateinit var applicationComponent: Component
     }
 
@@ -42,11 +43,15 @@ class Application : Application() {
         instance = this
         preferences = Preferences(this)
 
-        if (BuildConfig.DEBUG) {
-            LeakCanary.install(this)
-        }
-
         setupKatana()
+        /*
+        if (!BuildConfig.DEBUG) return
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return
+        }
+        LeakCanary.install(this)*/
     }
 
 

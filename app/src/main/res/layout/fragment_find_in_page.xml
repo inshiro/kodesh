@@ -7,8 +7,7 @@
     android:background="?attr/colorPrimaryVariant"
     android:clickable="true"
     android:focusable="true"
-    android:focusableInTouchMode="true"
-    app:layout_anchorGravity="top">
+    android:focusableInTouchMode="true">
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/find_edit_text"

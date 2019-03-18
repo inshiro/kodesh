@@ -22,8 +22,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp">
+        android:paddingTop="10dp">
 
 
         <ImageView
@@ -35,10 +34,11 @@
             android:padding="@dimen/avatar_padding"
             android:tint="@android:color/holo_green_dark"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/library_name"
+            app:layout_constraintBottom_toBottomOf="@id/library_description"
             app:srcCompat="@drawable/ic_android" />
 
-        <na.komi.kodesh.widget.BaselineGridTextView
+        <na.komi.kodesh.ui.widget.BaselineGridTextView
             android:id="@+id/library_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Android spport libraries" />
 
-        <na.komi.kodesh.widget.BaselineGridTextView
+        <na.komi.kodesh.ui.widget.BaselineGridTextView
             android:id="@+id/library_description"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

@@ -14,6 +14,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
+import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.CoroutineScope
@@ -35,7 +36,9 @@ import na.komi.kodesh.util.*
 import na.komi.kodesh.util.skate.Skate
 import na.komi.kodesh.util.skate.extension.startSkating
 import na.komi.kodesh.util.skate.log.SkateLogger
-import na.komi.kodesh.widget.LayoutedTextView
+import na.komi.kodesh.ui.widget.LayoutedTextView
+import na.komi.kodesh.util.skate.extension.setMode
+import na.komi.kodesh.util.skate.extension.show
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -54,7 +57,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
     abstract val layout: Int
 
     open val job = SupervisorJob()
-    private lateinit var skate:Skate
+    private lateinit var skate: Skate
 
     override val coroutineContext: CoroutineContext
         get() = ContextHelper.dispatcher + job
@@ -73,8 +76,6 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
     private val behavior by lazy { bottomSheetBehavior }
 
     val container by lazy { bottomSheetContainer }
-
-    var prevTitle: CharSequence? = null
 
     fun getNavigationView(): NavigationView = findViewById(R.id.navigation_view)
 
@@ -137,14 +138,10 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
         mBottomSheetBehavior.peekHeight = toolbar?.measuredHeight?.let { if (it <= 0) 147 else it } ?: 147
         mBottomSheetBehavior.state = BottomSheetBehavior2.STATE_COLLAPSED
 
-        getToolbar()?.menu?.findItem(R.id.ham_menu)?.setOnMenuItemClickListener {
-            mBottomSheetBehavior.toggle()
-        }
-
 
         val mainFragment by lazy {
             supportFragmentManager.findFragmentByTag(MainFragment::class.java.simpleName) as? MainFragment
-                ?: MainFragment()
+                ?: MainFragment().setMode(Skate.SINGLETON)
         }
 
         skate = startSkating(savedInstanceState)
@@ -156,9 +153,12 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
 
         if (savedInstanceState == null) {
             skate.container = R.id.nav_main_container
-            skate.show(mainFragment, addToBackStack = false)
+            mainFragment.show()
+            Application.init = true
 
         } else {
+            // (!Application.init)
+            //   skate to mainFragment
             if (skate.current is SettingsFragment) {
                 launch {
                     val title = getString(R.string.settings_title)
@@ -173,9 +173,8 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
 
                         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                             getToolbarTitleView()?.removeTextChangedListener(this)
-                            prevTitle = s
-                            getToolbar()?.title = title
-                            getToolbarTitleView()?.text = title
+                            getToolbar()?.title = Prefs.title
+                            getToolbarTitleView()?.text = Prefs.title
                         }
 
                     })
@@ -190,7 +189,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
          */
         val findInPageFragment by lazy {
             supportFragmentManager.findFragmentByTag(FindInPageFragment::class.java.simpleName) as? FindInPageFragment
-                ?: FindInPageFragment()
+                ?: FindInPageFragment().setMode(Skate.SPARING)
         }
         val prefaceFragment by lazy {
             supportFragmentManager.findFragmentByTag(PrefaceFragment::class.java.simpleName) as? PrefaceFragment
@@ -202,11 +201,43 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
         }
         val settingsFragment by lazy {
             supportFragmentManager.findFragmentByTag(SettingsFragment::class.java.simpleName) as? SettingsFragment
-                ?: SettingsFragment()
+                ?: SettingsFragment().setMode(Skate.SPARING)
         }
         val aboutFragment by lazy {
             supportFragmentManager.findFragmentByTag(AboutFragment::class.java.simpleName) as? AboutFragment
                 ?: AboutFragment()
+        }
+
+
+
+        toolbar?.post {
+            getToolbar()?.let { tb ->
+                tb.setNavigationOnClickListener { mBottomSheetBehavior.toggle() }
+                tb.menu.findItem(R.id.search_menu)?.setOnMenuItemClickListener {
+                    setLowProfileStatusBar()
+                    if (mBottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                        navToFrag = searchFragment
+                    } else {
+                        skate to searchFragment
+                    }
+                    mBottomSheetBehavior.close()
+                    navigationView.menu.children.forEach {
+                        it.isChecked = false
+                    }
+                    true
+
+                }
+                tb.menu.findItem(R.id.find_in_page).setOnMenuItemClickListener {
+                    skate.container = R.id.container_main
+                    findInPageFragment.show()
+                    mBottomSheetBehavior.close()
+                    //it.isEnabled = false
+                    mBottomSheetContainer.visibility = View.GONE
+                    skate.container = R.id.nav_main_container
+                    true
+                }
+            }
+
         }
         /**
          * https://stackoverflow.com/a/37873884
@@ -225,33 +256,38 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                 mBottomSheetBehavior.close()
                 setLowProfileStatusBar()
                 skate.container = R.id.nav_main_container
-                skate.defaultMode = Skate.FACTORY
-                //skate.defaultMode = Skate.SPARING_SINGLETON
-
-                if (skate.current is MainFragment)
-                    prevTitle = getToolbarTitleView()?.text
+                skate.mode = Skate.FACTORY
 
                 // Prevent pressing self
                 if (!item.isChecked) {
+                    //if (item.itemId != R.id.action_read) skate.hide(mainFragment, Skate.SINGLETON)
                     when (item.itemId) {
                         R.id.action_read -> {
                             /*
                             val f = skate.current
                             if (f != null && f::class.java.simpleName != MainFragment::class.java.simpleName)
                                 skate.hide(f)*/
-                            skate to mainFragment
-                            navigationView.menu.findItem(R.id.action_find_in_page).isEnabled = true
-                            getToolbar()?.title = prevTitle
+                            //skate to mainFragment
+                            navToFrag = mainFragment
+                            //navigationView.menu.findItem(R.id.action_find_in_page).isEnabled = true
+                            backToMain(mainFragment as MainFragment, findInPageFragment)
                         }
-                        R.id.action_find_in_page -> {
+                        /*R.id.action_find_in_page -> {
                             skate.container = R.id.container_main
-                            skate.show(findInPageFragment, modular = true)
+                            findInPageFragment.show()
+                            //skate.show(findInPageFragment, modular = true)
                             item.isEnabled = false
                         }
-                        R.id.action_preface -> skate to prefaceFragment
-                        R.id.action_search -> skate to searchFragment
-                        R.id.action_settings -> skate to settingsFragment
-                        R.id.action_about -> skate to aboutFragment
+                        R.id.action_search -> { navToFrag = searchFragment }*/
+                        R.id.action_preface -> {
+                            navToFrag = prefaceFragment
+                        }
+                        R.id.action_settings -> {
+                            navToFrag = settingsFragment
+                        }
+                        R.id.action_about -> {
+                            navToFrag = aboutFragment
+                        }
 
                     }
                 }
@@ -260,24 +296,10 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
 
             skate.setOnNavigateListener(object : Skate.OnNavigateListener {
                 override fun onBackPressed(isModular: Boolean) {
+                    mainFragment.show()
                     val fragment = skate.current
                     if (fragment is MainFragment) {
-                        getToolbar()?.also { tb ->
-                            tb.title = prevTitle ?: getString(R.string.app_name)
-                            for (a in tb.menu.children)
-                                a.isVisible = true
-                            tb.menu.findItem(R.id.styling).setOnMenuItemClickListener {
-                                fragment.openStylingDialog()
-                                true
-                            }
-                        }
-                        getToolbarTitleView()?.onClick { fragment.openNavDialog() }
-                        getNavigationView().let { nv ->
-                            nv.setCheckedItem(R.id.action_read)
-                            for (a in nv.menu.children)
-                                a.isEnabled = true
-                        }
-
+                        backToMain(fragment, findInPageFragment)
                     }
                 }
             })
@@ -285,6 +307,45 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
 
     }
 
+    fun backToMain(mainFragment: MainFragment, findInPageFragment: Fragment) {
+        bottomSheetContainer.visibility = View.VISIBLE
+        getToolbar()?.also { tb ->
+            tb.title = if (Prefs.title.isNotEmpty()) Prefs.title else  getString(R.string.app_name)
+            getToolbarTitleView()?.text = if (Prefs.title.isNotEmpty()) Prefs.title else  getString(R.string.app_name)
+            for (a in tb.menu.children)
+                a.isVisible = true
+            tb.menu.findItem(R.id.styling).setOnMenuItemClickListener {
+                mainFragment.openStylingDialog()
+                true
+            }
+            tb.menu.findItem(R.id.find_in_page).setOnMenuItemClickListener {
+                skate.container = R.id.container_main
+                findInPageFragment.show()
+                bottomSheetBehavior.close()
+                bottomSheetContainer.visibility = View.GONE
+                //it.isEnabled = false
+                skate.container = R.id.nav_main_container
+                true
+            }
+        }
+        getToolbarTitleView()?.onClick { mainFragment.openNavDialog() }
+        getNavigationView().let { nv ->
+            nv.setCheckedItem(R.id.action_read)
+            nv.menu.findItem(R.id.action_read).isChecked = true
+        }
+
+    }
+    //internal typealias OnClick = (library: Library) -> Unit
+
+    var navToFrag: Fragment? = null
+    fun navTo(fragment: Fragment) {
+        bottomSheetContainer.apply {
+            clearFocus()
+            isClickable = false
+            isFocusableInTouchMode = false
+        }
+        skate to fragment
+    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -299,15 +360,22 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             val min = 0.5f
             val multiplier = 1f + min
 
-            var f = skate.current?.let {
-                if (it is MainFragment) it
-                else null
-            }
-            var v = f?.view
+            var v = skate.current2?.view
             override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    if (navToFrag != null) {
+                        navTo(navToFrag!!)
+                        navToFrag = null
+                        bottomSheetContainer.apply {
+                            isClickable = true
+                            isFocusableInTouchMode = true
+                        }
+                    }
+
+                }
                 if (newState == BottomSheetBehavior.STATE_DRAGGING) {
-                    skate.current?.let {
-                        if (it is MainFragment) f = it
+                    skate.current2?.let {
+                        v = it.view
                     }
                 }
             }

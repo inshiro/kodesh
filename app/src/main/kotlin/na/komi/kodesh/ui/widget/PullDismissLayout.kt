@@ -1,4 +1,4 @@
-package na.komi.kodesh.widget
+package na.komi.kodesh.ui.widget
 
 
 import android.annotation.SuppressLint

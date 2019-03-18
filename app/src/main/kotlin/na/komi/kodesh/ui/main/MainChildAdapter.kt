@@ -18,10 +18,7 @@ import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.recyclerview_child_content_main.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import na.komi.kodesh.Application
 import na.komi.kodesh.Prefs
 import na.komi.kodesh.R
@@ -32,16 +29,18 @@ import na.komi.kodesh.util.page.MySpannableFactory
 import na.komi.kodesh.util.text.spanBetweenEach
 import na.komi.kodesh.util.text.withSpan
 import na.komi.kodesh.util.tryy
-import na.komi.kodesh.widget.LayoutedTextView
-import na.komi.kodesh.widget.LeadingMarginSpan3
+import na.komi.kodesh.ui.widget.LayoutedTextView
+import na.komi.kodesh.ui.widget.LeadingMarginSpan3
 import kotlin.coroutines.CoroutineContext
 
 
 class MainChildAdapter(
-    private val vm: MainViewModel,
-    private val coroutineContext: CoroutineContext
+    private val vm: MainViewModel
 ) :
-    RecyclerView.Adapter<MainChildAdapter.ViewHolder>() {
+    RecyclerView.Adapter<MainChildAdapter.ViewHolder>(), CoroutineScope {
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+    private val job = SupervisorJob()
     private val list = mutableListOf<Bible>()
     private val cleanList by lazy { mutableListOf<String>()  }
 
@@ -71,7 +70,8 @@ class MainChildAdapter(
         list.clear()
         list.addAll(newList)
         notifyDataSetChanged()
-        GlobalScope.launch(Dispatchers.IO) {
+        coroutineContext.cancelChildren()
+        /*launch(Dispatchers.IO) {
             cleanList.clear()
             var text:String
             list.mapTo(cleanList) {
@@ -82,7 +82,7 @@ class MainChildAdapter(
                 }
                 text
             }
-        }
+        }*/
     }
 
     private val spannableFactory by lazy { MySpannableFactory() }
@@ -149,36 +149,6 @@ class MainChildAdapter(
                 val kjv = Formatting.kjvList[item.id - 1]
                 Formatting.diffText(item.verseText!!, kjv)
             } else item.verseText!!
-
-            if (vm.showDropCap) {
-                if (position == 0) {
-/*
-                    if (p == null) {
-                        p = Paint()
-                        p!!.apply {
-                            isAntiAlias = true
-                            typeface = Fonts.GentiumPlus_R
-                            textSize = na.komi.kodesh.util.sp(Prefs.mainFontSize * 4)
-                        }
-                    }
-                    log d "Drawing"
-                    c.drawText("M", 0f, 0f, p!!)
-                    verseView.post{
-                        verseView.draw(c)
-                    }*/
-                    // verseView.updatePadding(top = 0, right = 0, bottom = 0)
-                    //verseView.setTextSize(TypedValue.COMPLEX_UNIT_SP, Prefs.mainFontSize * 4)
-                    //bigTextSize = verseView.textSize
-                    //verseView.includeFontPadding = false
-                    //log d "verseView.marginBottom: ${verseView.marginBottom} verseView.marginTop: ${verseView.marginTop}"
-                } else if (position == 1) {
-                    //val params = verseView.layoutParams as RecyclerView.LayoutParams
-                    //params.setMargins(0, -500-bigTextSize.toInt(), 0, 0)
-                    //verseView.layoutParams = params
-                    //log d "position == 1 | verseView.marginBottom: ${verseView.marginBottom} verseView.marginTop: ${verseView.marginTop}"
-                    //verseView.updatePadding(top = 150)//240)
-                }
-            }
 
             val finalText = SpannableStringBuilder()
             /**

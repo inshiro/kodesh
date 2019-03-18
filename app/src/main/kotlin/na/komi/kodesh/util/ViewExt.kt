@@ -17,7 +17,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import na.komi.kodesh.Application
 import na.komi.kodesh.ui.internal.BottomSheetBehavior2
-import na.komi.kodesh.widget.ViewPager3
+import na.komi.kodesh.ui.widget.ViewPager3
 
 
 fun View.onClick(debounceTime: Long = 1000L, action: () -> Unit) {

@@ -18,7 +18,7 @@ import na.komi.kodesh.ui.main.MainViewModel
 import na.komi.kodesh.util.closestKatana
 import na.komi.kodesh.util.tryy
 import na.komi.kodesh.util.viewModel
-import na.komi.kodesh.widget.NumberPicker2
+import na.komi.kodesh.ui.widget.NumberPicker2
 import org.rewedigital.katana.Component
 import org.rewedigital.katana.KatanaTrait
 

@@ -16,7 +16,6 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         savedInstanceState ?: PreferenceManager.setDefaultValues(this, R.xml.styling_preferences, false)
-
     }
 
     override fun onDestroy() {

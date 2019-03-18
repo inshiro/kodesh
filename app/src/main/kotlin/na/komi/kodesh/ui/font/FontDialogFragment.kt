@@ -26,7 +26,7 @@ import na.komi.kodesh.ui.main.MainPageAdapter
 import na.komi.kodesh.util.onClick
 import na.komi.kodesh.util.setLowProfileStatusBar
 import na.komi.kodesh.util.text.futureSet
-import na.komi.kodesh.widget.ViewPager3
+import na.komi.kodesh.ui.widget.ViewPager3
 
 class FontDialogFragment : ExtendedBottomSheetDialogFragment() {
 

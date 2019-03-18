@@ -15,6 +15,7 @@
             android:icon="@drawable/ic_study"
             android:title="Preface" />
     </group>
+    <!--
     <group
         android:id="@+id/group11"
         android:checkableBehavior="single">
@@ -28,7 +29,7 @@
             android:checkable="false"
             android:title="Find in page" />
     </group>
-
+-->
     <group
         android:id="@+id/group2"
         android:checkableBehavior="single">

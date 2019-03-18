@@ -14,6 +14,7 @@
             android:id="@+id/toolbar_main"
             style="@style/Widget.Shrine.Toolbar"
             android:layout_width="match_parent"
+            app:navigationIcon="@drawable/kod_menu"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimaryVariant"
             app:layout_constraintStart_toStartOf="parent"

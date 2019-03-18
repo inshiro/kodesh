@@ -9,7 +9,7 @@ interface Navigator {
     /**
      * add-remove (0), attach-detach (1), hide-show (2)
      */
-    val defaultMode: Int
+    val mode: Int
 
     /**
      * Get the current list of fragments added.
@@ -56,7 +56,7 @@ interface Navigator {
      * @param addToBackStack Register this [fragment] to be able to back press. Default to `true`.
      * @param modular Inclusive on navigation. (Will be hidden on [navigate])
      */
-    fun add(fragment: Fragment, mode: Int = defaultMode, addToBackStack: Boolean = true, modular: Boolean = false)
+    fun add(fragment: Fragment, mode: Int = this.mode, addToBackStack: Boolean = true, modular: Boolean = false)
 
 
     /**
@@ -115,7 +115,7 @@ interface Navigator {
      * @param addToBackStack Register this [fragment] to be able to back press. Default to `true`.
      * @param modular Inclusive on navigation. (Will be hidden on [navigate])
      */
-    fun show(fragment: Fragment, mode: Int = defaultMode, addToBackStack: Boolean = true, modular: Boolean = false)
+    fun show(fragment: Fragment, mode: Int = this.mode, addToBackStack: Boolean = true, modular: Boolean = false)
 
 
     /**
@@ -135,7 +135,7 @@ interface Navigator {
      * @param addToBackStack Register this [fragment] to be able to back press. Default to `true`.
      * @param modular Inclusive on navigation. (Will be hidden on [navigate])
      */
-    fun hide(fragment: Fragment, mode: Int = defaultMode, addToBackStack: Boolean = true, modular: Boolean = false)
+    fun hide(fragment: Fragment, mode: Int = this.mode, addToBackStack: Boolean = true, modular: Boolean = false)
 
 
     /**

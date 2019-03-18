@@ -1,4 +1,4 @@
-package na.komi.kodesh.widget
+package na.komi.kodesh.ui.widget
 
 /*
  * Copyright 2015 Google Inc.

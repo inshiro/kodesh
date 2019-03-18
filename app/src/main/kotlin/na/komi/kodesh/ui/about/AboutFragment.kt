@@ -25,39 +25,24 @@ import na.komi.kodesh.ui.internal.*
 import na.komi.kodesh.util.inflateView
 import na.komi.kodesh.util.log
 import na.komi.kodesh.util.snackbar
-import na.komi.kodesh.widget.NestedRecyclerView
+import na.komi.kodesh.ui.widget.NestedRecyclerView
 import java.security.InvalidParameterException
 
 
-class AboutFragment : BaseFragment() {
+class AboutFragment : BaseFragment2() {
     override val layout: Int = R.layout.fragment_about
-    override fun ToolbarBuilder(): FragmentToolbar {
-        return FragmentToolbar(
-            toolbar = R.id.toolbar_main,
-            title = R.string.about_title,
-            bottomSheet = R.id.main_bottom_container,
-            navigationView = R.id.navigation_view
-        )
-    }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_about, container, false)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         getToolbar()?.let {
+            it.title = getString(R.string.about_title)
             for (a in it.menu.children)
-                if (a.itemId == R.id.styling)
-                    a.isVisible = false
+                a.isVisible = false
         }
-        getNavigationView().let {
-            it.menu.findItem(R.id.action_find_in_page).isEnabled = false
-            it.setCheckedItem(R.id.action_about)
-        }
+        getNavigationView().setCheckedItem(R.id.action_about)
 
-        val tabLayout = view.tab_layout
+        val tabLayout = view?.tab_layout
         val libraries = listOf(
             Library(
                 "Android support libraries",
@@ -91,9 +76,9 @@ class AboutFragment : BaseFragment() {
                     onLibraryClick(it)
                 })
 
-        val viewPager = view.about_view_pager
-        viewPager.apply {
-            tabLayout.setupWithViewPager(this)
+        val viewPager = view?.about_view_pager
+        viewPager?.apply {
+            tabLayout?.setupWithViewPager(this)
             adapter = AboutAdapter(uiModel)
         }
 

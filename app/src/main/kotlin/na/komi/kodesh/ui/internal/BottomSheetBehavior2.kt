@@ -157,8 +157,8 @@ class BottomSheetBehavior2<V : View>(context: Context, attrs: AttributeSet) :
     override fun layoutDependsOn(parent: CoordinatorLayout, child: V, dependency: View): Boolean {
         if (dependency is Snackbar.SnackbarLayout) {
             updateSnackbar(child, dependency)
-        } else if (dependency is ConstraintLayout)
-            updateSearchBar(child,dependency)
+        } //else if (dependency is ConstraintLayout)
+         //   updateSearchBar(child,dependency)
         return super.layoutDependsOn(parent, child, dependency)
     }
 

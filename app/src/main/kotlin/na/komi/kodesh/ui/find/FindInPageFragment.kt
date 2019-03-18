@@ -9,15 +9,13 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
-import androidx.fragment.app.Fragment
 import na.komi.kodesh.R
-import na.komi.kodesh.ui.main.MainActivity
-import na.komi.kodesh.util.log
-import na.komi.kodesh.util.skate.Skate
+import na.komi.kodesh.ui.internal.BaseFragment2
+import na.komi.kodesh.util.skate.extension.hide
 import na.komi.kodesh.util.skate.extension.startSkating
 
-class FindInPageFragment : Fragment() {
-
+class FindInPageFragment : BaseFragment2() {
+    override val layout: Int = R.layout.fragment_find_in_page
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_find_in_page, container, false)
@@ -34,7 +32,7 @@ class FindInPageFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         view?.let { view ->
-             val skate by startSkating(savedInstanceState)
+            val skate by startSkating(savedInstanceState)
             val closeButton = view.findViewById<AppCompatImageButton>(R.id.close_botton)
             val editText = view.findViewById<AppCompatEditText>(R.id.find_edit_text)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
@@ -49,16 +47,21 @@ class FindInPageFragment : Fragment() {
             skate.fragmentManager = requireActivity().supportFragmentManager
 
             closeButton.setOnClickListener {
-                (activity as MainActivity).getNavigationView().menu.findItem(R.id.action_find_in_page).isEnabled = true
-                skate hide this
+                getBottomSheetContainer()?.visibility = View.VISIBLE
+                this.hide()
             }
-
-
         }
     }
 
     override fun onDetach() {
         super.onDetach()
-        (activity as? MainActivity)?.getNavigationView()?.menu?.findItem(R.id.action_find_in_page)?.isEnabled = true
+        getBottomSheetContainer()?.visibility = View.VISIBLE
     }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (hidden)
+            getBottomSheetContainer()?.visibility = View.VISIBLE
+    }
+
 }

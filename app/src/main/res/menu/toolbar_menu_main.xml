@@ -4,14 +4,19 @@
     xmlns:appname="http://schemas.android.com/tools">
 
     <item
+        android:id="@+id/search_menu"
+        android:icon="@drawable/kod_search"
+        android:title="@string/kod_search_title"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/styling"
         android:icon="@drawable/ic_filter"
         android:title="@string/styling_title"
         app:showAsAction="ifRoom" />
-
     <item
-        android:id="@+id/ham_menu"
-        android:icon="@drawable/kod_branded_menu"
-        android:title="Menu"
-        app:showAsAction="always" />
+        android:id="@+id/find_in_page"
+        android:icon="@drawable/ic_find_in_page"
+        android:title="@string/find_in_page_title"
+        app:showAsAction="never" />
+
 </menu>

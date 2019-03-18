@@ -24,7 +24,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/navigate_title">
 
-        <na.komi.kodesh.widget.NumberPicker2
+        <na.komi.kodesh.ui.widget.NumberPicker2
             android:id="@+id/bookNumberPicker"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -36,7 +36,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.5" />
 
-        <na.komi.kodesh.widget.NumberPicker2
+        <na.komi.kodesh.ui.widget.NumberPicker2
             android:id="@+id/chapterNumberPicker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
             app:layout_constraintLeft_toRightOf="@id/bookNumberPicker"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <na.komi.kodesh.widget.NumberPicker2
+        <na.komi.kodesh.ui.widget.NumberPicker2
             android:id="@+id/verseNumberPicker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

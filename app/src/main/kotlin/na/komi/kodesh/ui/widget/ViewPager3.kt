@@ -1,4 +1,4 @@
-package na.komi.kodesh.widget
+package na.komi.kodesh.ui.widget
 
 import android.content.Context
 import android.os.Build
@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import na.komi.kodesh.Prefs
 import na.komi.kodesh.ui.internal.LinearLayoutManager2
-import na.komi.kodesh.ui.main.MainChildAdapter
 import kotlin.math.abs
 
 class ViewPager3 : RecyclerView {

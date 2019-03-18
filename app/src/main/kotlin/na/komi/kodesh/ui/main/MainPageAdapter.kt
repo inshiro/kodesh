@@ -17,7 +17,7 @@ import na.komi.kodesh.R
 import na.komi.kodesh.model.Bible
 import na.komi.kodesh.ui.internal.ItemDecorator
 import na.komi.kodesh.ui.internal.LinearLayoutManager2
-import na.komi.kodesh.widget.NestedRecyclerView
+import na.komi.kodesh.ui.widget.NestedRecyclerView
 import kotlin.coroutines.CoroutineContext
 
 class MainPageAdapter(private val vm: MainViewModel, private val coroutineContext: CoroutineContext) :
@@ -114,7 +114,7 @@ class MainPageAdapter(private val vm: MainViewModel, private val coroutineContex
                         ScrollListener.scrollY += dy
                     }
                 })*/
-                adapter = MainChildAdapter(vm, coroutineContext)
+                adapter = MainChildAdapter(vm)
             }
         }
 

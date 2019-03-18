@@ -4,7 +4,6 @@ package na.komi.kodesh.ui.main
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,7 +12,6 @@ import kotlinx.coroutines.launch
 import na.komi.kodesh.Prefs
 import na.komi.kodesh.R
 import na.komi.kodesh.model.Bible
-import na.komi.kodesh.ui.internal.BaseActivity
 import na.komi.kodesh.ui.internal.BaseKatanaFragment
 import na.komi.kodesh.ui.internal.FragmentToolbar
 import na.komi.kodesh.ui.navigate.NavigateDialogFragment
@@ -22,9 +20,8 @@ import na.komi.kodesh.util.*
 import na.komi.kodesh.util.livedata.raw
 import na.komi.kodesh.util.livedata.toSingleEvent
 import na.komi.kodesh.util.text.futureSet
-import na.komi.kodesh.widget.ViewPager3
+import na.komi.kodesh.ui.widget.ViewPager3
 import org.rewedigital.katana.Component
-import org.rewedigital.katana.KatanaTrait
 
 class MainFragment : BaseKatanaFragment() {
     override val layout: Int = R.layout.fragment_main
@@ -55,11 +52,6 @@ class MainFragment : BaseKatanaFragment() {
 
             getToolbar()?.menu?.findItem(R.id.styling)?.setOnMenuItemClickListener {
                 openStylingDialog()
-                true
-            }
-
-            getToolbar()?.menu?.findItem(R.id.ham_menu)?.setOnMenuItemClickListener {
-                toggleBottomSheet()
                 true
             }
 
@@ -225,6 +217,7 @@ class MainFragment : BaseKatanaFragment() {
                 (view?.findViewById<ViewPager3>(R.id.pager_main)?.adapter as? MainPageAdapter)?.currentList?.get(position)
         item?.let {
             getToolbarTitleView()?.futureSet("${it.bookName} ${it.chapterId}")
+            Prefs.title = "${it.bookName} ${it.chapterId}"
         } ?: getToolbar()?.let { it.title = appName }
 
     }

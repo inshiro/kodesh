@@ -13,7 +13,13 @@ import na.komi.kodesh.util.skate.global.SkateSingleton
 import na.komi.kodesh.util.skate.log.Logger
 import java.util.*
 
-
+/**
+ * 2 stacks
+ * getMode/setMode
+ * add-remove
+ * show-hide
+ * navigateTo
+ */
 class Skate : Navigator {
 
     internal fun serializeList(list: ArrayList<SkateFragment>) {
@@ -23,13 +29,13 @@ class Skate : Navigator {
 
 
     override val stack
-        get() = SkateSingleton._stack!!
+        get() = SkateSingleton.stack
 
     companion object {
         operator fun invoke(): Skate {
             //log w "/SKATE Skate instance null?: $${SkateSingleton._instance == null}"
 
-            if (SkateSingleton._instance != null)
+            if (SkateSingleton.readInstance() != null)
                 throw RuntimeException("Use startSkating() method to get the single instance of this class.")
 
             return SkateSingleton.getInstance()
@@ -54,7 +60,7 @@ class Skate : Navigator {
          *
          * A balance between saving memory and speed.
          */
-        val SPARING_SINGLETON: Int = 1
+        val SPARING: Int = 1
 
 
         /**
@@ -77,13 +83,20 @@ class Skate : Navigator {
 
     @IdRes
     override var container: Int = -1
-    override var defaultMode = FACTORY
-    private val animationStart = android.R.animator.fade_in
-    private val animationEnd = android.R.animator.fade_out
+    override var mode = FACTORY
+    private val defaultMode
+        get () = mode
+    var animationStart = android.R.animator.fade_in
+    var animationEnd = android.R.animator.fade_out
     private val handler by lazy { Handler() }
 
+    private val modes = SkateSingleton.modes
+
     override val current: Fragment?
-        get() = currentlyVisibleFragment()
+        get() = fragmentManager?.fragments?.let { if (it.lastIndex-1>=0) it[it.lastIndex-1] else null}//currentlyVisibleFragment()
+
+    val current2:Fragment?
+    get()= fragmentManager?.fragments?.lastOrNull()
 
     override var fragmentManager: FragmentManager? = null
 
@@ -93,9 +106,130 @@ class Skate : Navigator {
     private val Fragment.name
         get() = this::class.java.simpleName
 
+    val myStack = Stack<String>()
+
+    fun nav2(fragment: Fragment) {
+        val list = internalFragmentManager.fragments
+        list.reverse()
+
+        //SYNCHRONOUS = true
+        ALLOW_COMMIT = false
+        // Get all modular fragments and hide them. Stop when we reach a non modular one.
+        run loop@{
+            list.forEach { fragment ->
+                if (stack.lastOrNull { it.tag == fragment.name }?.modular == true) {
+                    hide2(fragment)
+                } else {
+                    return@loop
+                }
+            }
+        }
+
+
+        // Hide the current showing fragment
+        fragmentManager?.fragments?.lastOrNull()?.let {
+            hide2(it)
+        }
+
+        //SYNCHRONOUS = false
+        ALLOW_COMMIT = true
+
+        // Show the destination
+        show2(fragment)
+
+    }
+
+    fun show2(fragment: Fragment) {
+        checkAndCreateTransaction()
+
+        // Get the mode assigned to the fragment
+        var mode = defaultMode
+        SkateSingleton.modes[fragment.name]?.let {
+            mode = it
+        } ?: SkateSingleton.modes.put(fragment.name, defaultMode)
+
+        if (myStack.firstOrNull { it == fragment.name } == null) {
+            currentTransaction?.add(container, fragment, fragment.name)
+            myStack.push(fragment.name)
+        } else
+            when (mode) {
+                FACTORY -> {
+
+                    if (myStack.firstOrNull { it == fragment.name } == null)
+                        currentTransaction?.add(container, fragment, fragment.name)
+                }
+                SPARING -> currentTransaction?.attach(fragment)
+                SINGLETON -> currentTransaction?.show(fragment)
+            }
+
+
+        Logger info myStack.toString()
+
+        // If it's already added to our stack
+        /*myStack.firstOrNull { it == fragment.name }?.also {
+
+            // Cannot add again if it's already added.
+            when (mode) {
+                //FACTORY -> currentTransaction?.add(container, fragment, fragment.name)
+                SPARING -> currentTransaction?.attach(fragment)
+                SINGLETON -> currentTransaction?.show(fragment)
+            }
+        } ?: myStack.also {
+            it.push(fragment.name)
+            currentTransaction?.add(container, fragment, fragment.name)
+        }*/
+
+        if (ALLOW_COMMIT) {
+            commit()
+            listener?.onShow()
+        }
+    }
+
+    fun hide2(fragment: Fragment) {
+        checkAndCreateTransaction()
+
+        // Get the mode assigned to the fragment
+        var mode = defaultMode
+        SkateSingleton.modes[fragment.name]?.let {
+            mode = it
+        } ?: SkateSingleton.modes.put(fragment.name, defaultMode)
+
+        when (mode) {
+            FACTORY -> {
+
+                myStack.firstOrNull { it == fragment.name }?.let {
+                    Logger assert "Removing $it"
+                    currentTransaction?.remove(fragment)
+                    myStack.remove(it)
+                    SkateSingleton.modes.remove(it)
+                }
+            }
+            SPARING -> currentTransaction?.detach(fragment)?.also { Logger assert "Detaching ${fragment.name}" }
+            SINGLETON -> currentTransaction?.hide(fragment)?.also { Logger assert "Hiding ${fragment.name}" }
+        }
+
+        Logger warn myStack.toString()
+
+        if (ALLOW_COMMIT) {
+            commit()
+            listener?.onShow()
+        }
+    }
 
     val back: Boolean
-        get() = goBack()
+        get() = goBack2()
+
+    fun goBack2(): Boolean {
+        fragmentManager?.fragments?.let {
+            it.lastOrNull()?.let { fragment ->
+                hide2(fragment)
+                listener?.onBackPressed(false)
+                if (it.size <= 1)
+                    return false
+            }
+        }
+        return true
+    }
 
     /**
      * [Fragment] wrapper to allow real state change listening.
@@ -118,11 +252,14 @@ class Skate : Navigator {
     private var ALLOW_COMMIT = true
 
     private fun commit() {
+        currentTransaction?.setCustomAnimations(animationStart, animationEnd)
         currentTransaction?.commit()
         currentTransaction = null
     }
 
     private fun commitNow() {
+        currentTransaction?.setCustomAnimations(animationStart, animationEnd)
+
         currentTransaction?.commitNow()
         currentTransaction = null
     }
@@ -132,7 +269,7 @@ class Skate : Navigator {
             currentTransaction = internalFragmentManager.beginTransaction()
     }
 
-    infix fun to(fragment: Fragment) = navigate(fragment)
+    infix fun to(fragment: Fragment) = nav2(fragment)
 
     override fun navigate(fragment: Fragment) {
         val list = internalFragmentManager.fragments
@@ -168,11 +305,12 @@ class Skate : Navigator {
         modular: Boolean = false,
         index: Int = -1
     ) {
+        // If we already have an entry
         stack.lastOrNull { it.tag == name }?.also {
             it.state =
                 when (mode) {
                     FACTORY -> State.ADDED
-                    SPARING_SINGLETON -> State.ATTACHED
+                    SPARING -> State.ATTACHED
                     else -> State.SHOWING
                 }
             it.modular = modular
@@ -189,7 +327,7 @@ class Skate : Navigator {
                 name,
                 when (mode) {
                     FACTORY -> State.ADDED
-                    SPARING_SINGLETON -> State.ATTACHED
+                    SPARING -> State.ATTACHED
                     else -> State.SHOWING
                 },
                 addToBackStack,
@@ -203,13 +341,15 @@ class Skate : Navigator {
         addToBackStack: Boolean = true,
         modular: Boolean = false
     ) {
-        if (mode == FACTORY) stack.lastOrNull { it.tag == name }?.let {
-            stack.remove(it)
-        }
+        if (mode == FACTORY)
+            stack.lastOrNull { it.tag == name }?.let {
+                stack.remove(it)
+                return
+            }
         stack.lastOrNull { it.tag == name }?.also {
             it.state =
                 when (mode) {
-                    SPARING_SINGLETON -> State.DETACHED
+                    SPARING -> State.DETACHED
                     else -> State.HIDDEN
                 }
             it.modular = modular
@@ -245,6 +385,18 @@ class Skate : Navigator {
         val tag = frag::class.java
         val prefix = "Found as"
         var state = State.REMOVED
+
+        var mode = mode
+        stack.lastOrNull { it.tag == frag.name }?.let {
+            Logger assert "Passing though state: ${it.state}"
+            mode = when (it.state) {
+                State.ADDED, State.REMOVED -> 0
+                State.ATTACHED, State.DETACHED -> 1
+                State.SHOWING, State.HIDDEN -> 2
+                else -> defaultMode
+            }
+        }
+
         if (show) {
             if (!frag.isVisible) {
                 when {
@@ -252,7 +404,7 @@ class Skate : Navigator {
                         Logger assert "$prefix detached"
                         when (mode) {
                             FACTORY -> state = State.ADDED.also { Logger debug "Add $tag" }
-                            SPARING_SINGLETON -> state = State.ATTACHED.also { Logger debug "Attach $tag" }
+                            SPARING -> state = State.ATTACHED.also { Logger debug "Attach $tag" }
                             SINGLETON -> state = State.SHOWING.also { Logger debug "Show $tag" }
                         }
                     }
@@ -260,14 +412,16 @@ class Skate : Navigator {
                         Logger assert "$prefix hiding"
                         when (mode) {
                             FACTORY -> state = State.ADDED.also { Logger debug "Add $tag" }
-                            SPARING_SINGLETON -> state = State.ATTACHED.also { Logger debug "Attach $tag" }
+                            SPARING -> state = State.ATTACHED.also { Logger debug "Attach $tag" }
                             SINGLETON -> state = State.SHOWING.also { Logger debug "Show $tag" }
                         }
                     }
                     !frag.isAdded -> {
+
                         Logger assert "$prefix removed"
                         state = State.ADDED
                         Logger debug "Add $tag"
+
                     }
                     else -> {
                         Logger error "ERROR trying to show $tag"
@@ -286,7 +440,7 @@ class Skate : Navigator {
                         Logger assert "$prefix attached"
                         when (mode) {
                             FACTORY -> state = State.REMOVED.also { Logger debug "Remove $tag" }
-                            SPARING_SINGLETON -> state = State.DETACHED.also { Logger debug "Detach $tag" }
+                            SPARING -> state = State.DETACHED.also { Logger debug "Detach $tag" }
                             SINGLETON -> state = State.HIDDEN.also { Logger debug "Hide $tag" }
                         }
 
@@ -295,7 +449,7 @@ class Skate : Navigator {
                         Logger assert "$prefix showing"
                         when (mode) {
                             FACTORY -> state = State.REMOVED.also { Logger debug "Remove $tag" }
-                            SPARING_SINGLETON -> state = State.DETACHED.also { Logger debug "Detach $tag" }
+                            SPARING -> state = State.DETACHED.also { Logger debug "Detach $tag" }
                             SINGLETON -> state = State.HIDDEN.also { Logger debug "Hide $tag" }
                         }
                     }
@@ -331,6 +485,8 @@ class Skate : Navigator {
         checkAndCreateTransaction()
 
         frag.push(mode, addToBackStack, modular)
+
+        Logger warn stack.toString()
 
         @Suppress("NON_EXHAUSTIVE_WHEN")
         when (state) {
@@ -401,7 +557,7 @@ class Skate : Navigator {
         // Hide if visible, else ignore.
 
         val ret = currentlyVisibleFragment(true) { fragment, KFragment ->
-            hide(fragment)
+            hide2(fragment)
             listener?.onBackPressed(KFragment.modular)
         }
 

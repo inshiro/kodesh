@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import na.komi.kodesh.Application
 import na.komi.kodesh.R
 import na.komi.kodesh.model.Bible
+import na.komi.kodesh.ui.internal.BaseFragment2
 import na.komi.kodesh.ui.internal.BaseKatanaFragment
 import na.komi.kodesh.ui.internal.BottomSheetBehavior2
 import na.komi.kodesh.ui.internal.FragmentToolbar
@@ -28,33 +29,21 @@ import na.komi.kodesh.ui.main.MainViewModel
 import na.komi.kodesh.util.closestKatana
 import na.komi.kodesh.util.viewModel
 import org.rewedigital.katana.Component
+import org.rewedigital.katana.KatanaTrait
 
-class SearchFragment : BaseKatanaFragment() {
+class SearchFragment : BaseFragment2() , KatanaTrait{
     override val layout: Int = R.layout.fragment_search
 
     override val component: Component by closestKatana()
 
     private val viewModel: MainViewModel by viewModel()
 
-    override fun ToolbarBuilder(): FragmentToolbar {
-        return FragmentToolbar(
-                toolbar = R.id.toolbar_main,
-                title = R.string.kod_search_title,
-                bottomSheet = R.id.main_bottom_container,
-                navigationView = R.id.navigation_view
-        )
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         getToolbar()?.let {
+            it.title = getString(R.string.kod_search_title)
             for (a in it.menu.children)
-                if (a.itemId == R.id.styling)
-                    a.isVisible = false
-        }
-        getNavigationView().let {
-            it.menu.findItem(R.id.action_find_in_page).isEnabled = false
-            it.setCheckedItem(R.id.action_search)
+                a.isVisible = false
         }
         setupRecyclerView()
         val bh = getBottomSheetBehavior()
@@ -83,7 +72,7 @@ class SearchFragment : BaseKatanaFragment() {
 
         rv.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 
-        val searchVerseObserver = Observer<PagedList<Bible>> { list ->
+        /*val searchVerseObserver = Observer<PagedList<Bible>> { list ->
             list?.let {
                 adapter.submitList(it)
                 Snackbar.make(
@@ -92,7 +81,7 @@ class SearchFragment : BaseKatanaFragment() {
                         Snackbar.LENGTH_SHORT
                 ).show()
             }
-        }
+        }*/
 
         editText.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) imm.showKeyboard()
@@ -112,7 +101,7 @@ class SearchFragment : BaseKatanaFragment() {
                                     adapter.submitList(it)
                                     Snackbar.make(
                                             editText,
-                                            "${it.size} result${if (it.size > 1 || it.size == 0) "s" else ""}",
+                                            "${it.size} result${if (it.size == 1) "" else "s"}",
                                             Snackbar.LENGTH_SHORT
                                     ).show()
                                 }

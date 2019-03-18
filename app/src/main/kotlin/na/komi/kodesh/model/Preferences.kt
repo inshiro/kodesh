@@ -32,6 +32,7 @@ class Preferences (context: Context) {
     private val NAVIGATE_TO_POSITION = "NAVIGATE_TO_POSITION"
     private val SCROLL_STRING = "SCROLL_STRING"
     private val SCALE_FACTOR = "SCALE_FACTOR"
+    private val TITLE_ID = "TITLE_ID"
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_FILENAME, MODE_PRIVATE)
 
     var Book: Int
@@ -91,4 +92,7 @@ class Preferences (context: Context) {
     var ScrollString: String?
         get() = prefs.getString(SCROLL_STRING, "")
         set(value) = prefs.edit().putString(SCROLL_STRING, value).apply()
+    var title: String
+        get() = prefs.getString(TITLE_ID, "")
+        set(value) = prefs.edit().putString(TITLE_ID, value).apply()
 }

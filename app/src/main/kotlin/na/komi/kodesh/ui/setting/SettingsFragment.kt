@@ -49,15 +49,10 @@ class SettingsFragment : PreferenceFragmentCompat(), CoroutineScope {
         (requireActivity() as MainActivity).let {
             it.findViewById<Toolbar>(R.id.toolbar_main).let { toolbar ->
                 for (a in toolbar.menu.children)
-                    if (a.itemId != R.id.ham_menu)
-                        a.isVisible = false
+                    a.isVisible = false
                 toolbar.title = getString(R.string.settings_title)
             }
-            it.findViewById<NavigationView>(R.id.navigation_view).let { navigationView ->
-                //navigationView.menu.findItem(R.id.action_search).isEnabled = false
-                navigationView.menu.findItem(R.id.action_find_in_page).isEnabled = false
-                navigationView.setCheckedItem(R.id.action_settings)
-            }
+            it.findViewById<NavigationView>(R.id.navigation_view).setCheckedItem(R.id.action_settings)
             it.getToolbarTitleView()?.onClick {}
 
         }
