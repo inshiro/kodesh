@@ -12,8 +12,7 @@ import kotlinx.coroutines.launch
 import na.komi.kodesh.Prefs
 import na.komi.kodesh.R
 import na.komi.kodesh.model.Bible
-import na.komi.kodesh.ui.internal.BaseKatanaFragment
-import na.komi.kodesh.ui.internal.FragmentToolbar
+import na.komi.kodesh.ui.internal.BaseFragment2
 import na.komi.kodesh.ui.navigate.NavigateDialogFragment
 import na.komi.kodesh.ui.styling.StylingDialogFragment
 import na.komi.kodesh.ui.widget.ViewPager3
@@ -25,9 +24,10 @@ import na.komi.kodesh.util.onClick
 import na.komi.kodesh.util.setLowProfileStatusBar
 import na.komi.kodesh.util.text.futureSet
 import org.rewedigital.katana.Component
+import org.rewedigital.katana.KatanaTrait
 import org.rewedigital.katana.androidx.viewmodel.activityViewModel
 
-class MainFragment : BaseKatanaFragment() {
+class MainFragment : BaseFragment2(), KatanaTrait {
     override val layout: Int = R.layout.fragment_main
 
     private val appName by lazy { getString(R.string.app_name) }
@@ -36,32 +36,26 @@ class MainFragment : BaseKatanaFragment() {
 
     private val viewModel: MainViewModel by activityViewModel()
 
-    override fun ToolbarBuilder(): FragmentToolbar {
-        return FragmentToolbar(
-                toolbar = R.id.toolbar_main,
-                menu = R.menu.toolbar_menu_main,
-                bottomSheet = R.id.main_bottom_container,
-                navigationView = R.id.navigation_view
-        )
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setupRecyclerView(view!!)
 
-        launch {
-            while (getToolbar()?.title.isNullOrBlank()) delay(10)
-            if (viewModel.MainRecyclerViewState == null) //getToolbar()?.title = ""
-                setTitle(Prefs.VP_Position)
+               launch {
+                   val p = Prefs.VP_Position
+                   while ( (view?.findViewById<ViewPager3>(R.id.pager_main)?.adapter as? MainPageAdapter)?.currentList?.get(p) == null) delay(1)
+                    if (viewModel.mBundleRecyclerViewState == null) //getToolbar()?.title = ""
+                        getToolbar()?.post { setTitle(Prefs.VP_Position) }
+                }
 
-            getToolbar()?.menu?.findItem(R.id.styling)?.setOnMenuItemClickListener {
-                openStylingDialog()
-                true
-            }
+        getToolbar()?.post {
+                getToolbar()?.menu?.findItem(R.id.styling)?.setOnMenuItemClickListener {
+                    openStylingDialog()
+                    true
+                }
 
-            getToolbarTitleView()?.onClick {
-                openNavDialog()
-            }
+                getToolbarTitleView()?.onClick {
+                    openNavDialog()
+                }
         }
     }
 
@@ -218,11 +212,15 @@ class MainFragment : BaseKatanaFragment() {
     private fun setTitle(position: Int) {
 
         val item =
-                (view?.findViewById<ViewPager3>(R.id.pager_main)?.adapter as? MainPageAdapter)?.currentList?.get(position)
+            (view?.findViewById<ViewPager3>(R.id.pager_main)?.adapter as? MainPageAdapter)?.currentList?.get(position)
         item?.let {
+            getToolbar()?.title = "${it.bookName} ${it.chapterId}"
             getToolbarTitleView()?.futureSet("${it.bookName} ${it.chapterId}")
             Prefs.title = "${it.bookName} ${it.chapterId}"
-        } ?: getToolbar()?.let { it.title = appName }
+        } ?: {
+            getToolbar()?.title = appName
+            getToolbarTitleView()?.text = appName
+        }()
 
     }
 
@@ -264,7 +262,7 @@ class MainFragment : BaseKatanaFragment() {
      * @return
      */
     private fun AppCompatTextView.getFirstLineIndex(scrollY: Int): Int? =
-            getFirstVisibleLine(scrollY)?.let { layout?.getLineStart(it) }
+        getFirstVisibleLine(scrollY)?.let { layout?.getLineStart(it) }
 
     private fun click() {
 
@@ -304,11 +302,11 @@ class MainFragment : BaseKatanaFragment() {
 
     private val stylingDialog by lazy { StylingDialogFragment() }
 
-     fun openNavDialog() {
+    fun openNavDialog() {
         navigationDialog.show(childFragmentManager, navigationDialog.javaClass.simpleName)
     }
 
-     fun openStylingDialog() {
+    fun openStylingDialog() {
         stylingDialog.show(childFragmentManager, stylingDialog.javaClass.simpleName)
     }
 

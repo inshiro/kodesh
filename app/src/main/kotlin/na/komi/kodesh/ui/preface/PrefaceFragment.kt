@@ -26,28 +26,32 @@ import na.komi.kodesh.ui.widget.LayoutedTextView
 import na.komi.kodesh.ui.widget.NestedRecyclerView
 import na.komi.kodesh.ui.widget.ViewPager3
 import na.komi.kodesh.util.closestKatana
+import na.komi.kodesh.util.log
 import na.komi.kodesh.util.onClick
 import na.komi.kodesh.util.page.Fonts
 import na.komi.kodesh.util.sp
+import na.komi.kodesh.util.text.futureSet
 import org.rewedigital.katana.Component
 import org.rewedigital.katana.KatanaTrait
 import org.rewedigital.katana.androidx.viewmodel.activityViewModel
 import kotlin.coroutines.CoroutineContext
 
 
-class PrefaceFragment : BaseFragment2(),KatanaTrait {
+class PrefaceFragment : BaseFragment2(), KatanaTrait {
     override val layout: Int = R.layout.fragment_preface
     override val component: Component by closestKatana()
-    private val viewModel:MainViewModel by activityViewModel()
+    private val viewModel: MainViewModel by activityViewModel()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         getToolbar()?.let {
-           // it.title = getString(R.string.preface_title)
             for (a in it.menu.children) {
-                if (a.itemId != R.id.find_in_page)
-                    a.isVisible = false
+                a.isVisible = a.itemId == R.id.find_in_page
             }
+        }
+        getToolbarTitleView()?.onClick {
+            if (!imageDialog.isVisible)
+                openImageDialog()
         }
         getNavigationView().let {
             it.setCheckedItem(R.id.action_preface)
@@ -56,13 +60,9 @@ class PrefaceFragment : BaseFragment2(),KatanaTrait {
         }
 
 
-        val pager = view!!.findViewById<ViewPager3>(R.id.preface_view_pager)
-        var list: MutableList<String>
-
-
-
         launch {
-            list = withContext(viewModel.executorDispatcher) {
+            val pager = view!!.findViewById<ViewPager3>(R.id.preface_view_pager)
+            val list = withContext(viewModel.executorDispatcher) {
                 mutableListOf(getString(R.string.dedicatory_text), translatorsText())
             }
             pager.apply {
@@ -71,22 +71,23 @@ class PrefaceFragment : BaseFragment2(),KatanaTrait {
                     isItemPrefetchEnabled = true
                     //initialPrefetchItemCount = 4
                 }
-                adapter = PrefaceAdapter(viewModel, coroutineContext)
+                adapter = PrefaceAdapter(viewModel, coroutineContext).apply { setList(list) }
                 isNestedScrollingEnabled = true
             }
-            (pager.adapter as PrefaceAdapter).setList(list)
 
-        }
-        pager.registerOnPageChangeCallback(object : ViewPager3.OnPageChangeCallback {
-            override fun onPageSelected(position: Int) {
-                //log d "onPageSelected: $position"
-                getToolbar()?.title = if (position == 0) "Dedicatory" else "Translators' Letter"
+            pager.registerOnPageChangeCallback(object : ViewPager3.OnPageChangeCallback {
+                override fun onPageSelected(position: Int) {
+                    //log d "/SKATE onPageSelected: $position"
+                    //getToolbar()?.title = if (position == 0) "Dedicatory" else "Translators' Letter"
+                    getToolbarTitleView()?.let {
+                        if (position == 0)
+                        it.futureSet("Dedicatory")
+                        else
+                        it.futureSet("Translators' Letter")
+                    }
 
-            }
-        })
-        (activity as MainActivity).getToolbarTitleView()?.onClick {
-            if (!imageDialog.isVisible)
-                openImageDialog()
+                }
+            })
         }
     }
 

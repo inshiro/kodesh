@@ -1,5 +1,6 @@
 package na.komi.kodesh.ui.internal
 
+import android.annotation.SuppressLint
 import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
@@ -18,10 +19,7 @@ import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancelChildren
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import na.komi.kodesh.Application
 import na.komi.kodesh.Prefs
 import na.komi.kodesh.R
@@ -117,6 +115,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
         outState.putParcelable("MAIN_COMPONENT", MainComponent)
     }*/
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -211,7 +210,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                 tb.menu.findItem(R.id.search_menu)?.setOnMenuItemClickListener {
                     setLowProfileStatusBar()
                     if (mBottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
-                        navToFrag = searchFragment
+                        searchFragment.navToFrag()
                     } else {
                         skate to searchFragment
                     }
@@ -252,16 +251,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                 setLowProfileStatusBar()
                 //skate.container = R.id.nav_main_container
                 //skate.mode = Skate.FACTORY
-                mBottomSheetContainer.apply {
-                    clearFocus()
-                    isClickable = false
-                    isFocusableInTouchMode = false
-                }
-                it.apply {
-                    clearFocus()
-                    isClickable = false
-                    isFocusableInTouchMode = false
-                }
+
                 // Prevent pressing self
                 if (!item.isChecked) {
                     //if (item.itemId != R.id.action_read) skate.hide(mainFragment, Skate.SINGLETON)
@@ -272,26 +262,13 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                             if (f != null && f::class.java.simpleName != MainFragment::class.java.simpleName)
                                 skate.hide(f)*/
                             //skate to mainFragment
-                            navToFrag = mainFragment
+                             mainFragment.navToFrag()
                             //navigationView.menu.findItem(R.id.action_find_in_page).isEnabled = true
                             backToMain(mainFragment as MainFragment, findInPageFragment)
                         }
-                        /*R.id.action_find_in_page -> {
-                            skate.container = R.id.container_main
-                            findInPageFragment.show()
-                            //skate.show(findInPageFragment, modular = true)
-                            item.isEnabled = false
-                        }
-                        R.id.action_search -> { navToFrag = searchFragment }*/
-                        R.id.action_preface -> {
-                            navToFrag = prefaceFragment
-                        }
-                        R.id.action_settings -> {
-                            navToFrag = settingsFragment
-                        }
-                        R.id.action_about -> {
-                            navToFrag = aboutFragment
-                        }
+                        R.id.action_preface -> prefaceFragment.navToFrag()
+                        R.id.action_settings -> settingsFragment.navToFrag()
+                        R.id.action_about -> aboutFragment.navToFrag()
 
                     }
                 }
@@ -346,8 +323,13 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
     }
     //internal typealias OnClick = (library: Library) -> Unit
 
-    var navToFrag: Fragment? = null
 
+    fun Fragment.navToFrag(){
+        launch {
+            delay(250)
+            skate to this@navToFrag
+        }
+    }
     override fun onDestroy() {
         super.onDestroy()
         coroutineContext.cancelChildren()
@@ -364,14 +346,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             var v = skate.current2?.view
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    if (navToFrag != null) {
-                        skate to navToFrag!!
-                        navToFrag = null
-                        bottomSheetContainer.apply {
-                            isClickable = true
-                            isFocusableInTouchMode = true
-                        }
-                    }
+
 
                 }
                 if (newState == BottomSheetBehavior.STATE_DRAGGING) {

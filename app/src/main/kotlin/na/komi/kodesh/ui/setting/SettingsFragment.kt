@@ -19,6 +19,7 @@ import na.komi.kodesh.Prefs
 import na.komi.kodesh.R
 import na.komi.kodesh.ui.main.MainActivity
 import na.komi.kodesh.util.onClick
+import na.komi.kodesh.util.text.futureSet
 import kotlin.coroutines.CoroutineContext
 
 class SettingsFragment : PreferenceFragmentCompat(), CoroutineScope {
@@ -47,13 +48,15 @@ class SettingsFragment : PreferenceFragmentCompat(), CoroutineScope {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         (requireActivity() as MainActivity).let {
-            it.findViewById<Toolbar>(R.id.toolbar_main).let { toolbar ->
+            it.getToolbar()?.let { toolbar ->
                 for (a in toolbar.menu.children)
                     a.isVisible = false
-                toolbar.title = getString(R.string.settings_title)
             }
-            it.findViewById<NavigationView>(R.id.navigation_view).setCheckedItem(R.id.action_settings)
-            it.getToolbarTitleView()?.onClick {}
+            it.getToolbarTitleView()?.apply {
+                futureSet(getString(R.string.settings_title))
+                onClick {}
+            }
+            it.getNavigationView().setCheckedItem(R.id.action_settings)
 
         }
         val mListPreference = preferenceManager.findPreference<ListPreference>("THEME_ID") ?: return

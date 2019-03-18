@@ -60,6 +60,7 @@ abstract class BaseFragment2 : Fragment(), CoroutineScope, TitleListener, Inject
     private val act
             get()= (activity as? MainActivity)
 
+    /*
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         getToolbar()?.let {
@@ -74,7 +75,7 @@ abstract class BaseFragment2 : Fragment(), CoroutineScope, TitleListener, Inject
         getToolbarTitleView()?.onClick {
             onToolbarTitleClick()
         }
-    }
+    }*/
 
     fun closeBottomSheet() = getBottomSheetBehavior()?.close()
 

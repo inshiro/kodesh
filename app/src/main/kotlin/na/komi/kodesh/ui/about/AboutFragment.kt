@@ -26,6 +26,7 @@ import na.komi.kodesh.util.inflateView
 import na.komi.kodesh.util.log
 import na.komi.kodesh.util.snackbar
 import na.komi.kodesh.ui.widget.NestedRecyclerView
+import na.komi.kodesh.util.text.futureSet
 import java.security.InvalidParameterException
 
 
@@ -36,10 +37,10 @@ class AboutFragment : BaseFragment2() {
         super.onActivityCreated(savedInstanceState)
 
         getToolbar()?.let {
-            it.title = getString(R.string.about_title)
             for (a in it.menu.children)
                 a.isVisible = false
         }
+        getToolbarTitleView()?.futureSet(getString(R.string.about_title))
         getNavigationView().setCheckedItem(R.id.action_about)
 
         val tabLayout = view?.tab_layout
