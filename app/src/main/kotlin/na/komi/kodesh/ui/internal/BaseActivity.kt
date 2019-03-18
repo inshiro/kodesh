@@ -152,8 +152,10 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             Application.init = true
 
         } else {
-            // (!Application.init)
-            //   skate to mainFragment
+            if (!Application.init)
+                supportFragmentManager.findFragmentById(skate.container)?.view?.post {
+                    skate to mainFragment
+                }
             if (skate.current is SettingsFragment) {
                 launch {
                     val title = getString(R.string.settings_title)

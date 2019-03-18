@@ -156,15 +156,16 @@ class Skate : Navigator {
         if (myStack.firstOrNull { it == fragment.name } == null) {
             currentTransaction?.add(container, fragment, fragment.name.name)
             myStack.push(fragment.name)
+            Logger assert "Adding ${fragment.name}"
         } else
             when (mode) {
                 FACTORY -> {
 
                     if (myStack.firstOrNull { it == fragment.name } == null)
-                        currentTransaction?.add(container, fragment, fragment.name.name)
+                        currentTransaction?.add(container, fragment, fragment.name.name).also { Logger assert "Adding ${fragment.name}" }
                 }
-                SPARING -> currentTransaction?.attach(fragment)
-                SINGLETON -> currentTransaction?.show(fragment)
+                SPARING -> currentTransaction?.attach(fragment).also { Logger assert "Attaching ${fragment.name}" }
+                SINGLETON -> currentTransaction?.show(fragment).also { Logger assert "Showing ${fragment.name}" }
             }
 
 

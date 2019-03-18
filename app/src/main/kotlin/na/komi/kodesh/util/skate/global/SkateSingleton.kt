@@ -31,6 +31,8 @@ internal object SkateSingleton {
     fun clear() {
         _instance = null
         _stack = null
+        _modeMap = null
+        _myStack = null
     }
 
 }
