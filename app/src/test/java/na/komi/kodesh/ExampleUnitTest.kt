@@ -2,21 +2,11 @@ package na.komi.kodesh
 
 import android.text.SpannableStringBuilder
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import org.jsoup.Jsoup
-import org.jsoup.helper.HttpConnection
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.FixMethodOrder
 import org.junit.Ignore
-import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
-import org.mozilla.javascript.Context
-import org.mozilla.javascript.Function
-import java.net.URL
 
 
 /**
