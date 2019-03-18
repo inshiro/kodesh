@@ -16,12 +16,16 @@ import na.komi.kodesh.ui.internal.BaseKatanaFragment
 import na.komi.kodesh.ui.internal.FragmentToolbar
 import na.komi.kodesh.ui.navigate.NavigateDialogFragment
 import na.komi.kodesh.ui.styling.StylingDialogFragment
-import na.komi.kodesh.util.*
+import na.komi.kodesh.ui.widget.ViewPager3
+import na.komi.kodesh.util.betterSmoothScrollToPosition
+import na.komi.kodesh.util.closestKatana
 import na.komi.kodesh.util.livedata.raw
 import na.komi.kodesh.util.livedata.toSingleEvent
+import na.komi.kodesh.util.onClick
+import na.komi.kodesh.util.setLowProfileStatusBar
 import na.komi.kodesh.util.text.futureSet
-import na.komi.kodesh.ui.widget.ViewPager3
 import org.rewedigital.katana.Component
+import org.rewedigital.katana.androidx.viewmodel.activityViewModel
 
 class MainFragment : BaseKatanaFragment() {
     override val layout: Int = R.layout.fragment_main
@@ -30,7 +34,7 @@ class MainFragment : BaseKatanaFragment() {
 
     override val component: Component by closestKatana()
 
-    private val viewModel: MainViewModel by viewModel()
+    private val viewModel: MainViewModel by activityViewModel()
 
     override fun ToolbarBuilder(): FragmentToolbar {
         return FragmentToolbar(

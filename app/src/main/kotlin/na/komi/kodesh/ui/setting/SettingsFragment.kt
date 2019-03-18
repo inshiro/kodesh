@@ -56,7 +56,7 @@ class SettingsFragment : PreferenceFragmentCompat(), CoroutineScope {
             it.getToolbarTitleView()?.onClick {}
 
         }
-        val mListPreference = preferenceManager.findPreference("THEME_ID") as ListPreference
+        val mListPreference = preferenceManager.findPreference<ListPreference>("THEME_ID") ?: return
         mListPreference.value = Prefs.themeId.toString()
         mListPreference.onPreferenceChangeListener =
             Preference.OnPreferenceChangeListener { pref, newValue ->

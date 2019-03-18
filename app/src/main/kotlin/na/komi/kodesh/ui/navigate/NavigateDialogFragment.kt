@@ -17,15 +17,15 @@ import na.komi.kodesh.ui.internal.ExtendedBottomSheetDialogFragment
 import na.komi.kodesh.ui.main.MainViewModel
 import na.komi.kodesh.util.closestKatana
 import na.komi.kodesh.util.tryy
-import na.komi.kodesh.util.viewModel
 import na.komi.kodesh.ui.widget.NumberPicker2
 import org.rewedigital.katana.Component
 import org.rewedigital.katana.KatanaTrait
+import org.rewedigital.katana.androidx.viewmodel.activityViewModel
 
 class NavigateDialogFragment : ExtendedBottomSheetDialogFragment(), KatanaTrait {
     override val component: Component by closestKatana()
 
-    private val viewModel:MainViewModel by viewModel()
+    private val viewModel:MainViewModel by activityViewModel()
 
     override val initialState: Int
         get() = BottomSheetBehavior.STATE_EXPANDED

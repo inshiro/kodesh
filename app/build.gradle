@@ -3,23 +3,15 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
-/**
- * Version Naming Scheme: is.gd/j8L2Wm AND is.gd/IfAfAX
- */
-ext.versionRelease = 1
-ext.versionBreaking = 0
-ext.versionFeature = 0
-ext.versionFix = 0
-
 android {
     compileSdkVersion 28
-    testOptions.unitTests.includeAndroidResources = true
     defaultConfig {
         applicationId "na.komi.kodesh"
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode generateVersionCode()
-        versionName generateVersionName()
+        versionCode 1010
+        versionName "0.1.0"
+        vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.ext.junit.runners.AndroidJUnit4"
     }
     buildTypes {
@@ -90,27 +82,16 @@ android {
     testOptions {
         unitTests {
             includeAndroidResources = true
-            unitTests.returnDefaultValues = true
+            returnDefaultValues = true
         }
     }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
-    defaultConfig {
-        vectorDrawables.useSupportLibrary = true
-    }
 }
 androidExtensions {
     /** For Coroutines LayoutContainer and Parcelable **/
     experimental = true
-}
-
-private Integer generateVersionCode() {
-    return ext.versionRelease * 10000000 + ext.versionBreaking * 10000  + ext.versionFeature * 100 + ext.versionFix
-}
-
-private String generateVersionName() {
-    return "${ext.versionRelease}.${ext.versionBreaking}.${ext.versionFeature}.${ext.versionFix}"
 }
 
 dependencies {
@@ -121,10 +102,10 @@ dependencies {
     implementation "com.google.android.material:material:1.1.0-alpha04"
     implementation "androidx.appcompat:appcompat:1.0.2"
     implementation "androidx.cardview:cardview:1.0.0"
-    implementation "androidx.recyclerview:recyclerview:1.1.0-alpha02"
+    implementation "androidx.recyclerview:recyclerview:1.1.0-alpha03"
     implementation "androidx.core:core-ktx:1.0.1"
-    implementation "androidx.preference:preference:1.1.0-alpha03"
-    implementation "androidx.preference:preference-ktx:1.1.0-alpha03"
+    implementation "androidx.preference:preference:1.1.0-alpha04"
+    implementation "androidx.preference:preference-ktx:1.1.0-alpha04"
     implementation "androidx.constraintlayout:constraintlayout:2.0.0-alpha3"
 
     /** ViewModel-LiveData **/
@@ -144,7 +125,7 @@ dependencies {
     implementation "androidx.paging:paging-runtime:$paging_version"
 
     /** Katana **/
-    def katana_version = '1.3.0'
+    def katana_version = '1.4.0'
     implementation "org.rewedigital.katana:katana-android:$katana_version"
 
     /** Imaging **/

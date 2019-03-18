@@ -93,6 +93,6 @@ class Preferences (context: Context) {
         get() = prefs.getString(SCROLL_STRING, "")
         set(value) = prefs.edit().putString(SCROLL_STRING, value).apply()
     var title: String
-        get() = prefs.getString(TITLE_ID, "")
+        get() = prefs.getString(TITLE_ID, "") ?: ""
         set(value) = prefs.edit().putString(TITLE_ID, value).apply()
 }

@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.children
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
@@ -18,28 +17,28 @@ import kotlinx.android.synthetic.main.recyclerview_child_content_main.*
 import kotlinx.coroutines.*
 import na.komi.kodesh.Prefs
 import na.komi.kodesh.R
-import na.komi.kodesh.ui.internal.*
+import na.komi.kodesh.ui.internal.BaseFragment2
+import na.komi.kodesh.ui.internal.ItemDecorator
+import na.komi.kodesh.ui.internal.LinearLayoutManager2
 import na.komi.kodesh.ui.main.MainActivity
 import na.komi.kodesh.ui.main.MainViewModel
+import na.komi.kodesh.ui.widget.LayoutedTextView
+import na.komi.kodesh.ui.widget.NestedRecyclerView
+import na.komi.kodesh.ui.widget.ViewPager3
 import na.komi.kodesh.util.closestKatana
 import na.komi.kodesh.util.onClick
 import na.komi.kodesh.util.page.Fonts
-import na.komi.kodesh.util.skate.extension.startSkating
 import na.komi.kodesh.util.sp
-import na.komi.kodesh.util.viewModel
-import na.komi.kodesh.ui.widget.LayoutedTextView
-import na.komi.kodesh.ui.widget.NestedRecyclerView
-import na.komi.kodesh.ui.widget.PullDismissLayout
-import na.komi.kodesh.ui.widget.ViewPager3
 import org.rewedigital.katana.Component
 import org.rewedigital.katana.KatanaTrait
+import org.rewedigital.katana.androidx.viewmodel.activityViewModel
 import kotlin.coroutines.CoroutineContext
 
 
 class PrefaceFragment : BaseFragment2(),KatanaTrait {
     override val layout: Int = R.layout.fragment_preface
     override val component: Component by closestKatana()
-    private val viewModel:MainViewModel by viewModel()
+    private val viewModel:MainViewModel by activityViewModel()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

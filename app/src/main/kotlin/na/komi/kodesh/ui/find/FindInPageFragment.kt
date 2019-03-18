@@ -47,21 +47,32 @@ class FindInPageFragment : BaseFragment2() {
             skate.fragmentManager = requireActivity().supportFragmentManager
 
             closeButton.setOnClickListener {
-                getBottomSheetContainer()?.visibility = View.VISIBLE
+                resetBottomSheetContainer()
                 this.hide()
             }
         }
     }
 
+    fun resetBottomSheetContainer(){
+        getBottomSheetContainer()?.post {
+            getBottomSheetContainer()?.visibility = View.VISIBLE
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        resetBottomSheetContainer()
+    }
+
     override fun onDetach() {
         super.onDetach()
-        getBottomSheetContainer()?.visibility = View.VISIBLE
+        resetBottomSheetContainer()
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (hidden)
-            getBottomSheetContainer()?.visibility = View.VISIBLE
+            resetBottomSheetContainer()
     }
 
 }

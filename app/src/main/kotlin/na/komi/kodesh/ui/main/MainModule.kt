@@ -3,8 +3,8 @@ package na.komi.kodesh.ui.main
 import na.komi.kodesh.Application
 import na.komi.kodesh.model.ApplicationDatabase
 import na.komi.kodesh.model.MainRepository
-import na.komi.kodesh.util.viewModel
 import org.rewedigital.katana.Module
+import org.rewedigital.katana.androidx.viewmodel.viewModel
 import org.rewedigital.katana.createModule
 import org.rewedigital.katana.dsl.compact.singleton
 import org.rewedigital.katana.dsl.get

@@ -8,7 +8,6 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.children
 import androidx.lifecycle.Observer
-import androidx.paging.PagedList
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -18,25 +17,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import na.komi.kodesh.Application
 import na.komi.kodesh.R
-import na.komi.kodesh.model.Bible
 import na.komi.kodesh.ui.internal.BaseFragment2
-import na.komi.kodesh.ui.internal.BaseKatanaFragment
 import na.komi.kodesh.ui.internal.BottomSheetBehavior2
-import na.komi.kodesh.ui.internal.FragmentToolbar
 import na.komi.kodesh.ui.main.MainViewModel
 import na.komi.kodesh.util.closestKatana
-import na.komi.kodesh.util.viewModel
 import org.rewedigital.katana.Component
 import org.rewedigital.katana.KatanaTrait
+import org.rewedigital.katana.androidx.viewmodel.activityViewModel
 
 class SearchFragment : BaseFragment2() , KatanaTrait{
     override val layout: Int = R.layout.fragment_search
 
     override val component: Component by closestKatana()
 
-    private val viewModel: MainViewModel by viewModel()
+    private val viewModel: MainViewModel by activityViewModel()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

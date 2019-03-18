@@ -252,21 +252,18 @@ class Skate : Navigator {
     private var ALLOW_COMMIT = true
 
     private fun commit() {
-        currentTransaction?.setCustomAnimations(animationStart, animationEnd)
         currentTransaction?.commit()
         currentTransaction = null
     }
 
     private fun commitNow() {
-        currentTransaction?.setCustomAnimations(animationStart, animationEnd)
-
         currentTransaction?.commitNow()
         currentTransaction = null
     }
 
     private fun checkAndCreateTransaction() {
         if (currentTransaction == null)
-            currentTransaction = internalFragmentManager.beginTransaction()
+            currentTransaction = internalFragmentManager.beginTransaction().setCustomAnimations(animationStart, animationEnd)
     }
 
     infix fun to(fragment: Fragment) = nav2(fragment)

@@ -16,9 +16,9 @@ import na.komi.kodesh.ui.main.MainActivity
 import na.komi.kodesh.ui.main.MainViewModel
 import na.komi.kodesh.util.closestKatana
 import na.komi.kodesh.util.setLowProfileStatusBar
-import na.komi.kodesh.util.viewModel
 import org.rewedigital.katana.Component
 import org.rewedigital.katana.KatanaTrait
+import org.rewedigital.katana.androidx.viewmodel.activityViewModel
 
 class StylingDialogFragment : ExtendedBottomSheetDialogFragment() {
 
@@ -48,7 +48,7 @@ class StylingDialogFragment : ExtendedBottomSheetDialogFragment() {
     class PreferenceFragment : BasePreferenceFragment(), KatanaTrait {
         override val component: Component by closestKatana()
 
-        private val viewModel:MainViewModel by viewModel()
+        private val viewModel:MainViewModel by activityViewModel()
 
         override fun onCreatePreferences(bundle: Bundle, rootKey: String) {
             addPreferencesFromResource(R.xml.styling_preferences)
