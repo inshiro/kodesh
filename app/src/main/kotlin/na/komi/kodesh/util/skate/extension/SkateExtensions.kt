@@ -53,14 +53,14 @@ internal fun getLifecycle(savedInstanceState: Bundle?, skate: Skate, act: Activi
 
 fun Activity.startSkating(savedInstanceState: Bundle?): Skate {
     val skate = SkateSingleton.getInstance()
-    application.registerActivityLifecycleCallbacks(getLifecycle(savedInstanceState, skate, this))
+   // application.registerActivityLifecycleCallbacks(getLifecycle(savedInstanceState, skate, this))
     return skate
 }
 
 
 fun Fragment.startSkating(savedInstanceState: Bundle?) = lazy {
     val skate = SkateSingleton.getInstance()
-    activity?.application?.registerActivityLifecycleCallbacks(getLifecycle(savedInstanceState, skate, activity!!))
+    //activity?.application?.registerActivityLifecycleCallbacks(getLifecycle(savedInstanceState, skate, activity!!))
     skate
 }
 

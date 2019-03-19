@@ -169,7 +169,7 @@ class Skate : Navigator {
             }
 
 
-        Logger info myStack.toString()
+        //Logger info myStack.toString()
 
         // If it's already added to our stack
         /*myStack.firstOrNull { it == fragment.name }?.also {
@@ -216,7 +216,7 @@ class Skate : Navigator {
             SINGLETON -> currentTransaction?.hide(fragment)?.also { Logger assert "Hiding ${fragment.name}" }
         }
 
-        Logger warn myStack.toString()
+        //Logger warn myStack.toString()
 
         if (ALLOW_COMMIT) {
             commit()
@@ -224,6 +224,9 @@ class Skate : Navigator {
         }
     }
 
+    fun operation(block: ()->Unit) {
+        
+    }
     val back: Boolean
         get() = goBack2()
 

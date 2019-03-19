@@ -277,9 +277,9 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                 !item.isChecked
             }
 
+            skate.apply {  }
             skate.setOnNavigateListener(object : Skate.OnNavigateListener {
                 override fun onBackPressed(isModular: Boolean) {
-                    //Log.d("SKATE ","${skate.fragmentManager?.fragments}")
                     val fragment = skate.current
                     if (fragment != null && fragment::class.java == MainFragment::class.java) {
                         mainFragment.show()

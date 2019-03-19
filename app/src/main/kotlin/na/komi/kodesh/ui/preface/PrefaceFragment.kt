@@ -79,6 +79,13 @@ class PrefaceFragment : BaseFragment2(), KatanaTrait {
                 override fun onPageSelected(position: Int) {
                     //log d "/SKATE onPageSelected: $position"
                     //getToolbar()?.title = if (position == 0) "Dedicatory" else "Translators' Letter"
+
+                    getToolbar()?.let {
+                        if (position == 0)
+                            it.title = ("Dedicatory")
+                        else
+                            it.title = ("Translators' Letter")
+                    }
                     getToolbarTitleView()?.let {
                         if (position == 0)
                         it.futureSet("Dedicatory")

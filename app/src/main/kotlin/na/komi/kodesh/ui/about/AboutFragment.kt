@@ -36,11 +36,14 @@ class AboutFragment : BaseFragment2() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        getToolbar()?.let {
-            for (a in it.menu.children)
-                a.isVisible = false
+        getToolbar()?.post {
+            getToolbar()?.let {
+                it.title = getString(R.string.about_title)
+                for (a in it.menu.children)
+                    a.isVisible = false
+            }
+            getToolbarTitleView()?.futureSet(getString(R.string.about_title))
         }
-        getToolbarTitleView()?.futureSet(getString(R.string.about_title))
         getNavigationView().setCheckedItem(R.id.action_about)
 
         val tabLayout = view?.tab_layout

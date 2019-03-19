@@ -18,6 +18,7 @@ import kotlinx.coroutines.cancelChildren
 import na.komi.kodesh.Prefs
 import na.komi.kodesh.R
 import na.komi.kodesh.ui.main.MainActivity
+import na.komi.kodesh.util.log
 import na.komi.kodesh.util.onClick
 import na.komi.kodesh.util.text.futureSet
 import kotlin.coroutines.CoroutineContext
@@ -47,8 +48,10 @@ class SettingsFragment : PreferenceFragmentCompat(), CoroutineScope {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        log w "onActivityCreated Setings"
         (requireActivity() as MainActivity).let {
             it.getToolbar()?.let { toolbar ->
+                toolbar.title = getString(R.string.settings_title)
                 for (a in toolbar.menu.children)
                     a.isVisible = false
             }
