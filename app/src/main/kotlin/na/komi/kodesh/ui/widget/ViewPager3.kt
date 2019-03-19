@@ -57,7 +57,7 @@ class ViewPager3 : RecyclerView {
             lm.orientation = value
         }
 
-    val lm
+    private  val lm
         get() = (layoutManager as LinearLayoutManager)
     private var mCallback: OnPageChangeCallback? = null
     private var downX = 0f
@@ -131,11 +131,11 @@ class ViewPager3 : RecyclerView {
     can zoom to 4 times the default value.*/
 
 
-    var firstVisibleChildView: Int? = -1
-    var childRV: RecyclerView? = null
-    var firstVisibleItem: Int? = -1
-    var lastVisibleItem: Int? = -1
-    var fontSize = -1f
+    private var firstVisibleChildView: Int? = -1
+    private var childRV: RecyclerView? = null
+    private var firstVisibleItem: Int? = -1
+    private var lastVisibleItem: Int? = -1
+    private var fontSize = -1f
     // var childViewHolder: MainChildAdapter.ViewHolder? = null
 
     private inner class ScaleListener : ScaleGestureDetector.SimpleOnScaleGestureListener() {

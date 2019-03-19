@@ -48,19 +48,17 @@ class SettingsFragment : PreferenceFragmentCompat(), CoroutineScope {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        log w "onActivityCreated Setings"
+        view?.post {
         (requireActivity() as MainActivity).let {
             it.getToolbar()?.let { toolbar ->
                 toolbar.title = getString(R.string.settings_title)
                 for (a in toolbar.menu.children)
                     a.isVisible = false
             }
-            it.getToolbarTitleView()?.apply {
-                futureSet(getString(R.string.settings_title))
-                onClick {}
-            }
+            it.getToolbarTitleView()?.onClick {}
             it.getNavigationView().setCheckedItem(R.id.action_settings)
 
+        }
         }
         val mListPreference = preferenceManager.findPreference<ListPreference>("THEME_ID") ?: return
         mListPreference.value = Prefs.themeId.toString()

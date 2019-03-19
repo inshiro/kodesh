@@ -16,16 +16,19 @@ import androidx.core.view.children
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.google.android.material.button.MaterialButton
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.card_item.*
 import kotlinx.android.synthetic.main.fragment_about.view.*
 import na.komi.kodesh.R
-import na.komi.kodesh.ui.internal.*
+import na.komi.kodesh.ui.internal.BaseAdapter
+import na.komi.kodesh.ui.internal.BaseFragment2
+import na.komi.kodesh.ui.internal.LinearLayoutManager2
+import na.komi.kodesh.ui.widget.NestedRecyclerView
 import na.komi.kodesh.util.inflateView
 import na.komi.kodesh.util.log
 import na.komi.kodesh.util.snackbar
-import na.komi.kodesh.ui.widget.NestedRecyclerView
 import na.komi.kodesh.util.text.futureSet
 import java.security.InvalidParameterException
 
@@ -35,16 +38,6 @@ class AboutFragment : BaseFragment2() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        getToolbar()?.post {
-            getToolbar()?.let {
-                it.title = getString(R.string.about_title)
-                for (a in it.menu.children)
-                    a.isVisible = false
-            }
-            getToolbarTitleView()?.futureSet(getString(R.string.about_title))
-        }
-        getNavigationView().setCheckedItem(R.id.action_about)
 
         val tabLayout = view?.tab_layout
         val libraries = listOf(
@@ -80,10 +73,20 @@ class AboutFragment : BaseFragment2() {
                     onLibraryClick(it)
                 })
 
-        val viewPager = view?.about_view_pager
+        val viewPager = view?.findViewById<ViewPager>(R.id.about_view_pager)
         viewPager?.apply {
             tabLayout?.setupWithViewPager(this)
             adapter = AboutAdapter(uiModel)
+        }
+        viewPager?.post {
+
+            getToolbar()?.let {
+                it.title = getString(R.string.about_title)
+                for (a in it.menu.children)
+                    a.isVisible = false
+            }
+            getToolbarTitleView()?.futureSet(getString(R.string.about_title))
+            getNavigationView().setCheckedItem(R.id.action_about)
         }
 
 

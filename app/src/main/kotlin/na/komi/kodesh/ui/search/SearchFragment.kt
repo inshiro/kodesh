@@ -35,12 +35,14 @@ class SearchFragment : BaseFragment2() , KatanaTrait{
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        getToolbar()?.let {
-            it.title = getString(R.string.kod_search_title)
-            for (a in it.menu.children)
-                a.isVisible = false
-        }
         setupRecyclerView()
+        view?.findViewById<RecyclerView>(R.id.recycler_view_search)?.post {
+            getToolbar()?.let {
+                it.title = getString(R.string.kod_search_title)
+                for (a in it.menu.children)
+                    a.isVisible = false
+            }
+        }
         val bh = getBottomSheetBehavior()
         launch(Dispatchers.Main) {
             while (bh?.state != BottomSheetBehavior2.STATE_COLLAPSED) delay(10)

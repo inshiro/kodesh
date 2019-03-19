@@ -20,17 +20,14 @@ import na.komi.kodesh.R
 import na.komi.kodesh.ui.internal.BaseFragment2
 import na.komi.kodesh.ui.internal.ItemDecorator
 import na.komi.kodesh.ui.internal.LinearLayoutManager2
-import na.komi.kodesh.ui.main.MainActivity
 import na.komi.kodesh.ui.main.MainViewModel
 import na.komi.kodesh.ui.widget.LayoutedTextView
 import na.komi.kodesh.ui.widget.NestedRecyclerView
 import na.komi.kodesh.ui.widget.ViewPager3
 import na.komi.kodesh.util.closestKatana
-import na.komi.kodesh.util.log
 import na.komi.kodesh.util.onClick
 import na.komi.kodesh.util.page.Fonts
 import na.komi.kodesh.util.sp
-import na.komi.kodesh.util.text.futureSet
 import org.rewedigital.katana.Component
 import org.rewedigital.katana.KatanaTrait
 import org.rewedigital.katana.androidx.viewmodel.activityViewModel
@@ -42,24 +39,16 @@ class PrefaceFragment : BaseFragment2(), KatanaTrait {
     override val component: Component by closestKatana()
     private val viewModel: MainViewModel by activityViewModel()
 
+    var init = false
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden)
+            init = true
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        getToolbar()?.let {
-            for (a in it.menu.children) {
-                a.isVisible = a.itemId == R.id.find_in_page
-            }
-        }
-        getToolbarTitleView()?.onClick {
-            if (!imageDialog.isVisible)
-                openImageDialog()
-        }
-        getNavigationView().let {
-            it.setCheckedItem(R.id.action_preface)
-            for (a in it.menu.children)
-                a.isEnabled = true
-        }
-
-
+        var currentPosition = 0
         launch {
             val pager = view!!.findViewById<ViewPager3>(R.id.preface_view_pager)
             val list = withContext(viewModel.executorDispatcher) {
@@ -79,22 +68,33 @@ class PrefaceFragment : BaseFragment2(), KatanaTrait {
                 override fun onPageSelected(position: Int) {
                     //log d "/SKATE onPageSelected: $position"
                     //getToolbar()?.title = if (position == 0) "Dedicatory" else "Translators' Letter"
+                    currentPosition = position
+                    if (init)
+                        getToolbar()?.apply {
+                            if (position == 0)
+                                title = ("Dedicatory")
+                            else
+                                title = ("Translators' Letter")
+                        }
 
-                    getToolbar()?.let {
-                        if (position == 0)
-                            it.title = ("Dedicatory")
-                        else
-                            it.title = ("Translators' Letter")
-                    }
-                    getToolbarTitleView()?.let {
-                        if (position == 0)
-                        it.futureSet("Dedicatory")
-                        else
-                        it.futureSet("Translators' Letter")
-                    }
 
                 }
             })
+
+            pager.post {
+                getToolbar()?.apply {
+                    title = if (currentPosition == 0) "Dedicatory" else "Translators' Letter"
+                    for (a in menu.children) {
+                        a.isVisible = a.itemId == R.id.find_in_page
+                    }
+                }
+                getToolbarTitleView()?.onClick {
+                    if (!imageDialog.isVisible)
+                        openImageDialog()
+                }
+                getNavigationView().setCheckedItem(R.id.action_preface)
+                init = true
+            }
         }
     }
 

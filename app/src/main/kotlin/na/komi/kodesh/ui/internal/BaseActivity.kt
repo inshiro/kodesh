@@ -6,7 +6,6 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowInsets
@@ -32,10 +31,9 @@ import na.komi.kodesh.ui.setting.SettingsFragment
 import na.komi.kodesh.ui.widget.LayoutedTextView
 import na.komi.kodesh.util.*
 import na.komi.kodesh.util.skate.Skate
-import na.komi.kodesh.util.skate.extension.setMode
+import na.komi.kodesh.util.skate.extension.mode
 import na.komi.kodesh.util.skate.extension.show
 import na.komi.kodesh.util.skate.extension.startSkating
-import na.komi.kodesh.util.skate.log.SkateLogger
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -137,25 +135,54 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
         mBottomSheetBehavior.state = BottomSheetBehavior2.STATE_COLLAPSED
 
 
+        /**
+         * We're using the same Fragment instance on this config(Portrait/Landscape)
+         * This preserves its state. Only on config change we create a new instance.
+         */
         val mainFragment by lazy {
             supportFragmentManager.findFragmentByTag(MainFragment::class.java.name) as? MainFragment
-                ?: MainFragment().setMode(Skate.SINGLETON)
+                ?: MainFragment()
+        }
+        val findInPageFragment by lazy {
+            supportFragmentManager.findFragmentByTag(FindInPageFragment::class.java.name) as? FindInPageFragment
+                ?: FindInPageFragment()
+        }
+        val prefaceFragment by lazy {
+            supportFragmentManager.findFragmentByTag(PrefaceFragment::class.java.name) as? PrefaceFragment
+                ?: PrefaceFragment()
+        }
+        val searchFragment by lazy {
+            (supportFragmentManager.findFragmentByTag(SearchFragment::class.java.name) as? SearchFragment)
+                ?: SearchFragment()
+        }
+        val settingsFragment by lazy {
+            supportFragmentManager.findFragmentByTag(SettingsFragment::class.java.name) as? SettingsFragment
+                ?: SettingsFragment()
+        }
+        val aboutFragment by lazy {
+            supportFragmentManager.findFragmentByTag(AboutFragment::class.java.name) as? AboutFragment
+                ?: AboutFragment()
         }
 
         skate = startSkating(savedInstanceState)
 
         skate.fragmentManager = supportFragmentManager
+        skate.container = R.id.nav_main_container
+        mainFragment.mode = Skate.SINGLETON
+        findInPageFragment.mode = Skate.SPARING
+        settingsFragment.mode = Skate.SPARING
 
         if (savedInstanceState == null) {
-            skate.container = R.id.nav_main_container
             mainFragment.show()
             Application.init = true
 
         } else {
-            if (!Application.init)
-                supportFragmentManager.findFragmentById(skate.container)?.view?.post {
-                    skate to mainFragment
-                }
+            if (!Application.init) {
+                Application.init = true
+                //supportFragmentManager.findFragmentById(skate.container)?.view?.post {
+                //    skate to mainFragment
+                // }
+            }
             if (skate.current is SettingsFragment) {
                 launch {
                     val title = getString(R.string.settings_title)
@@ -181,30 +208,6 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
         }
 
 
-        /**
-         * We're using the same Fragment instance on this config(Portrait/Landscape)
-         * This preserves its state. Only on config change we create a new instance.
-         */
-        val findInPageFragment by lazy {
-            supportFragmentManager.findFragmentByTag(FindInPageFragment::class.java.name) as? FindInPageFragment
-                ?: FindInPageFragment().setMode(Skate.SPARING)
-        }
-        val prefaceFragment by lazy {
-            supportFragmentManager.findFragmentByTag(PrefaceFragment::class.java.name) as? PrefaceFragment
-                ?: PrefaceFragment()
-        }
-        val searchFragment by lazy {
-            (supportFragmentManager.findFragmentByTag(SearchFragment::class.java.name) as? SearchFragment)?.also { log d "D/KNAVIGATOR found SearchFragment" }
-                ?: SearchFragment()
-        }
-        val settingsFragment by lazy {
-            supportFragmentManager.findFragmentByTag(SettingsFragment::class.java.name) as? SettingsFragment
-                ?: SettingsFragment().setMode(Skate.SPARING)
-        }
-        val aboutFragment by lazy {
-            supportFragmentManager.findFragmentByTag(AboutFragment::class.java.name) as? AboutFragment
-                ?: AboutFragment()
-        }
 
         toolbar?.post {
             getToolbar()?.let { tb ->
@@ -264,7 +267,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                             if (f != null && f::class.java.simpleName != MainFragment::class.java.simpleName)
                                 skate.hide(f)*/
                             //skate to mainFragment
-                             mainFragment.navToFrag()
+                            mainFragment.navToFrag()
                             //navigationView.menu.findItem(R.id.action_find_in_page).isEnabled = true
                             backToMain(mainFragment as MainFragment, findInPageFragment)
                         }
@@ -277,10 +280,10 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                 !item.isChecked
             }
 
-            skate.apply {  }
             skate.setOnNavigateListener(object : Skate.OnNavigateListener {
                 override fun onBackPressed(isModular: Boolean) {
                     val fragment = skate.current
+                    log w "/SKATE fragment: $fragment"
                     if (fragment != null && fragment::class.java == MainFragment::class.java) {
                         mainFragment.show()
                         backToMain(fragment as MainFragment, findInPageFragment)
@@ -295,7 +298,10 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
         bottomSheetContainer.visibility = View.VISIBLE
         getToolbar()?.also { tb ->
             tb.title = if (Prefs.title.isNotEmpty()) Prefs.title else getString(R.string.app_name)
-            getToolbarTitleView()?.text = if (Prefs.title.isNotEmpty()) Prefs.title else getString(R.string.app_name)
+            getToolbarTitleView()?.apply {
+                text = if (Prefs.title.isNotEmpty()) Prefs.title else getString(R.string.app_name)
+                onClick { mainFragment.openNavDialog() }
+            }
             for (a in tb.menu.children)
                 a.isVisible = true
             tb.menu.findItem(R.id.styling).setOnMenuItemClickListener {
@@ -307,12 +313,10 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                 findInPageFragment.show()
                 bottomSheetBehavior.close()
                 bottomSheetContainer.visibility = View.GONE
-                //it.isEnabled = false
                 skate.container = R.id.nav_main_container
                 true
             }
         }
-        getToolbarTitleView()?.onClick { mainFragment.openNavDialog() }
         getNavigationView().let { nv ->
             nv.setCheckedItem(R.id.action_read)
             nv.menu.findItem(R.id.action_read).isChecked = true
@@ -326,12 +330,13 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
     //internal typealias OnClick = (library: Library) -> Unit
 
 
-    fun Fragment.navToFrag(){
+    fun Fragment.navToFrag() {
         launch {
             delay(250)
             skate to this@navToFrag
         }
     }
+
     override fun onDestroy() {
         super.onDestroy()
         coroutineContext.cancelChildren()

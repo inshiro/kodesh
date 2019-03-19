@@ -36,15 +36,25 @@ class MainFragment : BaseFragment2(), KatanaTrait {
 
     private val viewModel: MainViewModel by activityViewModel()
 
+    var init = false
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden)
+            init = true
+    }
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setupRecyclerView(view!!)
-
                launch {
                    val p = Prefs.VP_Position
                    while ( (view?.findViewById<ViewPager3>(R.id.pager_main)?.adapter as? MainPageAdapter)?.currentList?.get(p) == null) delay(1)
-                    if (viewModel.mBundleRecyclerViewState == null) //getToolbar()?.title = ""
-                        getToolbar()?.post { setTitle(Prefs.VP_Position) }
+                    //if (viewModel.mBundleRecyclerViewState == null) //getToolbar()?.title = ""
+                   if (this@MainFragment.isVisible)
+                       getToolbar()?.post {
+                           setTitle(Prefs.VP_Position)
+                           init = true
+                       }
+
                 }
 
         getToolbar()?.post {
@@ -140,6 +150,7 @@ class MainFragment : BaseFragment2(), KatanaTrait {
             }
 
             override fun onPageSelected(position: Int) {
+                if (init)
                 setTitle(position)
                 Prefs.VP_Position = position
                 currentIndex = position

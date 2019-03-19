@@ -19,20 +19,14 @@ internal object SkateSingleton {
     val stack: Stack<Skate.SkateFragment>
         get() = _stack ?: Stack<Skate.SkateFragment>().also { _stack = it }
 
-    private var _myStack: Stack<Class<*>>?  = null
-    val myStack: Stack<Class<*>>
-        get() = _myStack ?: Stack<Class<*>>().also { _myStack = it }
-
-
-    private var _modeMap: MutableMap<Class<*>,Int>? = null
-    val modes: MutableMap<Class<*>,Int>
-        get() = _modeMap ?: mutableMapOf<Class<*>,Int>().also { _modeMap = it }
+    private var _modeMap: MutableMap<String,Int>? = null
+    val modes: MutableMap<String,Int>
+        get() = _modeMap ?: mutableMapOf<String,Int>().also { _modeMap = it }
 
     fun clear() {
         _instance = null
         _stack = null
         _modeMap = null
-        _myStack = null
     }
 
 }
