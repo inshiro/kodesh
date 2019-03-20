@@ -63,7 +63,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/library_link"
-            style="@style/Widget.Shrine.Button.TextButton"
+            style="@style/Widget.Kodesh.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"

@@ -11,17 +11,24 @@
     <color name="textColor">#414141</color>
     <color name="colorPrimary">#E0E0E0</color>
     -->
-    <color name="colorPrimary">#FFCBC1</color>
-    <color name="colorPrimaryDark">#FBB8AC</color>
-    <color name="colorAccent">#FEDBD0</color>
-    <color name="textColorPrimary">#442C2E</color>
-    <color name="toolbarIconColor">@color/textColorPrimary</color>
-    <color name="loginPageBackgroundColor">#FFFFFF</color>
-    <color name="productGridBackgroundColor">#FFFFFF</color>
-    <color name="colorControlActivated">#FBB8AC</color>
+    <!-- Light Theme -->
+    <color name="colorPrimary">#54759e</color>
+    <color name="colorPrimaryDark">#435e7e</color>
+    <color name="colorAccent">#69e2ff</color>
+    <color name="textColorPrimary">#CC000000</color>
+    <color name="toolbarIconColor">@color/colorBackground</color>
+    <color name="colorControlActivated">#6D96CA</color>
+    <color name="colorBackground">@color/material_grey_50</color>
 
-    <color name="colorBackground">#fffbfa</color>
+    <!-- Dark Theme -->
     <color name="darkColorPrimary">#33333D</color>
+    <color name="darkColorPrimaryDark">#27272F</color>
+    <color name="darkColorAccent">#FFCF44</color>
+    <color name="darkTextColorPrimary">@color/colorBackground</color>
+    <color name="darkToolbarIconColor">@color/colorBackground</color>
+    <color name="darkColorControlActivated">#69e2ff</color>
+    <color name="darkColorBackground">#27272F</color>
+
     <color name="colorBackgroundDark">#27272F</color>
     <color name="colorAccentDark">#FFCF44</color>
     <color name="colorAccentVariantDark">#E9A508</color>
@@ -37,10 +44,8 @@
     <color name="redletter_color_dark">#b71c1c</color>
 
 
-    <color name="kau_shadow_overlay">#80000000</color>
+    <color name="shadow_overlay">#80000000</color>
     <color name="transparent_dark">#1AFFFFFF</color>
     <color name="transparent_divider_light">#1A000000</color>
-
-    <color name="default_background_color">#fafafa</color>
 
 </resources>

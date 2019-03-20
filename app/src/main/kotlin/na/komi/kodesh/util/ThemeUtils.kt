@@ -5,28 +5,28 @@ import android.os.Build
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import na.komi.kodesh.Application
+import na.komi.kodesh.Prefs
 import na.komi.kodesh.R
 
 object ThemeUtils {
     private var sTheme: Int = 0
-    val THEME_DEFAULT = 0
-    val THEME_DARK = 2
+    val LIGHT = 0
+    val DARK = 1
+    val BLACK = 2
     /**
      * Set the theme of the Activity, and restart it by creating a new Activity of the same type.
      */
     fun changeToTheme(activity: AppCompatActivity, theme: Int) {
-        sTheme = theme
+        Prefs.themeId = theme
         activity.recreate()
-        // activity.finish()
-        //activity.startActivity(Intent(activity, activity::class.java))
     }
 
     /** Set the theme of the activity, according to the configuration.  */
     fun onActivityCreateSetTheme(activity: Activity) {
-        when (sTheme) {
-            THEME_DEFAULT -> activity.setTheme(R.style.AppTheme)
-            THEME_DARK -> activity.setTheme(R.style.Theme_Shrine_Dark)
-            else -> activity.setTheme(R.style.AppTheme)
+        when (Prefs.themeId ) {
+            DARK -> activity.setTheme(R.style.Theme_Dark)
+            BLACK -> activity.setTheme(R.style.Theme_Black)
+            else -> activity.setTheme(R.style.Theme_Light)
         }
     }
 

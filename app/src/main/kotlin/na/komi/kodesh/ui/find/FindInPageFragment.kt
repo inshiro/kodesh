@@ -11,8 +11,8 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import na.komi.kodesh.R
 import na.komi.kodesh.ui.internal.BaseFragment2
-import na.komi.kodesh.util.skate.extension.hide
-import na.komi.kodesh.util.skate.extension.startSkating
+import na.komi.skate.core.extension.hide
+import na.komi.skate.core.extension.startSkating
 
 class FindInPageFragment : BaseFragment2() {
     override val layout: Int = R.layout.fragment_find_in_page

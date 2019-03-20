@@ -30,10 +30,10 @@ import na.komi.kodesh.ui.search.SearchFragment
 import na.komi.kodesh.ui.setting.SettingsFragment
 import na.komi.kodesh.ui.widget.LayoutedTextView
 import na.komi.kodesh.util.*
-import na.komi.kodesh.util.skate.Skate
-import na.komi.kodesh.util.skate.extension.mode
-import na.komi.kodesh.util.skate.extension.show
-import na.komi.kodesh.util.skate.extension.startSkating
+import na.komi.skate.core.Skate
+import na.komi.skate.core.extension.mode
+import na.komi.skate.core.extension.show
+import na.komi.skate.core.extension.startSkating
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -118,9 +118,9 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
         super.onCreate(savedInstanceState)
 
         when (Prefs.themeId) {
-            1 -> setTheme(R.style.Theme_Shrine_Dark)
-            2 -> setTheme(R.style.Theme_Shrine_Black)
-            else -> setTheme(R.style.AppTheme)
+            1 -> setTheme(R.style.Theme_Dark)
+            2 -> setTheme(R.style.Theme_Black)
+            else -> setTheme(R.style.Theme_Light)
         }
         setContentView(layout)
 
@@ -185,6 +185,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             }
             if (skate.current is SettingsFragment) {
                 launch {
+                    getToolbar()?.post {
                     val title = getString(R.string.settings_title)
                     getToolbar()?.title = title
                     getToolbarTitleView()?.text = title
@@ -202,6 +203,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                         }
 
                     })
+                }
                 }
             }
 
@@ -262,14 +264,8 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                     //if (item.itemId != R.id.action_read) skate.hide(mainFragment, Skate.SINGLETON)
                     when (item.itemId) {
                         R.id.action_read -> {
-                            /*
-                            val f = skate.current
-                            if (f != null && f::class.java.simpleName != MainFragment::class.java.simpleName)
-                                skate.hide(f)*/
-                            //skate to mainFragment
                             mainFragment.navToFrag()
-                            //navigationView.menu.findItem(R.id.action_find_in_page).isEnabled = true
-                            backToMain(mainFragment as MainFragment, findInPageFragment)
+                            backToMain(mainFragment, findInPageFragment)
                         }
                         R.id.action_preface -> prefaceFragment.navToFrag()
                         R.id.action_settings -> settingsFragment.navToFrag()
@@ -281,12 +277,10 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             }
 
             skate.setOnNavigateListener(object : Skate.OnNavigateListener {
-                override fun onBackPressed(isModular: Boolean) {
-                    val fragment = skate.current
-                    log w "/SKATE fragment: $fragment"
-                    if (fragment != null && fragment::class.java == MainFragment::class.java) {
+                override fun onBackPressed(current: Fragment?) {
+                    if (current != null && current::class.java == MainFragment::class.java) {
                         mainFragment.show()
-                        backToMain(fragment as MainFragment, findInPageFragment)
+                        backToMain(current as MainFragment, findInPageFragment)
                     }
                 }
             })
@@ -350,14 +344,14 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             val min = 0.5f
             val multiplier = 1f + min
 
-            var v = skate.current2?.view
+            var v = skate.current?.view
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
 
 
                 }
                 if (newState == BottomSheetBehavior.STATE_DRAGGING) {
-                    skate.current2?.let {
+                    skate.current?.let {
                         v = it.view
                     }
                 }

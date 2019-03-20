@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="?bottomSheetDialogTheme"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -64,20 +65,24 @@
         android:id="@+id/navigate_cancel_button"
         android:layout_marginTop="10dp"
         android:text="CANCEL"
+        android:stateListAnimator="@animator/shr_next_button_state_list_anim"
         app:layout_constraintTop_toBottomOf="@+id/numberpicker_container"
         app:layout_constraintEnd_toStartOf="@id/navigate_positive_button"
         android:layout_marginEnd="20dp"
+        tools:targetApi="lollipop"
         android:layout_marginRight="20dp" />
     <com.google.android.material.button.MaterialButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:stateListAnimator="@animator/shr_next_button_state_list_anim"
         android:id="@+id/navigate_positive_button"
         android:text="OK"
         app:layout_constraintTop_toBottomOf="@+id/numberpicker_container"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:targetApi="lollipop" />
     <View
         android:layout_width="match_parent"
         android:layout_height="20dp"

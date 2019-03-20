@@ -3,6 +3,7 @@
     <attr name="textColor" format="color|reference" />
     <attr name="backgroundColor" format="color|reference" />
     <attr name="navigation_item_background" format="reference" />
+    <attr name="navigation_item_text" format="reference" />
     <attr name="numberPickerDividerColor" format="color|reference" />
     <attr name="redLetterColor" format="color|reference" />
     <attr name="colorDisabled" format="color|reference" />

@@ -24,7 +24,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_navigate"
-            style="@style/Widget.Shrine.Toolbar"
+            style="@style/Widget.Kodesh.Toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
 
@@ -51,7 +51,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/text_input"
-                    style="@style/Widget.Shrine.TextInputLayout"
+                    style="@style/Widget.Kodesh.TextInputLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:hint="@string/kod_hint_search_book"
@@ -176,7 +176,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/go_button"
-                    style="@style/Widget.Shrine.Button"
+                    style="@style/Widget.Kodesh.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -187,7 +187,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/cancel_button"
-                    style="@style/Widget.Shrine.Button.TextButton"
+                    style="@style/Widget.Kodesh.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="12dp"
@@ -198,7 +198,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/chipGroup3" />
 
                 <com.google.android.material.button.MaterialButton
-                    style="@style/Widget.Shrine.Button"
+                    style="@style/Widget.Kodesh.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:text="@string/kod_button_go"
