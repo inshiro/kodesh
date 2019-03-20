@@ -215,7 +215,7 @@ class MainFragment : BaseFragment2(), KatanaTrait {
         })*/
 
         viewModel.adapterUpdate.observe(viewLifecycleOwner, Observer {
-            viewModel.fromAdapterNotify.value = true
+            viewModel.fromAdapterNotify = true
             adapter.notifyDataSetChanged()
         })
     }

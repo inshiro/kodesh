@@ -33,7 +33,7 @@ class MainViewModel internal constructor(
     var showRedLetters = Prefs.redLetterPref//LiveEvent(Prefs.redLetterPref)
     var showVerseNumbers = Prefs.verseNumberPref
     var seperateVerses = Prefs.seperateVersePref
-    val fromAdapterNotify by lazy { LiveEvent(false) }
+    var fromAdapterNotify =false
     val pagePosition by lazy { LiveEvent(Prefs.VP_Position) }
     val verseNumberPref by lazy { Prefs.verseNumberPref }
     val textSize by lazy { LiveEvent(Prefs.mainFontSize) }

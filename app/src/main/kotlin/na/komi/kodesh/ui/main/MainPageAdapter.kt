@@ -121,30 +121,19 @@ class MainPageAdapter(private val vm: MainViewModel, private val coroutineContex
         fun bind(bible: Bible) {
             uiScope.launch {
                 val list = withContext(vm.executorDispatcher) {
-                    val l = vm.getVersesRaw(bible.bookId!!, bible.chapterId!!).toMutableList()
-                    /*if (vm.showDropCap ) {
-                       // val dItem = l[0]
-                        val sItem = l[0]
-                       // dItem.verseText = l[0].verseText!!.take(1)
-                       // sItem.verseText = l[0].verseText!!.drop(1)
-                        val d = Bible(sItem.bookId,sItem.bookAbbr,sItem.bookName,sItem.chapterId,sItem.verseId,sItem.verseText!!.take(1),sItem.id)
-                        //val s = Bible(sItem.bookId,sItem.bookAbbr,sItem.bookName,sItem.chapterId,sItem.verseId,sItem.verseText!!.drop(1),sItem.id)
-                            //l.removeAt(0)
-                        //l.add(0,s)
-                        l.add(0,d)
-                        //log d "sItem: $s"
-                        //log d "dItem: $d"
-                    }*/
-                    l
+                    vm.getVersesRaw(bible.bookId!!, bible.chapterId!!).toMutableList()
                 }
                 (childRecyclerView.adapter as MainChildAdapter).setList(list)
                 (childRecyclerView.layoutManager as LinearLayoutManager2).let {
                     it.currentList = list
 
                     // Scroll to top
-                    if (childRecyclerView.computeVerticalScrollOffset() != 0)
-                        it.scrollToPositionWithOffset(0, 0)
-                    it.resetScroll()
+                    if (!vm.fromAdapterNotify) {
+                        if (childRecyclerView.computeVerticalScrollOffset() != 0) {
+                            it.scrollToPositionWithOffset(0, 0)
+                            it.resetScroll()
+                        }
+                    } else { vm.fromAdapterNotify = false }
                 }
 
             }
