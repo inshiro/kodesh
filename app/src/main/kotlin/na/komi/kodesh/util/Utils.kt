@@ -14,9 +14,9 @@ import java.util.regex.Pattern
 
 object log {
 
-    infix fun d(message: String) {
+    infix fun d(message: Any) {
         if (BuildConfig.DEBUG)
-            Log.d(getTag(), message)
+            Log.d(getTag(), message.toString())
     }
 
     infix fun v(message: String) {

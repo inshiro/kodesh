@@ -31,6 +31,7 @@ import na.komi.kodesh.util.text.withSpan
 import na.komi.kodesh.util.tryy
 import na.komi.kodesh.ui.widget.LayoutedTextView
 import na.komi.kodesh.ui.widget.LeadingMarginSpan3
+import na.komi.kodesh.util.log
 import kotlin.coroutines.CoroutineContext
 
 
@@ -87,7 +88,7 @@ class MainChildAdapter(
 
     private val spannableFactory by lazy { MySpannableFactory() }
 
-    private val onlyAplhaNumericRegex by lazy { """\p{Alnum}""".toRegex() }
+    private val onlyAplhaNumericRegex by lazy { """[^A-Za-z0-9 ]""".toRegex() }
     private val periscopeDelimeter by lazy { """\\<.*?\\>""".toRegex() }
     private val italicDelimeter by lazy { """\\[|\\]""".toRegex() }
 
@@ -202,15 +203,17 @@ class MainChildAdapter(
                 val rIdx =
                     Formatting.redLetterList.indexOfFirst { str -> str.indexOf("${item.bookId}\t${item.chapterId}\t${item.verseId}\t") >= 0 }
                 if (rIdx >= 0) {
+                    val it = Formatting.redLetterList[rIdx]
+                    val _redText = it.substring(it.lastIndexOf('\t') + 1)
+                    val redText = if (vm.kjvStyling) {
+                        val kjv = Formatting.kjvList[item.id - 1]
+                        Formatting.diffText(_redText, kjv)
+                    } else _redText
                     Formatting.redLetterPositions(rIdx) { s, e, c ->
-                        val it = Formatting.redLetterList[rIdx]
-                        val redText =
-                            it.substring(it.lastIndexOf('\t') + 1)//.replace("{","").replace("}","")
-                        //val verseText = verse.toString().replace("\n","").replace("\t","").replace(ZSPACE,"")
 
                         // Safety bounds
                         val zSpace = finalText.length//verse.indexOf(ZSPACE)
-                        var start = if (s < 0) 0 else s
+                        var start = s orr 0
                         if (vm.showVerseNumbers && position > 1 && c <= 1) start += verseNumber.length
                         var end = if (e > finalText.length) finalText.length else e
                         end += if (vm.showVerseNumbers && position > 1 && end + verseNumber.length <= finalText.length) verseNumber.length else 0
@@ -245,10 +248,8 @@ class MainChildAdapter(
                         //if (i==0)
                         //log d "start :$start = $finalText"
 
-                        if (vm.kjvStyling) {
-                            end += vt.length - item.verseText!!.length
-
-                        }
+                        //if (vm.kjvStyling)
+                       //     end += vt.length - item.verseText!!.length
                         if (end > finalText.length) end = finalText.lastIndex
 
                         // Since we removed Punctuation we have to add the missing index back in
@@ -259,7 +260,6 @@ class MainChildAdapter(
                         if (endCharIndex in redText.length-2..redText.length+2)
                             end = finalText.length
 
-                        //log d finalText.substring(start,end)
                         try {
                             finalText.setSpan(
                                 ForegroundColorSpan(redColor),
@@ -284,5 +284,9 @@ class MainChildAdapter(
 
 
         }
+    }
+    private infix fun Int.orr(other:Int):Int {
+
+        return if (this < 0) other else this
     }
 }
