@@ -1,15 +1,19 @@
 package na.komi.kodesh.ui.search
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.view.children
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.fragment_search.view.*
@@ -22,11 +26,13 @@ import na.komi.kodesh.ui.internal.BaseFragment2
 import na.komi.kodesh.ui.internal.BottomSheetBehavior2
 import na.komi.kodesh.ui.main.MainViewModel
 import na.komi.kodesh.util.closestKatana
+import na.komi.kodesh.util.snackbar
+import na.komi.kodesh.util.toast
 import org.rewedigital.katana.Component
 import org.rewedigital.katana.KatanaTrait
 import org.rewedigital.katana.androidx.viewmodel.activityViewModel
 
-class SearchFragment : BaseFragment2() , KatanaTrait{
+class SearchFragment : BaseFragment2(), KatanaTrait {
     override val layout: Int = R.layout.fragment_search
 
     override val component: Component by closestKatana()
@@ -36,6 +42,11 @@ class SearchFragment : BaseFragment2() , KatanaTrait{
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setupRecyclerView()
+        /*view?.findViewById<AppBarLayout>(R.id.search_app_bar_layout)?.let {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                it.outlineProvider = null
+            }
+        }*/
         view?.findViewById<RecyclerView>(R.id.recycler_view_search)?.post {
             getToolbar()?.let {
                 it.title = getString(R.string.kod_search_title)
@@ -47,7 +58,7 @@ class SearchFragment : BaseFragment2() , KatanaTrait{
         launch(Dispatchers.Main) {
             while (bh?.state != BottomSheetBehavior2.STATE_COLLAPSED) delay(10)
             val editText = view?.text_input_edit_text
-            editText?.requestFocus()
+            view?.findViewById<RecyclerView>(R.id.recycler_view_search)?.post { editText?.requestFocus() }
         }
     }
 
@@ -56,15 +67,16 @@ class SearchFragment : BaseFragment2() , KatanaTrait{
         toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
 
-    fun InputMethodManager.hideKeyboard(view:View) {
+    fun InputMethodManager.hideKeyboard(view: View) {
         hideSoftInputFromWindow(view.windowToken, 0);
     }
+
     fun setupRecyclerView() {
         val rv: RecyclerView = view!!.recycler_view_search
         val adapter = SearchAdapter()
         val editText: TextInputEditText = view!!.text_input_edit_text as TextInputEditText
         var job = Job()
-        val SEARCH_DEBOUNCE_MS = 300.toLong()
+        val SEARCH_DEBOUNCE_MS = 370.toLong()
         val imm by lazy { requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager }
 
         rv.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
@@ -80,6 +92,13 @@ class SearchFragment : BaseFragment2() , KatanaTrait{
             }
         }*/
 
+        editText.setOnKeyListener { v, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                v.clearFocus()
+                return@setOnKeyListener true
+            }
+            false
+        }
         editText.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) imm.showKeyboard()
             else imm.hideKeyboard(v)//.v.hideKeyboard()
@@ -96,11 +115,8 @@ class SearchFragment : BaseFragment2() , KatanaTrait{
                                 list?.let {
                                     // When we receive the list, use it.
                                     adapter.submitList(it)
-                                    Snackbar.make(
-                                            editText,
-                                            "${it.size} result${if (it.size == 1) "" else "s"}",
-                                            Snackbar.LENGTH_SHORT
-                                    ).show()
+                                    //editText.snackbar("${it.size} result${if (it.size == 1) "" else "s"}")
+                                    editText.toast("${it.size} result${if (it.size == 1) "" else "s"}")
                                 }
                             })
                         }

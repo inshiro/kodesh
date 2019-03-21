@@ -16,8 +16,6 @@ object Formatting {
     private const val PARAGRAPH_PATH = "databases/ParagraphList.txt"
 
     val Italics by lazy { CustomTypefaceSpan(Fonts.GentiumPlus_I) }
-    //val TextColor by lazy { ContextCompat.getColor(Application.instance.applicationContext, R.color.textColor) }
-    //val TextColorPrimary by lazy { ContextCompat.getColor(Application.instance.applicationContext, R.color.textColorPrimary) }
     val NumColor by lazy { Color.parseColor("#877f66") }
     val WhiteColor by lazy { Color.parseColor("#ffffff") }
     val Transparent by lazy { Color.TRANSPARENT }

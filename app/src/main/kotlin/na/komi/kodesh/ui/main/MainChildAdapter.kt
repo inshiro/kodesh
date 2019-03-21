@@ -254,6 +254,10 @@ class MainChildAdapter(
                         // Since we removed Punctuation we have to add the missing index back in
                         if (zSpace >= 0 && end in zSpace - 3..zSpace) end = zSpace
 
+                        // If this is the last word, go to the end.
+                        //val testEndLength = newEnd + endWord.replace(onlyAplhaNumericRegex, "").length
+                        if (endCharIndex in redText.length-2..redText.length+2)
+                            end = finalText.length
 
                         //log d finalText.substring(start,end)
                         try {

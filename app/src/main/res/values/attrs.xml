@@ -7,4 +7,5 @@
     <attr name="numberPickerDividerColor" format="color|reference" />
     <attr name="redLetterColor" format="color|reference" />
     <attr name="colorDisabled" format="color|reference" />
+    <attr name="findInPageColor" format="color|reference" />
 </resources>

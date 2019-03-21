@@ -1,18 +1,30 @@
+import java.text.SimpleDateFormat
+
 apply plugin: "com.android.application"
 apply plugin: "kotlin-android"
 apply plugin: "kotlin-android-extensions"
 apply plugin: "kotlin-kapt"
+ext {
 
+    getBuildTime = {
+        def df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
+        df.setTimeZone(TimeZone.getTimeZone("UTC"))
+        return df.format(new Date())
+    }
+}
 android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "na.komi.kodesh"
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 1010
-        versionName "0.1.0"
+        versionCode 1100
+        versionName "1.0.0"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.ext.junit.runners.AndroidJUnit4"
+
+
+        buildConfigField "String", "BUILD_TIME", "\"${getBuildTime()}\""
     }
     buildTypes {
         release {

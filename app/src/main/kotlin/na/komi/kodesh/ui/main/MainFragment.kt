@@ -283,25 +283,7 @@ class MainFragment : BaseFragment2(), KatanaTrait {
             Prefs.VP_Position = Prefs.NavigateToPosition
             val p = Prefs.VP_Position
             val rv = view?.findViewById<ViewPager3>(R.id.pager_main)
-            rv?.apply {
-                //visibility = View.INVISIBLE
-                betterSmoothScrollToPosition(p)
-            }
-            /*rv?.apply {
-                val lm = layoutManager as LinearLayoutManager
-                val ad = adapter as MainPageAdapter
-                launch(Dispatchers.Main) {
-                    while (
-                        lm.findFirstCompletelyVisibleItemPosition() != p
-                        || ad.currentList?.get(p)?.id != viewModel.getRowAtPagePositon(p + 1)?.id
-                        || (findViewHolderForAdapterPosition(p) as? MainPageAdapter.ViewHolder)?.textView == null
-                    ) delay(10)
-                    delay(10)
-                    setTitle(p)
-                    closeBottomSheet()
-                }
-            }*/
-
+            rv?.betterSmoothScrollToPosition(p)
 
             Prefs.NavigateToPosition = -1
         }

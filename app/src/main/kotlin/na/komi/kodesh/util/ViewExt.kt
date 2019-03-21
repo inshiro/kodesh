@@ -12,11 +12,14 @@ import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import na.komi.kodesh.Application
 import na.komi.kodesh.ui.internal.BottomSheetBehavior2
+import na.komi.kodesh.ui.internal.LinearLayoutManager2
 import na.komi.kodesh.ui.widget.ViewPager3
 
 
@@ -35,6 +38,9 @@ fun View.onClick(debounceTime: Long = 1000L, action: () -> Unit) {
 
 fun View.snackbar(text: String, length: Int = Snackbar.LENGTH_LONG) {
     Snackbar.make(this, text, length).show()
+}
+fun View.toast(text: String, length: Int = Toast.LENGTH_LONG) {
+    Toast.makeText(context, text, length).show()
 }
 
 fun BottomSheetBehavior2<ConstraintLayout>.close() {
@@ -75,7 +81,7 @@ fun createStaticLayout(str: CharSequence, width: Int, tp: TextPaint, textSize: F
     }
 }
 
-fun ViewPager3.betterSmoothScrollToPosition(targetItem: Int) {
+fun RecyclerView.betterSmoothScrollToPosition(targetItem: Int) {
     layoutManager?.apply {
         val maxScroll = 10
         when (this) {

@@ -26,7 +26,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/font_size_text_view" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <na.komi.kodesh.ui.widget.BaselineGridTextView
         android:id="@+id/decrease_button"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="32dp"
@@ -40,7 +40,6 @@
         android:gravity="center"
         android:text="T"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-        android:textColor="?textColor"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/font_button_container"
@@ -60,7 +59,7 @@
         app:tickMark="@drawable/ic_seek_bar_tick"
         app:layout_constraintTop_toBottomOf="@id/font_size_text_view" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <na.komi.kodesh.ui.widget.BaselineGridTextView
         android:id="@+id/increase_button"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="32dp"
@@ -74,7 +73,6 @@
         android:gravity="center"
         android:text="T"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-        android:textColor="?textColor"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/font_button_container"
@@ -110,7 +108,6 @@
             android:clickable="true"
             android:focusable="true"
             android:text="LIGHT"
-            android:textColor="?textColor"
             android:textSize="25sp" />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -121,7 +118,6 @@
             android:clickable="true"
             android:focusable="true"
             android:text="DARK"
-            android:textColor="?textColor"
             android:textSize="25sp" />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -132,7 +128,6 @@
             android:clickable="true"
             android:focusable="true"
             android:text="BLACK"
-            android:textColor="?textColor"
             android:textSize="25sp" />
     </LinearLayout>
 

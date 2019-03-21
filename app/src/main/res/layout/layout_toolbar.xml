@@ -2,7 +2,8 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/main_bottom_container"
         android:layout_width="match_parent"
@@ -12,14 +13,15 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_main"
-            app:titleTextColor="@color/darkTextColorPrimary"
             android:layout_width="match_parent"
-            android:background="?colorPrimaryVariant"
             android:layout_height="?attr/actionBarSize"
-            app:titleTextAppearance="@style/TextAppearance.Toolbar"
+            android:background="?colorPrimaryVariant"
+            android:elevation="4dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/kod_menu"
+            app:titleTextAppearance="@style/TextAppearance.Toolbar"
+            app:titleTextColor="@color/darkTextColor"
             tools:title="@string/app_name">
 
         </androidx.appcompat.widget.Toolbar>

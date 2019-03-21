@@ -13,7 +13,9 @@
 - Pinch to zoom
 - Lightweight and fast
 - Absolutely no permissions needed
+- Completely offline
 - Clean and elegant Material design
+- Translations from the [PCE](http://www.bibleprotector.com/)
 
 #
 See the [wiki](https://github.com/inshiro/Kodesh/wiki) for some developer insights!

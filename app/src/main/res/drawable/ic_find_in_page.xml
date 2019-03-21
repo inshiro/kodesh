@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:width="24dp"
     android:height="24dp"
-    android:tint="@color/darkTextColorPrimary"
+    android:tint="@color/darkTextColor"
     android:autoMirrored="true"
     android:viewportWidth="24.0"
     android:viewportHeight="24.0"

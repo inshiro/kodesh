@@ -12,20 +12,17 @@
     <color name="colorPrimary">#E0E0E0</color>
     -->
     <!-- Light Theme -->
-    <color name="colorPrimary">#54759e</color>
-    <color name="colorPrimaryDark">#435e7e</color>
-    <color name="colorAccent">#69e2ff</color>
-    <color name="textColorPrimary">#CC000000</color>
-    <color name="toolbarIconColor">@color/colorBackground</color>
-    <color name="colorControlActivated">#6D96CA</color>
+    <color name="colorPrimary">#424242</color>
+    <color name="colorPrimaryDark">#1b1b1b</color>
+    <color name="colorAccent">#6d6d6d</color>
+    <color name="textColor">#CC000000</color>
     <color name="colorBackground">@color/material_grey_50</color>
 
     <!-- Dark Theme -->
     <color name="darkColorPrimary">#33333D</color>
     <color name="darkColorPrimaryDark">#27272F</color>
     <color name="darkColorAccent">#FFCF44</color>
-    <color name="darkTextColorPrimary">@color/colorBackground</color>
-    <color name="darkToolbarIconColor">@color/colorBackground</color>
+    <color name="darkTextColor">@color/colorBackground</color>
     <color name="darkColorControlActivated">#69e2ff</color>
     <color name="darkColorBackground">#27272F</color>
 

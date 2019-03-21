@@ -128,12 +128,19 @@ class MainPageAdapter(private val vm: MainViewModel, private val coroutineContex
                     it.currentList = list
 
                     // Scroll to top
-                    if (!vm.fromAdapterNotify) {
-                        if (childRecyclerView.computeVerticalScrollOffset() != 0) {
-                            it.scrollToPositionWithOffset(0, 0)
-                            it.resetScroll()
+                    if (vm.fromAdapterNotify) {
+                        it.postOnAnimation {
+                            childRecyclerView.post {
+                                vm.fromAdapterNotify = false
+                            }
                         }
-                    } else { vm.fromAdapterNotify = false }
+
+                    } else {
+                        if (childRecyclerView.computeVerticalScrollOffset() != 0) {
+                        it.scrollToPositionWithOffset(0, 0)
+                        it.resetScroll()
+                    }
+                    }
                 }
 
             }

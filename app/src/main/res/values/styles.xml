@@ -8,21 +8,20 @@
 
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorPrimaryVariant">@android:color/black</item>
+        <item name="colorPrimaryVariant">@color/material_grey_900</item>
 
 
-        <item name="colorAccent">@color/colorControlActivated</item>
-        <item name="colorSecondary">@color/colorControlActivated</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorSecondary">@color/colorAccent</item>
         <item name="colorSecondaryVariant">@color/colorPrimaryDark</item>
         <item name="colorOnSecondary">@color/colorPrimaryDark</item>
 
-        <item name="colorControlHighlight">@color/colorControlActivated</item>
-        <item name="colorControlActivated">@color/colorControlActivated</item>
-        <item name="android:textColorPrimary">@color/textColorPrimary</item>
-        <item name="android:textColor">@color/textColorPrimary</item>
-        <item name="textColor">@color/textColorPrimary</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="textColor">@color/textColor</item>
+        <item name="android:textColor">?textColor</item>
         <item name="redLetterColor">@color/redletter_color_dark</item>
         <item name="colorDisabled">@color/mtrl_on_primary_disabled</item>
+        <item name="findInPageColor">@color/colorBackground</item>
 
         <item name="actionOverflowButtonStyle">@style/MyOverflowButtonStyle</item>
         <item name="bottomSheetDialogTheme">@style/Theme.MaterialComponents.Light.BottomSheetDialog</item>
@@ -50,15 +49,14 @@
         <item name="colorOnSecondary">@color/colorAccentVariantDark</item>
 
         <item name="colorControlActivated">@color/colorAccentDark</item>
-        <item name="android:textColorPrimary">@color/colorBackground</item>
-        <item name="android:textColorSecondary">@color/colorBackground</item>
+        <item name="textColor">@color/colorBackground</item>
+        <item name="android:textColor">?textColor</item>
         <item name="redLetterColor">@color/redletter_color</item>
         <item name="colorDisabled">@color/mtrl_on_primary_disabled</item>
+        <item name="findInPageColor">@color/colorBackgroundDark</item>
 
         <item name="android:windowBackground">@color/darkColorPrimary</item>
         <item name="backgroundColor">@color/darkColorPrimary</item>
-        <item name="android:textColor">@color/colorBackground</item>
-        <item name="textColor">@color/colorBackground</item>
         <item name="bottomSheetDialogTheme">@style/BottomSheetDialog.Dark</item>
         <item name="alertDialogTheme">@style/AlertDialog.Dark</item>
         <item name="popupTheme">@style/ThemeOverlay.MaterialComponents</item>
@@ -78,17 +76,16 @@
         <item name="colorSecondary">@color/colorAccentBlack</item>
         <item name="colorSecondaryVariant">@color/colorAccentBlack</item>
         <item name="colorOnSecondary">@color/colorAccentBlack</item>
+        <item name="findInPageColor">?attr/colorPrimaryVariant</item>
 
         <item name="colorControlActivated">@color/colorAccentBlack</item>
-        <item name="android:textColorPrimary">@color/colorBackground</item>
-        <item name="android:textColorSecondary">@color/colorBackground</item>
+        <item name="textColor">@color/colorBackground</item>
+        <item name="android:textColor">?textColor</item>
         <item name="redLetterColor">@color/redletter_color</item>
         <item name="colorDisabled">@color/mtrl_dark_on_primary_disabled</item>
 
         <item name="android:windowBackground">@android:color/black</item>
         <item name="backgroundColor">@android:color/black</item>
-        <item name="android:textColor">@color/colorBackground</item>
-        <item name="textColor">@color/colorBackground</item>
         <item name="bottomSheetDialogTheme">@style/BottomSheetDialog.Black</item>
         <item name="alertDialogTheme">@style/AlertDialog.Black</item>
         <item name="popupTheme">@style/ThemeOverlay.MaterialComponents</item>
@@ -99,16 +96,14 @@
     </style>
 
     <style name="MyOverflowButtonStyle" parent="Widget.AppCompat.ActionButton.Overflow">
-        <item name="android:tint">@color/darkTextColorPrimary</item>
+        <item name="android:tint">@color/darkTextColor</item>
     </style>
     <style name="NavigationView.Dark" parent="Widget.MaterialComponents.NavigationView">
         <item name="colorOnPrimary">#FFFFFF</item>
         <item name="colorPrimary">@android:color/black</item>
         <item name="colorPrimaryDark">@android:color/black</item> <!-- This sets Status bar color -->
         <item name="colorPrimaryVariant">#0C0C0C</item>
-        <item name="android:textColorPrimary">@color/darkTextColorPrimary</item>
-        <item name="android:textColor">@color/darkTextColorPrimary</item>
-        <item name="textColor">@color/darkTextColorPrimary</item>
+        <item name="android:textColor">@color/darkTextColor</item>
         <item name="android:gravity">center_vertical</item>
     </style>
     <style name="AlertDialog.Dark" parent="Theme.MaterialComponents.Dialog.Alert">
@@ -124,25 +119,27 @@
         <item name="colorAccent">@color/colorAccentBlack</item>
     </style>
     <!-- TextInputLayout -->
-    <style name="Widget.Kodesh.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+    <style name="Widget.Kodesh.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
         <item name="hintTextAppearance">@style/TextAppearance.Kodesh.TextInputLayout.HintText</item>
-        <item name="android:paddingBottom">8dp</item>
+        <item name="boxStrokeColor">?colorAccent</item>
+        <item name="boxStrokeWidth">2dp</item>
+
     </style>
 
     <style name="TextAppearance.Kodesh.TextInputLayout.HintText" parent="TextAppearance.MaterialComponents.Subtitle2">
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:textColor">?textColor</item>
     </style>
 
     <!-- Buttons -->
     <style name="Widget.Kodesh.Button" parent="Widget.MaterialComponents.Button">
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:textColor">?textColor</item>
         <item name="backgroundTint">?attr/colorPrimaryDark</item>
         <item name="colorAccent">?colorAccent</item>
         <item name="android:stateListAnimator" tools:ignore="NewApi"> @animator/shr_next_button_state_list_anim </item>
     </style>
 
     <style name="Widget.Kodesh.Button.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:textColor">?textColor</item>
     </style>
 
     <style name="Widget.Kodesh.Toolbar" parent="Widget.AppCompat.Toolbar">
@@ -152,10 +149,8 @@
     </style>
     <style name="Widget.Kodesh.Toolbar.Dark" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">?colorPrimaryVariant</item>
-        <item name="android:textColorPrimary">@color/darkTextColorPrimary</item>
-        <item name="android:textColor">@color/darkTextColorPrimary</item>
-        <item name="textColor">@color/darkTextColorPrimary</item>
-        <item name="colorControlNormal">@color/darkTextColorPrimary</item>
+        <item name="android:textColor">@color/darkTextColor</item>
+        <item name="colorControlNormal">@color/darkTextColor</item>
         <item name="titleTextAppearance">@style/TextAppearance.Kodesh.Toolbar</item>
         <item name="android:fontFamily" tools:targetApi="jelly_bean">@font/rubik</item>
     </style>
@@ -171,13 +166,6 @@
         <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="ChipTextStyle">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/textColorPrimary</item>
-        <item name="android:fontFamily" tools:targetApi="jelly_bean">@font/rubik</item>
-    </style>
-
-
     <style name="Kodesh.TabLayout" parent="Widget.Design.TabLayout">
         <item name="android:theme">@style/Theme.AppCompat</item>
         <item name="tabIndicatorColor">#FFFFFF</item>
@@ -185,7 +173,7 @@
 
     <style name="Kodesh.TabLayout.Inverted" parent="Widget.Design.TabLayout">
         <item name="android:theme">@style/Theme.AppCompat.Light</item>
-        <item name="tabIndicatorColor">?android:textColorPrimary</item>
+        <item name="tabIndicatorColor">?textColor</item>
     </style>
 
 

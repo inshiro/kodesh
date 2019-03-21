@@ -11,7 +11,8 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbarlayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@null">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/ctl"
@@ -36,7 +37,7 @@
                     android:contentDescription="@string/about_banner_icon_description"
                     android:src="@mipmap/ic_launcher" />
 
-                <TextView
+                <na.komi.kodesh.ui.widget.BaselineGridTextView
                     android:id="@+id/banner_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -53,7 +54,7 @@
                     android:layout_gravity="center_horizontal"
                     android:gravity="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColorLink="?android:textColorPrimary"
+                    android:textColorLink="?textColor"
                     android:text="@string/about_banner_text" />
             </LinearLayout>
 
@@ -72,7 +73,7 @@
             android:layout_height="?actionBarSize"
             android:background="?attr/selectableItemBackground"
             app:tabIndicatorColor="?colorAccent"
-            app:tabSelectedTextColor="?colorDisabled"
+            app:tabSelectedTextColor="?textColor"
             app:tabMode="fixed" />
 
     </com.google.android.material.appbar.AppBarLayout>

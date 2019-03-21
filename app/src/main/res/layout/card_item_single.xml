@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="100dp"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_normal"
+            android:layout_marginBottom="@dimen/padding_normal"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:minHeight="?android:listPreferredItemHeight"
+            android:stateListAnimator="@animator/lift_on_touch"
+            app:cardPreventCornerOverlap="false"
+            app:cardUseCompatPadding="true"
+            tools:ignore="RtlSymmetry"
+            tools:targetApi="lollipop">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <na.komi.kodesh.ui.widget.BaselineGridTextView
+                    android:id="@+id/version_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:bufferType="spannable"
+                    android:clickable="true"
+                    android:drawablePadding="14dp"
+                    android:drawableTint="?textColor"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:minHeight="?android:listPreferredItemHeight"
+                    android:paddingStart="14dp"
+                    android:paddingLeft="14dp"
+                    android:text="Version\n1.0.0"
+                    app:drawableLeftCompat="@drawable/ic_info"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <na.komi.kodesh.ui.widget.BaselineGridTextView
+                    android:id="@+id/build_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:bufferType="spannable"
+                    android:clickable="true"
+                    android:drawablePadding="14dp"
+                    android:drawableTint="?textColor"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:minHeight="?android:listPreferredItemHeight"
+                    android:paddingStart="14dp"
+                    android:paddingLeft="14dp"
+                    app:drawableLeftCompat="@drawable/ic_time"
+                    app:layout_constraintTop_toBottomOf="@+id/version_text"
+                    tools:text="Build time\nMar. 20, 2019 4:20 p.m." />
+
+                <na.komi.kodesh.ui.widget.BaselineGridTextView
+                    android:id="@+id/source_code_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:bufferType="spannable"
+                    android:clickable="true"
+                    android:drawablePadding="14dp"
+                    android:drawableTint="?textColor"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:minHeight="?android:listPreferredItemHeight"
+                    android:paddingStart="14dp"
+                    android:paddingLeft="14dp"
+                    android:text="Source code\ngithub.com/inshiro"
+                    app:drawableLeftCompat="@drawable/ic_github"
+                    app:layout_constraintTop_toBottomOf="@+id/build_text" />
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:minHeight="?android:listPreferredItemHeight"
+            android:stateListAnimator="@animator/lift_on_touch"
+            app:cardPreventCornerOverlap="false"
+            app:cardUseCompatPadding="true"
+            tools:ignore="RtlSymmetry"
+            tools:targetApi="lollipop">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <na.komi.kodesh.ui.widget.BaselineGridTextView
+                    android:id="@+id/feedback_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:bufferType="spannable"
+                    android:clickable="true"
+                    android:drawablePadding="14dp"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:minHeight="?android:listPreferredItemHeightSmall"
+                    android:paddingStart="14dp"
+                    android:paddingLeft="14dp"
+                    android:text="Feedback"
+                    app:drawableLeftCompat="@drawable/ic_email"
+                    tools:drawableTint="?textColor" />
+
+                <na.komi.kodesh.ui.widget.BaselineGridTextView
+                    android:id="@+id/rate_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:bufferType="spannable"
+                    android:clickable="true"
+                    android:drawablePadding="14dp"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:minHeight="?android:listPreferredItemHeightSmall"
+                    android:paddingStart="14dp"
+                    android:paddingLeft="14dp"
+                    android:text="Rate this app"
+                    app:drawableLeftCompat="@drawable/ic_star"
+                    tools:drawableTint="?textColor" />
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

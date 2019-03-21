@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/card_item"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/padding_normal"
+    android:layout_marginTop="@dimen/padding_normal"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
@@ -25,24 +26,26 @@
         android:paddingTop="10dp">
 
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/library_image"
             android:layout_width="@dimen/avatar_bounds"
             android:layout_height="@dimen/avatar_bounds"
             android:layout_marginStart="@dimen/avatar_margin"
             android:layout_marginEnd="@dimen/avatar_margin"
             android:padding="@dimen/avatar_padding"
-            android:tint="@android:color/holo_green_dark"
+            app:layout_constraintBottom_toBottomOf="@id/library_description"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/library_name"
-            app:layout_constraintBottom_toBottomOf="@id/library_description"
-            app:srcCompat="@drawable/ic_android" />
+            tools:src="@drawable/ic_android"
+            tools:tint="@android:color/holo_green_light" />
 
         <na.komi.kodesh.ui.widget.BaselineGridTextView
             android:id="@+id/library_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="16sp"
+            android:paddingStart="10dp"
+            android:paddingLeft="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/library_image"
             app:layout_constraintTop_toTopOf="parent"
@@ -55,6 +58,8 @@
             android:layout_below="@id/library_name"
             android:ellipsize="end"
             android:maxLines="2"
+            android:paddingStart="10dp"
+            android:paddingLeft="10dp"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/library_image"
@@ -72,16 +77,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/library_description" />
 
-        <TextView
+        <na.komi.kodesh.ui.widget.BaselineGridTextView
             android:id="@+id/sub_item"
-            android:layout_height="wrap_content"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
             android:visibility="gone"
-            android:padding="20dp"
-            android:text="@string/apache_license"
-            app:layout_constraintTop_toBottomOf="@id/library_description"
+            tools:text="Licensed under the Apache License, Version 2.0 (the License); you may not use this file except in compliance with the License. You may obtain a copy of the License at"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="@id/library_description"
+            app:layout_constraintTop_toBottomOf="@id/library_description" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
