@@ -33,7 +33,7 @@ class MainViewModel internal constructor(
     var showRedLetters = Prefs.redLetterPref//LiveEvent(Prefs.redLetterPref)
     var showVerseNumbers = Prefs.verseNumberPref
     var seperateVerses = Prefs.seperateVersePref
-    var fromAdapterNotify =false
+    var fromAdapterNotify = false
     val pagePosition by lazy { LiveEvent(Prefs.VP_Position) }
     val verseNumberPref by lazy { Prefs.verseNumberPref }
     val textSize by lazy { LiveEvent(Prefs.mainFontSize) }
@@ -48,6 +48,7 @@ class MainViewModel internal constructor(
 
     val buttonState by lazy { LiveEvent(false) }
     val currentScroll by lazy { LiveEvent(Prefs.currentScroll) }
+    var versePicked: Int = 1
 
     private val _adapterUpdate by lazy { MutableLiveData<Boolean>() }
     val adapterUpdate: LiveData<Boolean>
@@ -80,7 +81,7 @@ class MainViewModel internal constructor(
             .build()
 
     private var _executorDispatcher: ExecutorCoroutineDispatcher? = null
-    val executorDispatcher:ExecutorCoroutineDispatcher
+    val executorDispatcher: ExecutorCoroutineDispatcher
         get() = _executorDispatcher ?: Executors.newCachedThreadPool().asCoroutineDispatcher()
 
     val KEY_RECYCLER_STATE = "recycler_state"

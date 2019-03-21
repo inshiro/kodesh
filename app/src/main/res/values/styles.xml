@@ -140,8 +140,15 @@
 
     <style name="Widget.Kodesh.Button.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:textColor">?textColor</item>
+        <item name="colorAccent">?colorAccent</item>
+        <item name="colorSecondary">?colorSecondary</item>
+        <item name="colorSecondaryVariant">?colorSecondaryVariant</item>
+        <item name="colorOnSecondary">?colorOnSecondary</item>
+        <item name="colorControlNormal">?colorControlActivated</item>
+        <item name="colorControlActivated">?colorControlActivated</item>
     </style>
 
+    <!-- Toolbars -->
     <style name="Widget.Kodesh.Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">?colorPrimaryVariant</item>
         <item name="titleTextAppearance">@style/TextAppearance.Kodesh.Toolbar</item>

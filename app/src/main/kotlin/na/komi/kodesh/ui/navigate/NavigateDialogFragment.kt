@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.NumberPicker
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.widget.ImageViewCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.button.MaterialButton
 import na.komi.kodesh.Prefs
@@ -57,7 +59,7 @@ class NavigateDialogFragment : ExtendedBottomSheetDialogFragment(), KatanaTrait 
         val bookPicker = view.findViewById<NumberPicker2>(R.id.bookNumberPicker)
         val chapterPicker = view.findViewById<NumberPicker2>(R.id.chapterNumberPicker)
         val versePicker = view.findViewById<NumberPicker2>(R.id.verseNumberPicker)
-        val negativeButton = view.findViewById<MaterialButton>(R.id.navigate_cancel_button)
+        val closeButton = view.findViewById<AppCompatImageView>(R.id.navigate_close_button)
         val positiveButton = view.findViewById<MaterialButton>(R.id.navigate_positive_button)
         val books = viewModel.getBooks()
         val bible: Bible = viewModel.getRowAtPagePositon(Prefs.VP_Position + 1)
@@ -121,6 +123,11 @@ class NavigateDialogFragment : ExtendedBottomSheetDialogFragment(), KatanaTrait 
             versePicker.value = 1
         }
 
+        viewModel.versePicked = versePicker.value
+        versePicker.setOnValueChangedListener { _, _, _ ->
+            viewModel.versePicked = versePicker.value
+        }
+
         tryy {
             val f = NumberPicker::class.java.getDeclaredField("mInputText")
             f.isAccessible = true
@@ -133,7 +140,7 @@ class NavigateDialogFragment : ExtendedBottomSheetDialogFragment(), KatanaTrait 
         }
         //.setPositiveButton("OK") { dialog, which ->
 
-        negativeButton.setOnClickListener {
+        closeButton.setOnClickListener {
             dismiss()
         }
         positiveButton.setOnClickListener {
