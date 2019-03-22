@@ -1,5 +1,7 @@
 package na.komi.kodesh.ui.internal
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.graphics.Rect
 import android.os.Build
@@ -102,18 +104,6 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
         return super.dispatchTouchEvent(ev)
     }
 
-    /*override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
-        super.onRestoreInstanceState(savedInstanceState)
-        savedInstanceState?.getParcelable<MainComponent>("MAIN_COMPONENT")?.let {
-            MainComponent.mmainComponent = it.mmainComponent!!
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putParcelable("MAIN_COMPONENT", MainComponent)
-    }*/
-
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -211,6 +201,29 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
         }
 
 
+        //log w "${skate.current?.tag}"
+        if (skate.current?.tag?.contains("FindInPageFragment") == true) {
+            (skate.current as FindInPageFragment).setListener {
+                onShow {
+                    skate.fragmentManager!!.fragments.find { it.tag?.contains("MainFragment") ?: false }?.view?.apply {
+                        post {
+                            animate()
+                                .translationY(146f)
+                                .setDuration(0L)
+                        }
+                    }
+                }
+                onHide {
+                    skate.fragmentManager!!.fragments.find { it.tag?.contains("MainFragment") ?: false }?.view?.apply {
+                            animate()
+                                .translationY(0f)
+                                .setInterpolator(AnimationUtils.FAST_OUT_LINEAR_IN_INTERPOLATOR)
+                                .setDuration(EXIT_ANIMATION_DURATION)
+
+                    }
+                }
+            }
+        } // TODO
 
         toolbar?.post {
             getToolbar()?.let { tb ->
@@ -322,31 +335,57 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
         }
 
     }
-    //internal typealias OnClick = (library: Library) -> Unit
 
-    protected val ENTER_ANIMATION_DURATION = 225
-    protected val EXIT_ANIMATION_DURATION = 175
+    protected val ENTER_ANIMATION_DURATION = 225.toLong()
+    protected val EXIT_ANIMATION_DURATION = 175.toLong()
     fun displayFindInPage(fragment: Fragment) {
         val v = skate.current?.view
-        log d "v null? ${v == null} | ${skate.current}"
-        v?.apply {
-            animate()
-                .translationY(146f)
-                .setInterpolator(AnimationUtils.LINEAR_OUT_SLOW_IN_INTERPOLATOR)
-                .setDuration(ENTER_ANIMATION_DURATION.toLong())
-                .start()
-        }
-        fragment.show()
-        (fragment as FindInPageFragment).setOnHideListener {
+        /*fragment.show()
+        (fragment as FindInPageFragment).setListener {
+            onShow {
+                v?.apply {
+                    animate()
+                        .translationY(146f)
+                        .setInterpolator(AnimationUtils.LINEAR_OUT_SLOW_IN_INTERPOLATOR)
+                        .setDuration(ENTER_ANIMATION_DURATION)
+                }
+            }
             onHide {
                 v?.apply {
                     animate()
                         .translationY(0f)
                         .setInterpolator(AnimationUtils.FAST_OUT_LINEAR_IN_INTERPOLATOR)
-                        .setDuration(EXIT_ANIMATION_DURATION.toLong())
-                        .start()
+                        .setDuration(EXIT_ANIMATION_DURATION)
                 }
             }
+        }*/
+        v?.apply {
+            animate()
+                .translationY(146f)
+                .setInterpolator(AnimationUtils.LINEAR_OUT_SLOW_IN_INTERPOLATOR)
+                .setDuration(ENTER_ANIMATION_DURATION)
+                .also {
+                    it.setListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator?) {
+                            super.onAnimationEnd(animation)
+                            fragment.show()
+                            (fragment as FindInPageFragment).setListener {
+                                onHide {
+                                    v.apply {
+                                        animate()
+                                            .translationY(0f)
+                                            .setInterpolator(AnimationUtils.FAST_OUT_LINEAR_IN_INTERPOLATOR)
+                                            .setDuration(EXIT_ANIMATION_DURATION)
+                                    }
+                                }
+                            }
+                            it.cancel()
+                            (this@apply).clearAnimation()
+                            it.setListener(null)
+                        }
+                    })
+                }
+
         }
     }
 

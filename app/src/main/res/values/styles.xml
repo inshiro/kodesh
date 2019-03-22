@@ -43,7 +43,7 @@
         <item name="colorPrimary">@color/darkColorPrimary</item>
         <item name="colorPrimaryDark">@color/darkColorPrimary</item>
         <item name="colorPrimaryVariant">@color/colorBackgroundDark</item>
-       <!-- <item name="colorPrimaryVariant">#1A1A1F</item> -->
+        <!-- <item name="colorPrimaryVariant">#1A1A1F</item> -->
 
         <item name="colorAccent">@color/colorAccentDark</item>
         <item name="colorSecondary">@color/colorAccentDark</item>
@@ -67,12 +67,13 @@
         <item name="numberPickerDividerColor">@color/transparent_dark</item>
 
     </style>
+
     <style name="Theme.Black" parent="Theme.MaterialComponents.NoActionBar">
         <item name="colorOnPrimary">#FFFFFF</item>
         <item name="colorPrimary">@android:color/black</item>
         <item name="colorPrimaryDark">@android:color/black</item> <!-- This sets Status bar color -->
         <item name="colorPrimaryVariant">#0C0C0C</item>
-       <!-- <item name="colorPrimaryVariant">#1A1A1F</item> -->
+        <!-- <item name="colorPrimaryVariant">#1A1A1F</item> -->
 
         <item name="colorAccent">@color/colorAccentBlack</item>
         <item name="colorSecondary">@color/colorAccentBlack</item>
@@ -100,6 +101,7 @@
     <style name="MyOverflowButtonStyle" parent="Widget.AppCompat.ActionButton.Overflow">
         <item name="android:tint">@color/darkTextColor</item>
     </style>
+
     <style name="NavigationView.Dark" parent="Widget.MaterialComponents.NavigationView">
         <item name="colorOnPrimary">#FFFFFF</item>
         <item name="colorPrimary">@android:color/black</item>
@@ -124,6 +126,7 @@
         <item name="buttonStyle">@style/Widget.Kodesh.Button.TextButton</item>
         <item name="buttonBarButtonStyle">@style/Widget.Kodesh.Button.TextButton</item>
     </style>
+
     <style name="AlertDialog.Black" parent="Theme.MaterialComponents.Dialog.Alert">
         <item name="colorAccent">@color/colorAccentBlack</item>
         <item name="actionButtonStyle">@style/Widget.Kodesh.Button.TextButton</item>
@@ -135,9 +138,11 @@
     <style name="BottomSheetDialog.Light" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
     <style name="BottomSheetDialog.Dark" parent="Theme.MaterialComponents.BottomSheetDialog">
         <item name="colorAccent">@color/colorAccentDark</item>
     </style>
+
     <style name="BottomSheetDialog.Black" parent="Theme.MaterialComponents.BottomSheetDialog">
         <item name="colorAccent">@color/colorAccentBlack</item>
     </style>
@@ -160,7 +165,7 @@
         <item name="android:textColor">?textColor</item>
         <item name="backgroundTint">?attr/colorPrimaryDark</item>
         <item name="colorAccent">?colorAccent</item>
-        <item name="android:stateListAnimator" tools:ignore="NewApi"> @animator/shr_next_button_state_list_anim </item>
+        <item name="android:stateListAnimator" tools:ignore="NewApi">@animator/shr_next_button_state_list_anim</item>
     </style>
 
     <style name="Widget.Kodesh.Button.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
@@ -171,26 +176,24 @@
     <!-- Toolbars -->
     <style name="Widget.Kodesh.Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">?colorPrimaryVariant</item>
-        <item name="titleTextAppearance">@style/TextAppearance.Kodesh.Toolbar</item>
+        <item name="titleTextAppearance">@style/TextAppearance.Toolbar.Title</item>
         <item name="android:fontFamily" tools:targetApi="jelly_bean">@font/rubik</item>
     </style>
+    <!--
     <style name="Widget.Kodesh.Toolbar.Dark" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">?colorPrimaryVariant</item>
         <item name="android:textColor">@color/darkTextColor</item>
         <item name="colorControlNormal">@color/darkTextColor</item>
         <item name="titleTextAppearance">@style/TextAppearance.Kodesh.Toolbar</item>
         <item name="android:fontFamily" tools:targetApi="jelly_bean">@font/rubik</item>
-    </style>
+    </style>-->
 
     <!--
     <item name="android:theme">@style/Theme_Light</item>
     <item name="popupTheme">@style/ThemeOverlay.MaterialComponents.Light</item> -->
-    <style name="TextAppearance.Toolbar" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textStyle">bold</item>
+    <style name="TextAppearance.Toolbar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:fontFamily" tools:targetApi="jelly_bean">@font/rubik</item>
-    </style>
-    <style name="TextAppearance.Kodesh.Toolbar" parent="TextAppearance.MaterialComponents.Button">
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="Kodesh.TabLayout" parent="Widget.Design.TabLayout">
@@ -214,6 +217,7 @@
         <item name="android:textColor">#CFB53B</item>
         <item name="android:textStyle">bold</item>
     </style>
+
     <style name="NavigationDrawerStyle">
         <item name="android:textSize">@dimen/smallTextSize</item><!-- text size in menu-->
         <item name="android:listDivider">@color/transparent_divider_light</item>

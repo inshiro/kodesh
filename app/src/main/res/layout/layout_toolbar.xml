@@ -19,7 +19,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/kod_menu"
-            app:titleTextAppearance="@style/TextAppearance.Toolbar"
+            app:titleTextAppearance="@style/TextAppearance.Toolbar.Title"
             app:titleTextColor="@color/darkTextColor"
             tools:title="@string/app_name">
 

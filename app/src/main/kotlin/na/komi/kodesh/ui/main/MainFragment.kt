@@ -26,37 +26,6 @@ import org.rewedigital.katana.Component
 import org.rewedigital.katana.KatanaTrait
 import org.rewedigital.katana.androidx.viewmodel.activityViewModel
 
-//typealias onClick = () -> Unit
-class S {
-    private var onShowListener = {}
-    private var onHideListener = {}
-    private val listener by lazy { OnNavigateListener() }
-
-    fun setOnNavigateListener(init: OnNavigateListener.() -> Unit) {
-        listener.init()
-    }
-
-    inner class OnNavigateListener {
-        fun onShow(action: () -> Unit) {
-            onShowListener = action
-        }
-
-        fun onNavigate(action: () -> Unit) {
-            onHideListener = action
-        }
-    }
-
-    infix fun show(s: String) {
-        println(s)
-        onShowListener()
-    }
-
-    infix fun hide(s: String) {
-        println(s)
-        onHideListener()
-    }
-}
-
 class MainFragment : BaseFragment2(), KatanaTrait {
     override val layout: Int = R.layout.fragment_main
 
@@ -320,7 +289,6 @@ class MainFragment : BaseFragment2(), KatanaTrait {
         val bp = Prefs.VP_Position
         val p = Prefs.NavigateToPosition
         Prefs.VP_Position = p
-        log d "bp: $bp p: $p viewModel.versePicked : ${viewModel.versePicked}"
         val rv = view?.findViewById<ViewPager3>(R.id.pager_main)
         if (bp != p) {
             launch {

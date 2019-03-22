@@ -128,7 +128,7 @@ dependencies {
     kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
 
     /** Room **/
-    def room_version  = "2.1.0-alpha04"
+    def room_version  = "2.1.0-alpha05"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
@@ -137,7 +137,7 @@ dependencies {
     implementation "androidx.paging:paging-runtime:$paging_version"
 
     /** Skate **/
-    def skate_version = "0.2.0"
+    def skate_version = "master-SNAPSHOT"
     implementation "com.github.inshiro:skate:$skate_version"
 
     /** Katana **/
