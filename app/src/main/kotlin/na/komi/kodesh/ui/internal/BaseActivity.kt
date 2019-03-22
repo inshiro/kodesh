@@ -210,6 +210,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                             animate()
                                 .translationY(146f)
                                 .setDuration(0L)
+                            bottomSheetContainer.visibility = View.GONE
                         }
                     }
                 }

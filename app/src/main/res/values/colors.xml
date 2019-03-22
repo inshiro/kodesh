@@ -41,6 +41,7 @@
     <color name="redletter_color_dark">#b71c1c</color>
 
 
+    <color name="colorDisabled">#ffbdbdbd</color>
     <color name="shadow_overlay">#80000000</color>
     <color name="transparent_dark">#1AFFFFFF</color>
     <color name="transparent_divider_light">#1A000000</color>

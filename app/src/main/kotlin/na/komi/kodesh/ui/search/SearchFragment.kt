@@ -1,24 +1,22 @@
 package na.komi.kodesh.ui.search
 
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.children
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.fragment_search.view.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import na.komi.kodesh.R
@@ -27,7 +25,6 @@ import na.komi.kodesh.ui.internal.BottomSheetBehavior2
 import na.komi.kodesh.ui.main.MainViewModel
 import na.komi.kodesh.util.closestKatana
 import na.komi.kodesh.util.snackbar
-import na.komi.kodesh.util.toast
 import org.rewedigital.katana.Component
 import org.rewedigital.katana.KatanaTrait
 import org.rewedigital.katana.androidx.viewmodel.activityViewModel
@@ -71,12 +68,11 @@ class SearchFragment : BaseFragment2(), KatanaTrait {
         hideSoftInputFromWindow(view.windowToken, 0);
     }
 
+    private var listSize:Int? =null
     fun setupRecyclerView() {
         val rv: RecyclerView = view!!.recycler_view_search
         val adapter = SearchAdapter()
         val editText: TextInputEditText = view!!.text_input_edit_text as TextInputEditText
-        var job = Job()
-        val SEARCH_DEBOUNCE_MS = 370.toLong()
         val imm by lazy { requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager }
 
         rv.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
@@ -92,34 +88,20 @@ class SearchFragment : BaseFragment2(), KatanaTrait {
             }
         }*/
 
-        editText.setOnKeyListener { v, keyCode, event ->
+        /*editText.setOnKeyListener { v, keyCode, event ->
             if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
                 v.clearFocus()
                 return@setOnKeyListener true
             }
             false
-        }
-        editText.setOnFocusChangeListener { v, hasFocus ->
-            if (hasFocus) imm.showKeyboard()
-            else imm.hideKeyboard(v)//.v.hideKeyboard()
-        }
+        }*/
 
-        editText.addTextChangedListener(object : TextWatcher {
+        val coordinatorLayout = requireActivity().findViewById<CoordinatorLayout>(R.id.container_main)
+        val textWatcher = object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 s?.let {
                     if (s.isNotBlank() || s.isNotEmpty()) {
-                        job.cancel()
-                        job = launch {
-                            delay(SEARCH_DEBOUNCE_MS)
-                            viewModel.searchVerse(s.toString()).observe(viewLifecycleOwner, Observer { list ->
-                                list?.let {
-                                    // When we receive the list, use it.
-                                    adapter.submitList(it)
-                                    //editText.snackbar("${it.size} result${if (it.size == 1) "" else "s"}")
-                                    editText.toast("${it.size} result${if (it.size == 1) "" else "s"}")
-                                }
-                            })
-                        }
+                        performSearch(s.toString(), adapter, coordinatorLayout)
                     }
 
 
@@ -132,11 +114,61 @@ class SearchFragment : BaseFragment2(), KatanaTrait {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
 
-        })
+        }
 
+        editText.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                if (listSize==null) {
+                    SEARCH_DEBOUNCE_MS = 0
+                    performSearch(editText.text.toString(), adapter, coordinatorLayout)
+                    //imm.hideKeyboard(editText)
+                }
+                editText.clearFocus()
+                return@setOnEditorActionListener true
+            }
+            false
+        }
+        editText.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) imm.showKeyboard()
+            else imm.hideKeyboard(v)//.v.hideKeyboard()
+        }
+
+
+        editText.post {
+            editText.addTextChangedListener(textWatcher)
+            editText.selectAll()
+        }
 
         rv.adapter = adapter
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        snackBar?.dismiss()
+        listSize = null
+        snackBar = null
+    }
+
+    private var SEARCH_DEBOUNCE_MS = 370.toLong()
+    private var snackBar: Snackbar?=null
+    fun performSearch(s: String, adapter: SearchAdapter, coordinatorLayout: CoordinatorLayout) {
+        coroutineContext.cancelChildren()
+        launch {
+            delay(SEARCH_DEBOUNCE_MS)
+            if (SEARCH_DEBOUNCE_MS == 0L)
+                SEARCH_DEBOUNCE_MS = 370.toLong()
+            viewModel.searchVerse(s).observe(viewLifecycleOwner, Observer { list ->
+                list?.let {
+                    // When we receive the list, use it.
+                    adapter.submitList(it)
+                    //editText.snackbar("${it.size} result${if (it.size == 1) "" else "s"}")
+                    snackBar = coordinatorLayout.snackbar("${it.size} result${if (it.size == 1) "" else "s"}",Snackbar.LENGTH_SHORT)
+                    listSize = it.size
+                    //Snackbar.make(coordinatorLayout, "${it.size} result${if (it.size == 1) "" else "s"}", Snackbar.LENGTH_SHORT).apply {view.layoutParams = (view.layoutParams as CoordinatorLayout.LayoutParams).apply {setMargins(leftMargin, topMargin, rightMargin, 146)}}.show()
+                    //editText.toast("${it.size} result${if (it.size == 1) "" else "s"}")
+                }
+            })
+        }
+    }
 
 }

@@ -4,7 +4,6 @@ package na.komi.kodesh.ui.main
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.view.doOnLayout
 import androidx.lifecycle.Observer
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,13 +13,16 @@ import na.komi.kodesh.Prefs
 import na.komi.kodesh.R
 import na.komi.kodesh.model.Bible
 import na.komi.kodesh.ui.internal.BaseFragment2
+import na.komi.kodesh.ui.internal.LinearLayoutManager2
 import na.komi.kodesh.ui.navigate.NavigateDialogFragment
 import na.komi.kodesh.ui.styling.StylingDialogFragment
-import na.komi.kodesh.ui.widget.NestedRecyclerView
 import na.komi.kodesh.ui.widget.ViewPager3
-import na.komi.kodesh.util.*
+import na.komi.kodesh.util.betterSmoothScrollToPosition
+import na.komi.kodesh.util.closestKatana
 import na.komi.kodesh.util.livedata.raw
 import na.komi.kodesh.util.livedata.toSingleEvent
+import na.komi.kodesh.util.onClick
+import na.komi.kodesh.util.setLowProfileStatusBar
 import na.komi.kodesh.util.text.futureSet
 import org.rewedigital.katana.Component
 import org.rewedigital.katana.KatanaTrait
@@ -292,24 +294,27 @@ class MainFragment : BaseFragment2(), KatanaTrait {
         val rv = view?.findViewById<ViewPager3>(R.id.pager_main)
         if (bp != p) {
             launch {
-                    rv?.betterSmoothScrollToPosition(p)
+                rv?.betterSmoothScrollToPosition(p)
                 var c = 0
                 while ((rv?.findViewHolderForAdapterPosition(p) as? MainPageAdapter.ViewHolder)?.childRecyclerView == null) {
                     delay(10)
                     c++
-                    if (c>5000)
+                    if (c > 5000)
                         break
                 }
                 delay(230)
-                if (viewModel.versePicked != 1)
-                (rv?.findViewHolderForAdapterPosition(p) as? MainPageAdapter.ViewHolder)?.childRecyclerView?.betterSmoothScrollToPosition(
-                    viewModel.versePicked
-                )
+                /*if (viewModel.versePicked == 1)
+                    ((rv?.findViewHolderForAdapterPosition(p) as? MainPageAdapter.ViewHolder)?.childRecyclerView?.layoutManager as? LinearLayoutManager2)?.scrollToPositionWithOffset(
+                        0,
+                        0
+                    )
+                else*/
+                    (rv?.findViewHolderForAdapterPosition(p) as? MainPageAdapter.ViewHolder)?.childRecyclerView?.betterSmoothScrollToPosition(
+                        viewModel.versePicked - 1
+                    )
             }
         } else if (bp == p)
-            (rv?.findViewHolderForAdapterPosition(p) as? MainPageAdapter.ViewHolder)?.childRecyclerView?.betterSmoothScrollToPosition(
-                viewModel.versePicked
-            )
+            (rv?.findViewHolderForAdapterPosition(p) as? MainPageAdapter.ViewHolder)?.childRecyclerView?.betterSmoothScrollToPosition(viewModel.versePicked - 1)
         Prefs.NavigateToPosition = -1
     }
 

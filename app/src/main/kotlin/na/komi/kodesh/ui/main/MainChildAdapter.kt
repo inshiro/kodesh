@@ -1,5 +1,8 @@
 package na.komi.kodesh.ui.main
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Typeface
@@ -7,18 +10,17 @@ import android.text.Layout
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
-import android.text.style.AlignmentSpan
-import android.text.style.ForegroundColorSpan
-import android.text.style.RelativeSizeSpan
-import android.text.style.StyleSpan
+import android.text.style.*
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.recyclerview_child_content_main.*
 import kotlinx.coroutines.*
@@ -36,6 +38,7 @@ import na.komi.kodesh.ui.widget.LayoutedTextView
 import na.komi.kodesh.ui.widget.LeadingMarginSpan3
 import na.komi.kodesh.ui.widget.ViewPager3
 import na.komi.kodesh.util.log
+import na.komi.kodesh.util.text.count
 import na.komi.kodesh.util.text.spanBetween
 import kotlin.coroutines.CoroutineContext
 
@@ -47,7 +50,7 @@ class MainChildAdapter(
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
     private val job = SupervisorJob()
-    private val list = mutableListOf<Bible>()
+    val list = mutableListOf<Bible>()
     private val cleanList by lazy { mutableListOf<String>() }
 
     init {
@@ -91,17 +94,23 @@ class MainChildAdapter(
         }*/
     }
 
-    var mRecyclerView: RecyclerView? = null
-    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        super.onAttachedToRecyclerView(recyclerView)
-        mRecyclerView = recyclerView
+    fun search(text: CharSequence) {
+        searchTerm = text
+        notifyDataSetChanged()
     }
+
+    private var searchTerm: CharSequence = ""
     private val spannableFactory by lazy { MySpannableFactory() }
 
     private val onlyAplhaNumericRegex by lazy { """[^A-Za-z0-9 ]""".toRegex() }
     private val periscopeDelimeter by lazy { """\\<.*?\\>""".toRegex() }
     private val italicDelimeter by lazy { """\\[|\\]""".toRegex() }
 
+    private val clipboard by lazy {
+        Application.instance.applicationContext.getSystemService(
+            Context.CLIPBOARD_SERVICE
+        ) as ClipboardManager?
+    }
     inner class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
         var verseView: LayoutedTextView = child_tv_item
         private var origLeftPadding = -1
@@ -121,6 +130,25 @@ class MainChildAdapter(
             verseView.typeface = Fonts.GentiumPlus_R
             verseView.setTextSize(TypedValue.COMPLEX_UNIT_SP, Prefs.mainFontSize)
             verseView.setSpannableFactory(spannableFactory)
+            verseView.setOnLongClickListener {
+                val title = "${list[adapterPosition].bookName} ${list[adapterPosition].chapterId}:${list[adapterPosition].verseId}"
+                var content = verseView.text.toString()
+
+                // Check for persicope
+                if (adapterPosition == 0 && list[adapterPosition].verseText!!.contains("<"))
+                    content = verseView.text.substring(verseView.text.indexOfLast { it == '\n' }+1)
+                else if (adapterPosition+1 == list.size  && list[adapterPosition].verseText!!.contains("<") )
+                    content = verseView.text.substring(0,verseView.text.indexOf('\n'))
+
+                // Check for dropcap
+                 if (verseView.dropCapText.isNotEmpty()) content = "${verseView.dropCapText}$content"
+
+                content =  content.replace("${list[adapterPosition].verseId}  ","")
+                    Snackbar.make(verseView,"Selected $title", Snackbar.LENGTH_SHORT).setAction("Copy") {
+                        clipboard?.primaryClip = ClipData.newPlainText("Search text", "$title\n$content")
+                    }.show()
+                false
+            }
         }
 
         private fun sp(px: Float) = px / Application.instance.applicationContext.resources.displayMetrics.scaledDensity
@@ -350,6 +378,12 @@ class MainChildAdapter(
                 }
             }
 
+            // Search
+            if (searchTerm.isNotEmpty()) {
+                finalText.count(searchTerm.toString(), true) { s, e, c ->
+                    finalText.setSpan(BackgroundColorSpan(Formatting.HighLightColor),s,e,SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE)
+                }
+            }
             verseView.setText(finalText, TextView.BufferType.SPANNABLE)
 
             /*

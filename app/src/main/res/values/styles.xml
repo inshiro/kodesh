@@ -22,7 +22,7 @@
         <item name="textColor">@color/textColor</item>
         <item name="android:textColor">?textColor</item>
         <item name="redLetterColor">@color/redletter_color_dark</item>
-        <item name="colorDisabled">@color/mtrl_on_primary_disabled</item>
+        <item name="colorDisabled">@color/switch_thumb_disabled_material_light</item>
         <item name="findInPageColor">@color/colorBackground</item>
 
         <item name="actionOverflowButtonStyle">@style/MyOverflowButtonStyle</item>

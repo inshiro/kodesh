@@ -36,8 +36,8 @@ fun View.onClick(debounceTime: Long = 1000L, action: () -> Unit) {
     })
 }
 
-fun View.snackbar(text: String, length: Int = Snackbar.LENGTH_LONG) {
-    Snackbar.make(this, text, length).show()
+fun View.snackbar(text: String, length: Int = Snackbar.LENGTH_LONG):Snackbar {
+    return Snackbar.make(this, text, length).also { it.show() }
 }
 fun View.toast(text: String, length: Int = Toast.LENGTH_LONG) {
     Toast.makeText(context, text, length).show()

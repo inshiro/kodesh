@@ -6,8 +6,8 @@
     android:layout_height="?attr/actionBarSize"
     android:background="?findInPageColor"
     android:clickable="true"
-    android:focusable="true"
     android:elevation="7dp"
+    android:focusable="true"
     android:focusableInTouchMode="true">
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -19,6 +19,7 @@
         android:ellipsize="end"
         android:focusable="true"
         android:hint="Find in page"
+        android:imeOptions="actionSearch"
         android:inputType="text"
         android:maxLines="1"
         android:paddingLeft="16dp"
@@ -28,13 +29,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:searchIcon="@null" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <na.komi.kodesh.ui.widget.BaselineGridTextView
         android:id="@+id/find_results_text_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:bufferType="spannable"
         android:gravity="center"
         android:padding="12dp"
-        android:textColor="@color/darkTextColor"
+        android:textColor="?textColor"
         app:layout_constraintEnd_toStartOf="@id/find_divider"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="0/0" />
@@ -56,7 +58,7 @@
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:tint="@color/mtrl_on_primary_disabled"
+        android:tint="?textColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/find_results_text_view"
         app:layout_constraintRight_toLeftOf="@id/find_down_botton"
@@ -70,7 +72,7 @@
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:tint="@color/mtrl_on_primary_disabled"
+        android:tint="?textColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/close_botton"
         app:layout_constraintLeft_toRightOf="@id/close_botton"
