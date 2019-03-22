@@ -18,16 +18,44 @@ import na.komi.kodesh.ui.navigate.NavigateDialogFragment
 import na.komi.kodesh.ui.styling.StylingDialogFragment
 import na.komi.kodesh.ui.widget.NestedRecyclerView
 import na.komi.kodesh.ui.widget.ViewPager3
-import na.komi.kodesh.util.betterSmoothScrollToPosition
-import na.komi.kodesh.util.closestKatana
+import na.komi.kodesh.util.*
 import na.komi.kodesh.util.livedata.raw
 import na.komi.kodesh.util.livedata.toSingleEvent
-import na.komi.kodesh.util.onClick
-import na.komi.kodesh.util.setLowProfileStatusBar
 import na.komi.kodesh.util.text.futureSet
 import org.rewedigital.katana.Component
 import org.rewedigital.katana.KatanaTrait
 import org.rewedigital.katana.androidx.viewmodel.activityViewModel
+
+//typealias onClick = () -> Unit
+class S {
+    private var onShowListener = {}
+    private var onHideListener = {}
+    private val listener by lazy { OnNavigateListener() }
+
+    fun setOnNavigateListener(init: OnNavigateListener.() -> Unit) {
+        listener.init()
+    }
+
+    inner class OnNavigateListener {
+        fun onShow(action: () -> Unit) {
+            onShowListener = action
+        }
+
+        fun onNavigate(action: () -> Unit) {
+            onHideListener = action
+        }
+    }
+
+    infix fun show(s: String) {
+        println(s)
+        onShowListener()
+    }
+
+    infix fun hide(s: String) {
+        println(s)
+        onHideListener()
+    }
+}
 
 class MainFragment : BaseFragment2(), KatanaTrait {
     override val layout: Int = R.layout.fragment_main
@@ -181,11 +209,17 @@ class MainFragment : BaseFragment2(), KatanaTrait {
     }
 
     private fun subscribeUI(adapter: MainPageAdapter) {
+        navigationDialog.setOnNavigateListener {
+            onPositiveClick {
+                navigateToPage()
+                closeBottomSheet()
+            }
+        }
 
-        viewModel.pagePosition.observe(viewLifecycleOwner, Observer {
+        /*viewModel.pagePosition.observe(viewLifecycleOwner, Observer {
             navigateToPage()
             closeBottomSheet()
-        })
+        })*/
 
         activity?.window?.decorView?.setOnSystemUiVisibilityChangeListener {
             if ((it and View.SYSTEM_UI_FLAG_LOW_PROFILE) == 0) {
@@ -281,23 +315,34 @@ class MainFragment : BaseFragment2(), KatanaTrait {
 
     private fun navigateToPage() {
 
-        if (Prefs.NavigateToPosition != -1 && Prefs.VP_Position != Prefs.NavigateToPosition) {
-            //log d "NavigateToPosition"
+        if (Prefs.NavigateToPosition == -1) return
 
-            Prefs.VP_Position = Prefs.NavigateToPosition
-            val p = Prefs.VP_Position
-            val rv = view?.findViewById<ViewPager3>(R.id.pager_main)
-            rv?.betterSmoothScrollToPosition(p)
-            //rv?.post {
-
-                launch {
-                    while ((rv?.findViewHolderForAdapterPosition(p) as? MainPageAdapter.ViewHolder)?.childRecyclerView == null) delay(10)
-                    delay(100)
-                    (rv.findViewHolderForAdapterPosition(p) as? MainPageAdapter.ViewHolder)?.childRecyclerView?.betterSmoothScrollToPosition(viewModel.versePicked)
+        val bp = Prefs.VP_Position
+        val p = Prefs.NavigateToPosition
+        Prefs.VP_Position = p
+        log d "bp: $bp p: $p viewModel.versePicked : ${viewModel.versePicked}"
+        val rv = view?.findViewById<ViewPager3>(R.id.pager_main)
+        if (bp != p) {
+            launch {
+                    rv?.betterSmoothScrollToPosition(p)
+                var c = 0
+                while ((rv?.findViewHolderForAdapterPosition(p) as? MainPageAdapter.ViewHolder)?.childRecyclerView == null) {
+                    delay(10)
+                    c++
+                    if (c>5000)
+                        break
                 }
-            //}
-            Prefs.NavigateToPosition = -1
-        }
+                delay(230)
+                if (viewModel.versePicked != 1)
+                (rv?.findViewHolderForAdapterPosition(p) as? MainPageAdapter.ViewHolder)?.childRecyclerView?.betterSmoothScrollToPosition(
+                    viewModel.versePicked
+                )
+            }
+        } else if (bp == p)
+            (rv?.findViewHolderForAdapterPosition(p) as? MainPageAdapter.ViewHolder)?.childRecyclerView?.betterSmoothScrollToPosition(
+                viewModel.versePicked
+            )
+        Prefs.NavigateToPosition = -1
     }
 
     private var currentIndex: Int = 0

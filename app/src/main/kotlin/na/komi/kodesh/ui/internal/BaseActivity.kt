@@ -16,6 +16,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
+import com.google.android.material.animation.AnimationUtils
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.*
@@ -186,24 +187,24 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             if (skate.current is SettingsFragment) {
                 launch {
                     getToolbar()?.post {
-                    val title = getString(R.string.settings_title)
-                    getToolbar()?.title = title
-                    getToolbarTitleView()?.text = title
-                    getToolbarTitleView()?.addTextChangedListener(object : TextWatcher {
-                        override fun afterTextChanged(s: Editable?) {
-                        }
+                        val title = getString(R.string.settings_title)
+                        getToolbar()?.title = title
+                        getToolbarTitleView()?.text = title
+                        getToolbarTitleView()?.addTextChangedListener(object : TextWatcher {
+                            override fun afterTextChanged(s: Editable?) {
+                            }
 
-                        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                        }
+                            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                            }
 
-                        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                            getToolbarTitleView()?.removeTextChangedListener(this)
-                            getToolbar()?.title = Prefs.title
-                            getToolbarTitleView()?.text = Prefs.title
-                        }
+                            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                                getToolbarTitleView()?.removeTextChangedListener(this)
+                                getToolbar()?.title = Prefs.title
+                                getToolbarTitleView()?.text = Prefs.title
+                            }
 
-                    })
-                }
+                        })
+                    }
                 }
             }
 
@@ -230,7 +231,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                 }
                 tb.menu.findItem(R.id.find_in_page).setOnMenuItemClickListener {
                     skate.container = R.id.container_main
-                    findInPageFragment.show()
+                    displayFindInPage(findInPageFragment)
                     mBottomSheetBehavior.close()
                     //it.isEnabled = false
                     mBottomSheetContainer.visibility = View.GONE
@@ -304,7 +305,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             }
             tb.menu.findItem(R.id.find_in_page).setOnMenuItemClickListener {
                 skate.container = R.id.container_main
-                findInPageFragment.show()
+                displayFindInPage(findInPageFragment)
                 bottomSheetBehavior.close()
                 bottomSheetContainer.visibility = View.GONE
                 skate.container = R.id.nav_main_container
@@ -323,6 +324,31 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
     }
     //internal typealias OnClick = (library: Library) -> Unit
 
+    protected val ENTER_ANIMATION_DURATION = 225
+    protected val EXIT_ANIMATION_DURATION = 175
+    fun displayFindInPage(fragment: Fragment) {
+        val v = skate.current?.view
+        log d "v null? ${v == null} | ${skate.current}"
+        v?.apply {
+            animate()
+                .translationY(146f)
+                .setInterpolator(AnimationUtils.LINEAR_OUT_SLOW_IN_INTERPOLATOR)
+                .setDuration(ENTER_ANIMATION_DURATION.toLong())
+                .start()
+        }
+        fragment.show()
+        (fragment as FindInPageFragment).setOnHideListener {
+            onHide {
+                v?.apply {
+                    animate()
+                        .translationY(0f)
+                        .setInterpolator(AnimationUtils.FAST_OUT_LINEAR_IN_INTERPOLATOR)
+                        .setDuration(EXIT_ANIMATION_DURATION.toLong())
+                        .start()
+                }
+            }
+        }
+    }
 
     fun Fragment.navToFrag() {
         launch {

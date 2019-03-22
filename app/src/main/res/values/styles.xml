@@ -16,6 +16,8 @@
         <item name="colorSecondaryVariant">@color/colorPrimaryDark</item>
         <item name="colorOnSecondary">@color/colorPrimaryDark</item>
 
+        <item name="colorButtonNormal">@color/colorAccent</item>
+        <item name="android:colorButtonNormal" tools:targetApi="lollipop">@color/colorAccent</item>
         <item name="colorControlActivated">@color/colorAccent</item>
         <item name="textColor">@color/textColor</item>
         <item name="android:textColor">?textColor</item>
@@ -24,8 +26,8 @@
         <item name="findInPageColor">@color/colorBackground</item>
 
         <item name="actionOverflowButtonStyle">@style/MyOverflowButtonStyle</item>
-        <item name="bottomSheetDialogTheme">@style/Theme.MaterialComponents.Light.BottomSheetDialog</item>
-        <item name="alertDialogTheme">@style/Theme.MaterialComponents.Light.Dialog.Alert</item>
+        <item name="bottomSheetDialogTheme">@style/BottomSheetDialog.Light</item>
+        <item name="alertDialogTheme">@style/AlertDialog.Light</item>
         <item name="popupTheme">@style/ThemeOverlay.MaterialComponents.Light</item>
         <item name="backgroundColor">@color/colorBackground</item>
         <item name="navigation_item_background">@drawable/nav_item_background_light</item>
@@ -106,18 +108,41 @@
         <item name="android:textColor">@color/darkTextColor</item>
         <item name="android:gravity">center_vertical</item>
     </style>
+
+
+    <!-- AlertDialog -->
+    <style name="AlertDialog.Light" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="actionButtonStyle">@style/Widget.Kodesh.Button.TextButton</item>
+        <item name="buttonStyle">@style/Widget.Kodesh.Button.TextButton</item>
+        <item name="buttonBarButtonStyle">@style/Widget.Kodesh.Button.TextButton</item>
+    </style>
+
     <style name="AlertDialog.Dark" parent="Theme.MaterialComponents.Dialog.Alert">
         <item name="colorAccent">@color/colorAccentDark</item>
+        <item name="actionButtonStyle">@style/Widget.Kodesh.Button.TextButton</item>
+        <item name="buttonStyle">@style/Widget.Kodesh.Button.TextButton</item>
+        <item name="buttonBarButtonStyle">@style/Widget.Kodesh.Button.TextButton</item>
+    </style>
+    <style name="AlertDialog.Black" parent="Theme.MaterialComponents.Dialog.Alert">
+        <item name="colorAccent">@color/colorAccentBlack</item>
+        <item name="actionButtonStyle">@style/Widget.Kodesh.Button.TextButton</item>
+        <item name="buttonStyle">@style/Widget.Kodesh.Button.TextButton</item>
+        <item name="buttonBarButtonStyle">@style/Widget.Kodesh.Button.TextButton</item>
+    </style>
+
+
+    <style name="BottomSheetDialog.Light" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
     <style name="BottomSheetDialog.Dark" parent="Theme.MaterialComponents.BottomSheetDialog">
         <item name="colorAccent">@color/colorAccentDark</item>
     </style>
-    <style name="AlertDialog.Black" parent="Theme.MaterialComponents.BottomSheetDialog">
-        <item name="colorAccent">@color/colorAccentBlack</item>
-    </style>
     <style name="BottomSheetDialog.Black" parent="Theme.MaterialComponents.BottomSheetDialog">
         <item name="colorAccent">@color/colorAccentBlack</item>
     </style>
+
+
     <!-- TextInputLayout -->
     <style name="Widget.Kodesh.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
         <item name="hintTextAppearance">@style/TextAppearance.Kodesh.TextInputLayout.HintText</item>
@@ -140,12 +165,7 @@
 
     <style name="Widget.Kodesh.Button.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:textColor">?textColor</item>
-        <item name="colorAccent">?colorAccent</item>
-        <item name="colorSecondary">?colorSecondary</item>
-        <item name="colorSecondaryVariant">?colorSecondaryVariant</item>
-        <item name="colorOnSecondary">?colorOnSecondary</item>
-        <item name="colorControlNormal">?colorControlActivated</item>
-        <item name="colorControlActivated">?colorControlActivated</item>
+        <item name="rippleColor">?colorAccent</item>
     </style>
 
     <!-- Toolbars -->

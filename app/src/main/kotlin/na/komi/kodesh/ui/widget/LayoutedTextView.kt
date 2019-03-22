@@ -17,6 +17,7 @@ import na.komi.kodesh.Prefs
 import na.komi.kodesh.util.log
 import na.komi.kodesh.util.page.Fonts
 import na.komi.kodesh.util.sp
+import kotlin.math.absoluteValue
 
 
 class LayoutedTextView : AppCompatTextView {
@@ -112,6 +113,7 @@ class LayoutedTextView : AppCompatTextView {
         */
     var drawn = false
     var drawCount = 0
+    var hasPeriscope = false
 
     val MARGIN_PADDING = 20
     override fun onDraw(canvas: Canvas?) {
@@ -120,47 +122,56 @@ class LayoutedTextView : AppCompatTextView {
             super.onDraw(canvas)
         } else {
             if (canvas != null) {
-               // if (drawn) return
+                // if (drawn) return
                 //var moveY = y+height-(top+Math.abs(paint.descent()))
                 //drawCount++
                 //log w "onDraw $drawCount"
 
 
                 var moveY = y + height - (top + Math.abs(paint.descent()))
+                //log w "linecount: ${lineCount}"
                 for (i in leadingMarginSpan.lineCount + 1..lineCount) {
                     moveY -= Math.abs(paint.fontMetrics.top) + Math.abs(paint.fontMetrics.bottom)
                 }
-                moveY += paint.fontMetrics.descent/3
+                moveY += paint.fontMetrics.descent / 3
+                //log w "movey: $moveY"
+
+                if (hasPeriscope) {
+                    // Getting n amount of line heights and multiplying that to the abs value of ascent (Bottom of first line text)
+                    val line = layout.getLineForOffset(text.lastIndexOf("\n") + 3) + 1
+                    val v = paint.fontMetrics.ascent.absoluteValue + (lineHeight.toFloat() * line)
+                    //canvas.drawLine(0f, v, width.toFloat(), v + 5f, paint)
+                    //log i "line for offset $line"
+                    moveY = v
+                }
 
                 tp.textSize = paint.textSize * 4
                 tp.color = paint.color
 
+                // TOP of first line text
+                // canvas.drawLine(0f, paint.fontMetrics.descent, width.toFloat(), paint.fontMetrics.descent + 5f, paint)
+                // canvas.drawLine(0f, paint.fontMetrics.bottom, width.toFloat(), paint.fontMetrics.bottom + 5f, paint)
+                // canvas.drawLine(0f, paint.fontMetrics.leading, width.toFloat(), paint.fontMetrics.leading + 5f, paint)
+
+                // Bottom of first line text
+                // canvas.drawLine(0f, moveY, width.toFloat(), moveY + 5f, paint)
+
+                // Getting line height if TextView.getLineHeight() is not accessible. https://stackoverflow.com/a/16050019
+                // val lh = paint.fontMetrics.top - paint.fontMetrics.bottom
+                // log i "fm.top - fm.bottom: ${lh} line height: ${lineHeight}"
+
                 val ss = text as Spannable
-                val redSpans = ss.getSpans(0,1, ForegroundColorSpan::class.java)
-                for(redSpan in redSpans){
+                val redSpans = ss.getSpans(0, 1, ForegroundColorSpan::class.java)
+                for (redSpan in redSpans) {
                     tp.color = redSpan.foregroundColor
                 }
 
                 canvas.drawText(dropCapText, x + paddingLeft.toFloat(), moveY, tp)
-                val spans = ss.getSpans(0,ss.length, LeadingMarginSpan3::class.java)
-                for(span in spans){
+                val spans = ss.getSpans(0, ss.length, LeadingMarginSpan3::class.java)
+                for (span in spans) {
                     span.setMargin(tp.measureText(dropCapText).toInt() + MARGIN_PADDING)
                 }
-
-
                 super.onDraw(canvas)
-
-
-                /*
-                val str = text.drop(1).toSpannable()
-                leadingMarginSpan.setMargin(200)
-                str.setSpan(leadingMarginSpan,0,str.length,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                tp.textSize = sp(Prefs.mainFontSize)
-                val textLayout = getStaticLayout(str,tp.textSize,width-paddingLeft-paddingRight)
-                //canvas.drawMultilineText(str,tp,width,x,y)
-                //it.translate(dLayout.width.toFloat(), paint.ascent() - PADDING_BOUNDS-10)
-                textLayout.draw(canvas)*/
-                //it.restore()
             }
         }
     }

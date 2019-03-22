@@ -29,6 +29,19 @@ class FindInPageFragment : BaseFragment2() {
         hideSoftInputFromWindow(view.windowToken, 0);
     }
 
+    private val listener by lazy { OnClick }
+
+    fun setOnHideListener(init: OnClick.() -> Unit) {
+        listener.init() // Calls the site functions to set the values
+    }
+
+    object OnClick {
+        var onHide = {}
+        fun onHide(action: () -> Unit) {
+            onHide = action
+        }
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         view?.let { view ->
@@ -57,6 +70,7 @@ class FindInPageFragment : BaseFragment2() {
         getBottomSheetContainer()?.post {
             getBottomSheetContainer()?.visibility = View.VISIBLE
         }
+        listener.onHide()
     }
 
     override fun onDestroyView() {
