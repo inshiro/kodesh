@@ -85,7 +85,7 @@ class PrefaceFragment : BaseFragment2(), KatanaTrait {
                 getToolbar()?.apply {
                     title = if (currentPosition == 0) "Dedicatory" else "Translators' Letter"
                     for (a in menu.children) {
-                        a.isVisible = a.itemId == R.id.find_in_page
+                        a.isVisible = false
                     }
                 }
                 getToolbarTitleView()?.onClick {

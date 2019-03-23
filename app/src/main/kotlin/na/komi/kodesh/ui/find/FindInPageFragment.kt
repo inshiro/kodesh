@@ -245,6 +245,7 @@ class FindInPageFragment : BaseFragment2() {
                 false
             }
 
+            registerVars()
             editText.post {
                 registerVars()
                 editText.addTextChangedListener(textWatcher)

@@ -58,7 +58,7 @@ class MainChildAdapter(
         setHasStableIds(true)
     }
 
-    override fun getItemId(position: Int): Long = if (position == 0) 0.1.toLong() else list[position].id.toLong()
+    override fun getItemId(position: Int): Long = list[position].id.toLong()
 
     override fun getItemCount(): Int = list.size
 

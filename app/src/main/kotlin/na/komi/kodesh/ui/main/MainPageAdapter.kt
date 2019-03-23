@@ -19,6 +19,9 @@ import na.komi.kodesh.ui.internal.ItemDecorator
 import na.komi.kodesh.ui.internal.LinearLayoutManager2
 import na.komi.kodesh.ui.widget.NestedRecyclerView
 import kotlin.coroutines.CoroutineContext
+import androidx.recyclerview.widget.SimpleItemAnimator
+
+
 
 class MainPageAdapter(private val vm: MainViewModel, private val coroutineContext: CoroutineContext) :
     PagedListAdapter<Bible, MainPageAdapter.ViewHolder>(object : DiffUtil.ItemCallback<Bible>() {
@@ -85,7 +88,6 @@ class MainPageAdapter(private val vm: MainViewModel, private val coroutineContex
     private var textSize = -1f
 
     val viewPool by lazy { RecyclerView.RecycledViewPool() }
-    val itemDecorator by lazy { ItemDecorator(-80) }
 
     inner class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
         val childRecyclerView: NestedRecyclerView = child_recycler_view
@@ -96,24 +98,14 @@ class MainPageAdapter(private val vm: MainViewModel, private val coroutineContex
                 //ViewCompat.setNestedScrollingEnabled(this, true)
                 //removeItemDecoration(itemDecorator)
                 //addItemDecoration(itemDecorator)
+                (this.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+                itemAnimator = null
                 setRecycledViewPool(viewPool)
                 layoutManager = LinearLayoutManager2(childRecyclerView.context, RecyclerView.VERTICAL, false).apply {
                     //recycleChildrenOnDetach = true // Resets scrollbar position
                     isItemPrefetchEnabled = true
                     //initialPrefetchItemCount = 3
                 }
-
-                /*ScrollListener.reset()
-                doOnLayout {
-                    ScrollListener.height = it.measuredHeight
-                    ScrollListener.width = it.measuredWidth
-                }
-                addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                        super.onScrolled(recyclerView, dx, dy)
-                        ScrollListener.scrollY += dy
-                    }
-                })*/
                 adapter = MainChildAdapter(vm)
             }
         }
