@@ -121,6 +121,7 @@ fun Canvas.drawMultilineText(
             .setEllipsize(ellipsize)
             .build()
     } else {
+        @Suppress("DEPRECATION")
         StaticLayout(text, start, end, textPaint, width, alignment,
             spacingMult, spacingAdd, includePad, ellipsize, ellipsizedWidth)
             .apply { StaticLayoutCache[cacheKey] = this }

@@ -1,17 +1,13 @@
 package na.komi.kodesh.util.text
 
-import android.text.method.Touch.onTouchEvent
 import android.text.Selection
-import android.view.MotionEvent
-import android.R.attr.onClick
-import android.text.style.ClickableSpan
 import android.text.Spannable
-import android.widget.TextView
-import android.view.View.FOCUS_DOWN
-import android.view.View.FOCUS_FORWARD
 import android.text.method.LinkMovementMethod
 import android.text.method.Touch
+import android.text.style.ClickableSpan
+import android.view.MotionEvent
 import android.view.View
+import android.widget.TextView
 
 
 class CustomMovementMethod : LinkMovementMethod() {
@@ -29,6 +25,7 @@ class CustomMovementMethod : LinkMovementMethod() {
             }
         private var sInstance: CustomMovementMethod? = null
     }
+
     override fun canSelectArbitrarily(): Boolean {
         return true
     }
@@ -38,6 +35,7 @@ class CustomMovementMethod : LinkMovementMethod() {
     }
 
     override fun onTakeFocus(view: TextView, text: Spannable, dir: Int) {
+        @Suppress("DEPRECATED_IDENTITY_EQUALS")
         if (dir and (View.FOCUS_FORWARD or View.FOCUS_DOWN) !== 0) {
             if (view.layout == null) {
                 // This shouldn't be null, but do something sensible if it is.

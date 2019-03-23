@@ -79,52 +79,11 @@ class MainFragment : BaseFragment2(), KatanaTrait {
         viewModel.pagesList.toSingleEvent().observe(viewLifecycleOwner, Observer<PagedList<Bible>?> { pagedList ->
             pagedList?.let {
                 adapter.submitList(pagedList)
-                val lm = rv.layoutManager as LinearLayoutManager
                 val p = Prefs.VP_Position
-                val y = Prefs.currentScroll
-
-
                 viewModel.mBundleRecyclerViewState?.let {
                     rv.layoutManager?.onRestoreInstanceState(it.getParcelable(viewModel.KEY_RECYCLER_STATE))
                 }
-                // Scroll to position to trigger on page scroll
-                rv.scrollToPosition(p)//.also {  rv.visibility = View.INVISIBLE }
-
-
-                //rv.onLayout(p) {
-                /*if (viewModel.mBundleRecyclerViewState == null)
-                    (rv.findViewHolderForAdapterPosition(p) as? MainPageAdapter.ViewHolder)?.scrollView?.isVerticalScrollBarEnabled =
-                        true
-                launch {
-                    var count = 0
-                    while ((rv.findViewHolderForAdapterPosition(p) as? MainPageAdapter.ViewHolder)?.textView?.layout == null && count < 3500) delay(
-                        1
-                    ).also { count++ }
-
-                    (rv.findViewHolderForAdapterPosition(p) as? MainPageAdapter.ViewHolder)?.let {
-                        it.textView.layout?.let { tvl ->
-                            if (!Prefs.ScrollString.isNullOrEmpty()) {
-                                //if (viewModel.mBundleRecyclerViewState == null) {
-                                it.scrollView.post {
-                                    it.scrollView.smoothScrollTo(
-                                        0, tvl.getLineTop(
-                                            tvl.getLineForOffset(it.textView.text.indexOf(Prefs.ScrollString!!))//tvl.getLineForVertical(it.scrollView.scrollY)
-                                        )
-                                    )
-                                    /*
-                                    TimeBench.end = System.currentTimeMillis() - TimeBench.start
-                                    TimeBench.start = 0
-                                    log d "TimeBench.end: ${TimeBench.end}"*/
-                                }
-                                if (viewModel.mBundleRecyclerViewState == null)
-                                    setTitle(Prefs.VP_Position)
-                            }
-                        }
-                    }
-
-                }*/
-
-                //}
+                rv.scrollToPosition(p)
             }
         })
 

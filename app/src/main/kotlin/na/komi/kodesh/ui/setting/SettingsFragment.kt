@@ -63,7 +63,7 @@ class SettingsFragment : PreferenceFragmentCompat(), CoroutineScope {
         val mListPreference = preferenceManager.findPreference<ListPreference>("THEME_ID") ?: return
         mListPreference.value = Prefs.themeId.toString()
         mListPreference.onPreferenceChangeListener =
-            Preference.OnPreferenceChangeListener { pref, newValue ->
+            Preference.OnPreferenceChangeListener { _, newValue ->
                 if (mListPreference.value != newValue) {
                     when (newValue) {
                         "0" -> Prefs.themeId = 0

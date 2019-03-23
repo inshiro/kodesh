@@ -99,7 +99,7 @@ class FindInPageFragment : BaseFragment2() {
         list.forEach {
             val vt = it.verseText!!.replace("[", "").replace("]", "").replace("<", "").replace(">", "")
             val newVt = if (kjvPref) Formatting.diffText(vt, Formatting.kjvList[it.id - 1]) else vt
-            c += newVt.count(str.toString(), true) { s, e, c ->
+            c += newVt.count(str.toString(), true) { s, e, _ ->
                 if (searchListResult.positions[it.verseId!!] == null)
                     searchListResult.positions[it.verseId!!] = mutableListOf()
                 searchListResult.positions[it.verseId!!]!!.add(Pair(s, e))
@@ -233,7 +233,7 @@ class FindInPageFragment : BaseFragment2() {
 
             }
 
-            editText.setOnEditorActionListener { v, actionId, event ->
+            editText.setOnEditorActionListener { v, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     if (resultsText!!.text.isNullOrEmpty()) {
                         val s = editText.text.toString()

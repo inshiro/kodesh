@@ -73,7 +73,7 @@ class FontDialogFragment : ExtendedBottomSheetDialogFragment() {
         val min = 50
         val default = min / step
         var fromButton = false
-        var person = false
+        var person: Boolean
 
 
         val fontSizeTitle = view.findViewById<AppCompatTextView>(R.id.font_size_text_view)
@@ -90,7 +90,6 @@ class FontDialogFragment : ExtendedBottomSheetDialogFragment() {
 
         val f = parentFragment as? MainFragment
         val rv = f?.view?.findViewById<ViewPager3>(R.id.pager_main)
-        val adapter = (rv?.adapter as? MainPageAdapter)
        // var currentTextView =
        //     (f?.view?.findViewById<ViewPager3>(R.id.pager_main)?.findViewHolderForAdapterPosition(Prefs.VP_Position) as? MainPageAdapter.ViewHolder)?.textView
 

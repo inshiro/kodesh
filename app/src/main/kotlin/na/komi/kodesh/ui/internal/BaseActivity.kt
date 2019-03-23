@@ -224,7 +224,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                     }
                 }
             }
-        } // TODO
+        }
 
         toolbar?.post {
             getToolbar()?.let { tb ->

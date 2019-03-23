@@ -70,7 +70,7 @@ abstract class BaseFragment : Fragment(), CoroutineScope, TitleListener, InjectL
 
     fun getToolbarTitleView(): AppCompatTextView? = act()?.getToolbarTitleView()
 
-    fun getNavigationView(): NavigationView =  act()?.getNavigationView()!!
+    fun getNavigationView(): NavigationView? =  act()?.getNavigationView()
 
     fun getToolbar(): Toolbar? = act()?.getToolbar()
 

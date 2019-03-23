@@ -610,9 +610,9 @@ class diff_match_patch {
      * @return The number of characters common to the end of the first
      * string and the start of the second string.
      */
-    protected fun diff_commonOverlap(text1: String, text2: String): Int {
-        var text1 = text1
-        var text2 = text2
+    private fun diff_commonOverlap(t1: String, t2: String): Int {
+        var text1 = t1
+        var text2 = t2
         // Cache the text lengths to prevent multiple calls.
         val text1_length = text1.length
         val text2_length = text2.length

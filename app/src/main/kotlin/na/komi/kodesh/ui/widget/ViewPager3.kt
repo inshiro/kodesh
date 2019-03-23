@@ -33,10 +33,10 @@ class ViewPager3 : RecyclerView {
 
     init {
         layoutManager = LinearLayoutManager(context, LinearLayout.HORIZONTAL, false)
-        PagerSnapHelperVerbose().also { SnapHelper = it }.attachToRecyclerView(this)
+        PagerSnapHelperVerbose().also { snapHelper = it }.attachToRecyclerView(this)
     }
 
-    private lateinit var SnapHelper: PagerSnapHelperVerbose
+    private var snapHelper: PagerSnapHelperVerbose
 
     interface OnPageChangeCallback {
         fun onPageScrolled(pagesState: List<VisiblePageState>) {}

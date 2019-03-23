@@ -137,7 +137,7 @@ dependencies {
     implementation "androidx.paging:paging-runtime:$paging_version"
 
     /** Skate **/
-    def skate_version = "master-SNAPSHOT"
+    def skate_version = "29ee57f189"
     implementation "com.github.inshiro:skate:$skate_version"
 
     /** Katana **/

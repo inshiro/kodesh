@@ -66,6 +66,7 @@ class SearchAdapter : PagedListAdapter<Bible, SearchAdapter.ViewHolder>(object :
             if (context is Activity) {
                 return context
             }
+            @Suppress("USELESS_CAST")
             context = (context as ContextWrapper).baseContext
         }
         return null

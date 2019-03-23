@@ -1,7 +1,5 @@
 package na.komi.kodesh.ui.main
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
 import org.rewedigital.katana.Component
 import org.rewedigital.katana.createComponent
 
@@ -14,9 +12,8 @@ import org.rewedigital.katana.createComponent
  * design was chosen in contrast to other DI libraries that for instance work with a global, singleton state to prevent
  * accidental memory leaks.
  */
-@Parcelize
-object MainComponent : Parcelable {
-    internal var mmainComponent: Component? = null
+object MainComponent {
+    private var mmainComponent: Component? = null
     val mainComponent
         get() = mmainComponent ?: createComponent(
             modules = listOf(Modules.mainModule)// + Modules.modules,
