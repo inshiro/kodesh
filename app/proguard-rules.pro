@@ -32,3 +32,7 @@
 # -keep public class na.komi.kodesh.ui.** { *; }
 # -keep public class na.komi.kodesh.util.skate.** { *; }
 # -keepclassmembers class na.komi.kodesh.util.skate.** { *; }
+-keep public class na.komi.kodesh.ui.main.** { *; }
+-keepclassmembers class na.komi.kodesh.ui.main.** { *; }
+-keep public class na.komi.kodesh.ui.find.** { *; }
+-keepclassmembers class na.komi.kodesh.ui.find.** { *; }

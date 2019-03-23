@@ -8,12 +8,14 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
 import android.view.View
+import android.view.animation.Animation
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.content.ContextCompat
 import androidx.core.widget.ImageViewCompat
+import com.google.android.material.animation.AnimationUtils
 import na.komi.kodesh.Prefs
 import na.komi.kodesh.R
 import na.komi.kodesh.model.Bible
@@ -38,56 +40,86 @@ class FindInPageFragment : BaseFragment2() {
         hideSoftInputFromWindow(view.windowToken, 0);
     }
 
-    @Volatile
-    var listener: Listeners? = null
+    /*
+    var listener: Listeners? = Listeners()
 
-    @Synchronized
-    inline fun setListener(init: Listeners.() -> Unit) {
+     inline fun setListener(init: Listeners.() -> Unit) {
         listener = null
         listener = Listeners()
         listener!!.init()
-
     }
 
     inner class Listeners {
         var onHide: (() -> Unit)? = {}
         var onShow: (() -> Unit)? = {}
 
-        @Synchronized
         fun onHide(action: () -> Unit) {
             onHide = action
         }
 
 
-        @Synchronized
         fun onShow(action: () -> Unit) {
             onShow = action
         }
-    }
+    }*/
 
-    fun resetBottomSheetContainer() {
-        getBottomSheetContainer()?.post {
-            getBottomSheetContainer()?.visibility = View.VISIBLE
-        }
+    fun cleanup() {
         if (!requireActivity().isChangingConfigurations) {
-            listener?.onHide?.invoke()
+            performHide()
             mainChildAdapter?.search("")
             mainChildAdapter?.highlight(null)
             mainChildAdapter?.notifyDataSetChanged()
         }
+    }
 
+    var slideDown: Animation? = null
+    var slideUp: Animation? = null
+    fun performShow() {
+        requireActivity().supportFragmentManager.fragments.firstOrNull()?.view?.run {
+            animation?.cancel()
+            this.clearAnimation()
+            animation = null
+            getBottomSheetContainer()?.visibility = View.GONE
+            animate()
+                .translationY(146f)
+                .setInterpolator(AnimationUtils.LINEAR_OUT_SLOW_IN_INTERPOLATOR)
+                .setDuration(225L)
+                .setStartDelay(225L)
+                .start()
+        }
+    }
+
+    fun performHide() {
+        requireActivity().supportFragmentManager.fragments.firstOrNull()?.view?.run {
+            animation?.cancel()
+            this.clearAnimation()
+            animation = null
+            getBottomSheetContainer()?.visibility = View.VISIBLE
+            animate()
+                .translationY(0f)
+                .setInterpolator(AnimationUtils.FAST_OUT_LINEAR_IN_INTERPOLATOR)
+                .setDuration(225L)
+                .setStartDelay(225L)
+                .start()
+
+        }
     }
 
     override fun onDestroyView() {
+        view?.let {
+            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideKeyboard(it)
+        }
+
         super.onDestroyView()
-        resetBottomSheetContainer()
-        listener = null
+        cleanup()
         mainChildAdapter = null
         mainList = null
         childRecyclerView = null
         resultsText = null
         _defaultTextColor = null
         _defaultButtonColorStateList = null
+        // listener = null
     }
 
     data class SearchListResult(val positions: MutableMap<Int, MutableList<Pair<Int, Int>>>, var total: Int)
@@ -158,7 +190,7 @@ class FindInPageFragment : BaseFragment2() {
         //log d "$idx | $lidx"
 
         childRecyclerView?.scrollToPosition(idx - 1)
-        resultsText?.text = "$counter/${resultList!!.total}"
+        resultsText?.text = ("$counter/${resultList!!.total}")
         mainChildAdapter?.highlight(Pair(idx, lidx))
         if (!fromSearch) {
             mainChildAdapter?.notifyItemChanged(idxAfter - 1)
@@ -282,7 +314,8 @@ class FindInPageFragment : BaseFragment2() {
                 //resetBottomSheetContainer()
                 this.hide()
             }
-            listener?.onShow?.invoke()
+            performShow()
+            //listener?.onShow?.invoke()
         }
     }
 
@@ -329,9 +362,7 @@ class FindInPageFragment : BaseFragment2() {
     }
 
     fun registerVars() {
-        val mainFragmentView =
-            requireActivity().supportFragmentManager.fragments.find { it.tag?.contains("MainFragment") ?: false }
-                ?.view
+        val mainFragmentView = requireActivity().supportFragmentManager.fragments.firstOrNull()?.view
         mainList =
             (mainFragmentView!!.findViewById<ViewPager3>(R.id.pager_main).findViewHolderForAdapterPosition(Prefs.VP_Position) as? MainPageAdapter.ViewHolder)?.childRecyclerView?.let { crv ->
                 childRecyclerView = crv

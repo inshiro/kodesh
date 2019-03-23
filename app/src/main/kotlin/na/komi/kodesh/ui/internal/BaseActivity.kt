@@ -1,7 +1,5 @@
 package na.komi.kodesh.ui.internal
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.graphics.Rect
 import android.os.Build
@@ -18,7 +16,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
-import com.google.android.material.animation.AnimationUtils
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.*
@@ -201,30 +198,9 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
         }
 
 
-        //log w "${skate.current?.tag}"
-        if (skate.current?.tag?.contains("FindInPageFragment") == true) {
-            (skate.current as FindInPageFragment).setListener {
-                onShow {
-                    skate.fragmentManager!!.fragments.find { it.tag?.contains("MainFragment") ?: false }?.view?.apply {
-                        post {
-                            animate()
-                                .translationY(146f)
-                                .setDuration(0L)
-                            bottomSheetContainer.visibility = View.GONE
-                        }
-                    }
-                }
-                onHide {
-                    skate.fragmentManager!!.fragments.find { it.tag?.contains("MainFragment") ?: false }?.view?.apply {
-                            animate()
-                                .translationY(0f)
-                                .setInterpolator(AnimationUtils.FAST_OUT_LINEAR_IN_INTERPOLATOR)
-                                .setDuration(EXIT_ANIMATION_DURATION)
+        //if (skate.current?.javaClass == FindInPageFragment::class.java) {
 
-                    }
-                }
-            }
-        }
+        //}
 
         toolbar?.post {
             getToolbar()?.let { tb ->
@@ -244,12 +220,8 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
 
                 }
                 tb.menu.findItem(R.id.find_in_page).setOnMenuItemClickListener {
-                    skate.container = R.id.container_main
-                    displayFindInPage(findInPageFragment)
+                    findInPageFragment.show()
                     mBottomSheetBehavior.close()
-                    //it.isEnabled = false
-                    mBottomSheetContainer.visibility = View.GONE
-                    skate.container = R.id.nav_main_container
                     true
                 }
             }
@@ -280,7 +252,7 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                     when (item.itemId) {
                         R.id.action_read -> {
                             mainFragment.navToFrag()
-                            backToMain(mainFragment, findInPageFragment)
+                            backToMain(mainFragment)
                         }
                         R.id.action_preface -> prefaceFragment.navToFrag()
                         R.id.action_settings -> settingsFragment.navToFrag()
@@ -293,9 +265,9 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
 
             skate.setOnNavigateListener(object : Skate.OnNavigateListener {
                 override fun onBackPressed(current: Fragment?) {
-                    if (current != null && current::class.java == MainFragment::class.java) {
+                    if (current != null && current.javaClass == MainFragment::class.java) {
                         mainFragment.show()
-                        backToMain(current as MainFragment, findInPageFragment)
+                        backToMain(current as MainFragment)
                     }
                 }
             })
@@ -303,8 +275,9 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
 
     }
 
-    fun backToMain(mainFragment: MainFragment, findInPageFragment: Fragment) {
+    fun backToMain(mainFragment: MainFragment) {
         bottomSheetContainer.visibility = View.VISIBLE
+        //log w "backToMain ${findInPageFragment.hashCode()}"
         getToolbar()?.also { tb ->
             tb.title = if (Prefs.title.isNotEmpty()) Prefs.title else getString(R.string.app_name)
             getToolbarTitleView()?.apply {
@@ -317,14 +290,14 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
                 mainFragment.openStylingDialog()
                 true
             }
-            tb.menu.findItem(R.id.find_in_page).setOnMenuItemClickListener {
+            /*tb.menu.findItem(R.id.find_in_page).setOnMenuItemClickListener {
                 skate.container = R.id.container_main
-                displayFindInPage(findInPageFragment)
+                findInPageFragment.show()
                 bottomSheetBehavior.close()
-                bottomSheetContainer.visibility = View.GONE
+                //bottomSheetContainer.visibility = View.GONE
                 skate.container = R.id.nav_main_container
                 true
-            }
+            }*/
         }
         getNavigationView().let { nv ->
             nv.setCheckedItem(R.id.action_read)
@@ -335,59 +308,6 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope, TitleListener
             }
         }
 
-    }
-
-    protected val ENTER_ANIMATION_DURATION = 225.toLong()
-    protected val EXIT_ANIMATION_DURATION = 175.toLong()
-    fun displayFindInPage(fragment: Fragment) {
-        val v = skate.current?.view
-        /*fragment.show()
-        (fragment as FindInPageFragment).setListener {
-            onShow {
-                v?.apply {
-                    animate()
-                        .translationY(146f)
-                        .setInterpolator(AnimationUtils.LINEAR_OUT_SLOW_IN_INTERPOLATOR)
-                        .setDuration(ENTER_ANIMATION_DURATION)
-                }
-            }
-            onHide {
-                v?.apply {
-                    animate()
-                        .translationY(0f)
-                        .setInterpolator(AnimationUtils.FAST_OUT_LINEAR_IN_INTERPOLATOR)
-                        .setDuration(EXIT_ANIMATION_DURATION)
-                }
-            }
-        }*/
-        v?.apply {
-            animate()
-                .translationY(146f)
-                .setInterpolator(AnimationUtils.LINEAR_OUT_SLOW_IN_INTERPOLATOR)
-                .setDuration(ENTER_ANIMATION_DURATION)
-                .also {
-                    it.setListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(animation: Animator?) {
-                            super.onAnimationEnd(animation)
-                            fragment.show()
-                            (fragment as FindInPageFragment).setListener {
-                                onHide {
-                                    v.apply {
-                                        animate()
-                                            .translationY(0f)
-                                            .setInterpolator(AnimationUtils.FAST_OUT_LINEAR_IN_INTERPOLATOR)
-                                            .setDuration(EXIT_ANIMATION_DURATION)
-                                    }
-                                }
-                            }
-                            it.cancel()
-                            (this@apply).clearAnimation()
-                            it.setListener(null)
-                        }
-                    })
-                }
-
-        }
     }
 
     fun Fragment.navToFrag() {

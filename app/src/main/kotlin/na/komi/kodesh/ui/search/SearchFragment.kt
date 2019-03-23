@@ -117,7 +117,7 @@ class SearchFragment : BaseFragment2(), KatanaTrait {
 
         }
 
-        editText.setOnEditorActionListener { v, actionId, _ ->
+        editText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 if (listSize==null) {
                     SEARCH_DEBOUNCE_MS = 0

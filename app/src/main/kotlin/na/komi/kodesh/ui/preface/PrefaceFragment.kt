@@ -188,7 +188,7 @@ class PrefaceAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(list[position], position)
+        holder.bind(list[position])
     }
 
     fun setList(newList: MutableList<String>) {
@@ -217,7 +217,7 @@ class PrefaceAdapter(
             }
         }
 
-        fun bind(item: String, position: Int) {
+        fun bind(item: String) {
             childRecyclerView.isVerticalScrollBarEnabled = true
             GlobalScope.launch(Dispatchers.Main) {
                 val list = withContext(vm.executorDispatcher) {

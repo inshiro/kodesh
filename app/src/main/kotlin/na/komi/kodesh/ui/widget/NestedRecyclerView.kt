@@ -26,6 +26,7 @@ class NestedRecyclerView : RecyclerView, NestedScrollingChild3, GestureDetector.
    private lateinit var mDetector : GestureDetectorCompat
 
     override fun setNestedScrollingEnabled(enabled: Boolean) {
+        @Suppress("UNNECESSARY_SAFE_CALL")
         mNestedScrollingChildHelper?.isNestedScrollingEnabled = true
     }
 

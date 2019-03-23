@@ -1764,7 +1764,7 @@ class diff_match_patch {
      * @param diffs Array of Diff objects for text1 to text2.
      * @return LinkedList of Patch objects.
      */
-    @Deprecated("Prefer patch_make(String text1, LinkedList<Diff> diffs).")
+    @Deprecated("Prefer patch_make(String text1, LinkedList<Diff> diffs).", ReplaceWith("patch_make(text1, diffs)"))
     fun patch_make(text1: String, text2: String,
                    diffs: LinkedList<Diff>): LinkedList<Patch> {
         return patch_make(text1, diffs)

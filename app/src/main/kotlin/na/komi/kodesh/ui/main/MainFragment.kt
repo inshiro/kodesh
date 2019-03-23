@@ -6,12 +6,13 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.Observer
 import androidx.paging.PagedList
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import na.komi.kodesh.Prefs
 import na.komi.kodesh.R
 import na.komi.kodesh.model.Bible
+import na.komi.kodesh.ui.find.FindInPageFragment
 import na.komi.kodesh.ui.internal.BaseFragment2
 import na.komi.kodesh.ui.navigate.NavigateDialogFragment
 import na.komi.kodesh.ui.styling.StylingDialogFragment
@@ -75,6 +76,8 @@ class MainFragment : BaseFragment2(), KatanaTrait {
     private fun setupRecyclerView(view: View) {
         val rv = view.findViewById(R.id.pager_main) as ViewPager3
         rv.isNestedScrollingEnabled = true
+        (rv.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        rv.itemAnimator = null
         val adapter = MainPageAdapter(viewModel, coroutineContext)
         viewModel.pagesList.toSingleEvent().observe(viewLifecycleOwner, Observer<PagedList<Bible>?> { pagedList ->
             pagedList?.let {
@@ -105,13 +108,14 @@ class MainFragment : BaseFragment2(), KatanaTrait {
                     }
 
 
-                    if (pageState.distanceToSettled == 1.0f)
-                        requireActivity().supportFragmentManager.fragments.lastOrNull {
-                            it.tag?.contains("FindInPageFragment") ?: false
-                        }?.let {
-                            it.hide()
-                        }
-
+                    if (pageState.distanceToSettled == 1.0f) {
+                        if (!requireActivity().isChangingConfigurations)
+                            requireActivity().supportFragmentManager.fragments.lastOrNull {
+                                it.javaClass == FindInPageFragment::class.java
+                            }?.let {
+                                it.hide()
+                            }
+                    }
                     vh.childRecyclerView.isVerticalScrollBarEnabled = pageState.distanceToSettled == 1.0f
 
                     //     vh.setRealtimeAttr(pageState.index, pageState.viewCenterX.toString(), pageState.distanceToSettled, pageState.distanceToSettledPixels)
@@ -123,19 +127,6 @@ class MainFragment : BaseFragment2(), KatanaTrait {
                     setTitle(position)
                 Prefs.VP_Position = position
                 currentIndex = position
-                //(activity as? MainActivity)?.displayFindInPage(false)
-                /*ScrollListener.reset()
-                rv.doOnLayout {
-                    ScrollListener.height = it.measuredHeight
-                    ScrollListener.width = it.measuredWidth
-                }*/
-                //val vh = rv.findViewHolderForAdapterPosition(position) as? MainPageAdapter.ViewHolder
-
-                //(vh?.childRecyclerView?.layoutManager as? LinearLayoutManager2)?.let {
-                //    it.setCurrentScroll(vh.childRecyclerView.computeVerticalScrollOffset())
-                //}
-                //if (vh != null && vh.scrollView.scrollY in 0..100)
-                //    getBottomSheetBehavior().slideUp(getBottomSheetContainer())
 
             }
         })
@@ -153,41 +144,17 @@ class MainFragment : BaseFragment2(), KatanaTrait {
             }
         }
 
-        /*viewModel.pagePosition.observe(viewLifecycleOwner, Observer {
-            navigateToPage()
-            closeBottomSheet()
-        })*/
 
         activity?.window?.decorView?.setOnSystemUiVisibilityChangeListener {
             if ((it and View.SYSTEM_UI_FLAG_LOW_PROFILE) == 0) {
                 //d { "Status bar is visible" }
                 @Suppress("RedundantIf")
                 viewModel.currentLowProfileFlag.value = false
-                //viewModel.lowProfileFlag.postValue(true)
             } else {
                 //d { "Status bar is NOT visible" }
                 viewModel.currentLowProfileFlag.value = true
-                //viewModel.lowProfileFlag.postValue(false)
             }
         }
-/*
-        viewModel.lowProfileFlag.observe(viewLifecycleOwner, Observer {
-
-            (activity as? AppCompatActivity)?.window?.decorView?.apply {
-                if (it)
-                    systemUiVisibility = systemUiVisibility or View.SYSTEM_UI_FLAG_LOW_PROFILE
-                else {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
-                        (activity as? AppCompatActivity)?.window?.statusBarColor = Color.TRANSPARENT
-                        systemUiVisibility =
-                            systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or
-                                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    } else systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
-                }
-            }
-
-        })*/
 
         viewModel.adapterUpdate.observe(viewLifecycleOwner, Observer {
             viewModel.fromAdapterNotify = true
@@ -215,24 +182,11 @@ class MainFragment : BaseFragment2(), KatanaTrait {
         val rv = view?.findViewById<ViewPager3>(R.id.pager_main)
         if (viewModel.mBundleRecyclerViewState == null)
             viewModel.mBundleRecyclerViewState = Bundle()
-        /*(rv?.findViewHolderForAdapterPosition(Prefs.VP_Position) as? MainPageAdapter.ViewHolder)?.let {
-            it.textView.getFirstLineIndex(it.scrollView.scrollY)?.let { idx ->
-                it.textView.text?.let { text ->
-                    Prefs.ScrollString =
-                        text.substring(idx, text.indexOf((rv.adapter as MainPageAdapter).ZSPACE, idx + 1))
-                }
-            }
-        }*/
-        // (rv?.findViewHolderForAdapterPosition(Prefs.VP_Position) as? MainPageAdapter.ViewHolder)?.also {
-        //     Prefs.currentScroll = it.scrollView.scrollY
-        //}
         viewModel.mBundleRecyclerViewState?.apply {
             clear()
             putParcelable(viewModel.KEY_RECYCLER_STATE, rv?.layoutManager?.onSaveInstanceState())
         }
         viewModel.MainRecyclerViewState = rv?.layoutManager?.onSaveInstanceState()
-        //val current = (rv!!.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-
     }
 
     /**
@@ -260,6 +214,7 @@ class MainFragment : BaseFragment2(), KatanaTrait {
         val rv = view?.findViewById<ViewPager3>(R.id.pager_main)
         if (bp != p) {
             launch {
+                rv?.visibility = View.INVISIBLE
                 rv?.scrollToPosition(p)
                 var c = 0
                 while ((rv?.findViewHolderForAdapterPosition(p) as? MainPageAdapter.ViewHolder)?.childRecyclerView == null) {
@@ -269,6 +224,7 @@ class MainFragment : BaseFragment2(), KatanaTrait {
                         break
                 }
                 delay(230)
+                rv?.visibility = View.VISIBLE
                 (rv?.findViewHolderForAdapterPosition(p) as? MainPageAdapter.ViewHolder)?.childRecyclerView?.betterSmoothScrollToPosition(
                     viewModel.versePicked - 1
                 )

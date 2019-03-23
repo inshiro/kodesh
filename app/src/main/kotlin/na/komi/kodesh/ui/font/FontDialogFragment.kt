@@ -22,11 +22,9 @@ import na.komi.kodesh.R
 import na.komi.kodesh.ui.internal.ExtendedBottomSheetDialogFragment
 import na.komi.kodesh.ui.main.MainActivity
 import na.komi.kodesh.ui.main.MainFragment
-import na.komi.kodesh.ui.main.MainPageAdapter
 import na.komi.kodesh.util.onClick
 import na.komi.kodesh.util.setLowProfileStatusBar
 import na.komi.kodesh.util.text.futureSet
-import na.komi.kodesh.ui.widget.ViewPager3
 
 class FontDialogFragment : ExtendedBottomSheetDialogFragment() {
 
@@ -89,9 +87,8 @@ class FontDialogFragment : ExtendedBottomSheetDialogFragment() {
         val blackThemeButton = view.findViewById<AppCompatButton>(R.id.black_theme_button)
 
         val f = parentFragment as? MainFragment
-        val rv = f?.view?.findViewById<ViewPager3>(R.id.pager_main)
-       // var currentTextView =
-       //     (f?.view?.findViewById<ViewPager3>(R.id.pager_main)?.findViewHolderForAdapterPosition(Prefs.VP_Position) as? MainPageAdapter.ViewHolder)?.textView
+        // var currentTextView =
+        //     (f?.view?.findViewById<ViewPager3>(R.id.pager_main)?.findViewHolderForAdapterPosition(Prefs.VP_Position) as? MainPageAdapter.ViewHolder)?.textView
 
 
         // Ex :
@@ -172,6 +169,7 @@ class FontDialogFragment : ExtendedBottomSheetDialogFragment() {
         setSpan(span, if (from == length) 0 else from, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         return this
     }
+
     private var currentFontSize = -1f
 
     private fun restartActivity() {
@@ -183,6 +181,7 @@ class FontDialogFragment : ExtendedBottomSheetDialogFragment() {
             it.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
     }
+
     override fun onDismiss(dialog: DialogInterface) {
 
 /*        if (currentFontSize != -1f && currentFontSize != Prefs.mainFontSize) {
@@ -230,7 +229,6 @@ class FontDialogFragment : ExtendedBottomSheetDialogFragment() {
     private val viewModel
       get()=  _viewModel ?: ViewModelProviders.of(activity!!, InjectorUtils.provideMainViewModelFactory(activity!!))
             .get(MainViewModel::class.java)*/
-
 
 
 }
