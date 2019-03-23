@@ -13,7 +13,6 @@ import na.komi.kodesh.Prefs
 import na.komi.kodesh.R
 import na.komi.kodesh.model.Bible
 import na.komi.kodesh.ui.internal.BaseFragment2
-import na.komi.kodesh.ui.internal.LinearLayoutManager2
 import na.komi.kodesh.ui.navigate.NavigateDialogFragment
 import na.komi.kodesh.ui.styling.StylingDialogFragment
 import na.komi.kodesh.ui.widget.ViewPager3
@@ -148,7 +147,9 @@ class MainFragment : BaseFragment2(), KatanaTrait {
 
 
                     if (pageState.distanceToSettled == 1.0f)
-                        requireActivity().supportFragmentManager.fragments.lastOrNull {it.tag?.contains("FindInPageFragment") ?: false}?.let {
+                        requireActivity().supportFragmentManager.fragments.lastOrNull {
+                            it.tag?.contains("FindInPageFragment") ?: false
+                        }?.let {
                             it.hide()
                         }
 
@@ -309,18 +310,15 @@ class MainFragment : BaseFragment2(), KatanaTrait {
                         break
                 }
                 delay(230)
-                /*if (viewModel.versePicked == 1)
-                    ((rv?.findViewHolderForAdapterPosition(p) as? MainPageAdapter.ViewHolder)?.childRecyclerView?.layoutManager as? LinearLayoutManager2)?.scrollToPositionWithOffset(
-                        0,
-                        0
-                    )
-                else*/
-                    (rv?.findViewHolderForAdapterPosition(p) as? MainPageAdapter.ViewHolder)?.childRecyclerView?.betterSmoothScrollToPosition(
-                        viewModel.versePicked - 1
-                    )
+                (rv?.findViewHolderForAdapterPosition(p) as? MainPageAdapter.ViewHolder)?.childRecyclerView?.betterSmoothScrollToPosition(
+                    viewModel.versePicked - 1
+                )
+                setTitle(p)
             }
         } else if (bp == p)
-            (rv?.findViewHolderForAdapterPosition(p) as? MainPageAdapter.ViewHolder)?.childRecyclerView?.betterSmoothScrollToPosition(viewModel.versePicked - 1)
+            (rv?.findViewHolderForAdapterPosition(p) as? MainPageAdapter.ViewHolder)?.childRecyclerView?.betterSmoothScrollToPosition(
+                viewModel.versePicked - 1
+            )
         Prefs.NavigateToPosition = -1
     }
 
