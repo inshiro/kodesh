@@ -179,7 +179,6 @@ class BottomSheetBehavior2<V : View>(context: Context, attrs: AttributeSet) :
             params.anchorId = child.id
             params.anchorGravity = Gravity.TOP
             params.gravity = Gravity.TOP
-            params.bottomMargin = 167
             snackbarLayout.layoutParams = params
         }
     }

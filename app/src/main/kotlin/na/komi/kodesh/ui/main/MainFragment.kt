@@ -24,6 +24,7 @@ import na.komi.kodesh.util.livedata.toSingleEvent
 import na.komi.kodesh.util.onClick
 import na.komi.kodesh.util.setLowProfileStatusBar
 import na.komi.kodesh.util.text.futureSet
+import na.komi.skate.core.extension.hide
 import org.rewedigital.katana.Component
 import org.rewedigital.katana.KatanaTrait
 import org.rewedigital.katana.androidx.viewmodel.activityViewModel
@@ -145,6 +146,11 @@ class MainFragment : BaseFragment2(), KatanaTrait {
                         viewModel.currentLowProfileFlag.value = true
                     }
 
+
+                    if (pageState.distanceToSettled == 1.0f)
+                        requireActivity().supportFragmentManager.fragments.lastOrNull {it.tag?.contains("FindInPageFragment") ?: false}?.let {
+                            it.hide()
+                        }
 
                     vh.childRecyclerView.isVerticalScrollBarEnabled = pageState.distanceToSettled == 1.0f
 
@@ -294,7 +300,7 @@ class MainFragment : BaseFragment2(), KatanaTrait {
         val rv = view?.findViewById<ViewPager3>(R.id.pager_main)
         if (bp != p) {
             launch {
-                rv?.betterSmoothScrollToPosition(p)
+                rv?.scrollToPosition(p)
                 var c = 0
                 while ((rv?.findViewHolderForAdapterPosition(p) as? MainPageAdapter.ViewHolder)?.childRecyclerView == null) {
                     delay(10)

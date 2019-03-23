@@ -9,6 +9,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.children
+import androidx.core.view.updatePadding
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -164,7 +165,7 @@ class SearchFragment : BaseFragment2(), KatanaTrait {
                     //editText.snackbar("${it.size} result${if (it.size == 1) "" else "s"}")
                     snackBar = coordinatorLayout.snackbar("${it.size} result${if (it.size == 1) "" else "s"}",Snackbar.LENGTH_SHORT)
                     listSize = it.size
-                    //Snackbar.make(coordinatorLayout, "${it.size} result${if (it.size == 1) "" else "s"}", Snackbar.LENGTH_SHORT).apply {view.layoutParams = (view.layoutParams as CoordinatorLayout.LayoutParams).apply {setMargins(leftMargin, topMargin, rightMargin, 146)}}.show()
+                    //Snackbar.make(coordinatorLayout, "${it.size} result${if (it.size == 1) "" else "s"}", Snackbar.LENGTH_SHORT).apply { view.layoutParams = (view.layoutParams as CoordinatorLayout.LayoutParams).apply {setMargins(leftMargin, topMargin, rightMargin, 267)}}.show()
                     //editText.toast("${it.size} result${if (it.size == 1) "" else "s"}")
                 }
             })

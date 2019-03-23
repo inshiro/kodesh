@@ -17,6 +17,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
@@ -96,7 +97,11 @@ class MainChildAdapter(
 
     fun search(text: CharSequence) {
         searchTerm = text
-        notifyDataSetChanged()
+        //notifyDataSetChanged()
+    }
+    fun highlight(found: Pair<Int,Int>?) {
+        highlight = found//?.also { notifyItemChanged(it.first)  }
+
     }
 
     private var searchTerm: CharSequence = ""
@@ -106,6 +111,7 @@ class MainChildAdapter(
     private val periscopeDelimeter by lazy { """\\<.*?\\>""".toRegex() }
     private val italicDelimeter by lazy { """\\[|\\]""".toRegex() }
 
+    private var highlight:Pair<Int,Int>?= null
     private val clipboard by lazy {
         Application.instance.applicationContext.getSystemService(
             Context.CLIPBOARD_SERVICE
@@ -131,7 +137,7 @@ class MainChildAdapter(
             verseView.setTextSize(TypedValue.COMPLEX_UNIT_SP, Prefs.mainFontSize)
             verseView.setSpannableFactory(spannableFactory)
             verseView.setOnLongClickListener {
-                val title = "${list[adapterPosition].bookName} ${list[adapterPosition].chapterId}:${list[adapterPosition].verseId}"
+                val title = "${Prefs.title}:${list[adapterPosition].verseId}"
                 var content = verseView.text.toString()
 
                 // Check for persicope
@@ -146,6 +152,7 @@ class MainChildAdapter(
                 content =  content.replace("${list[adapterPosition].verseId}  ","")
                     Snackbar.make(verseView,"Selected $title", Snackbar.LENGTH_SHORT).setAction("Copy") {
                         clipboard?.primaryClip = ClipData.newPlainText("Search text", "$title\n$content")
+                        Toast.makeText(it.context,"Copied verse",Toast.LENGTH_SHORT).show()
                     }.show()
                 false
             }
@@ -273,7 +280,6 @@ class MainChildAdapter(
 
             } else {
                 if (item.verseId!! == list.size && vt.contains("<")) {
-                    log d "POSITION ${item.verseId!!}"
                     if (vt.contains("<")) {
                         val i = vt.indexOf("<")
                         val s1 = vt.substring(0, i).trim()
@@ -381,6 +387,9 @@ class MainChildAdapter(
             // Search
             if (searchTerm.isNotEmpty()) {
                 finalText.count(searchTerm.toString(), true) { s, e, c ->
+                    if (highlight!=null && highlight!!.first == item.verseId!! &&highlight!!.second == c)
+                        finalText.setSpan(BackgroundColorSpan(Formatting.HighlightFocusColor),s,e,SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    else
                     finalText.setSpan(BackgroundColorSpan(Formatting.HighLightColor),s,e,SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
             }

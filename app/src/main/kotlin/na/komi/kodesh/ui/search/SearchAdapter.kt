@@ -8,6 +8,7 @@ import android.content.ContextWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.cardview.widget.CardView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -89,6 +90,7 @@ class SearchAdapter : PagedListAdapter<Bible, SearchAdapter.ViewHolder>(object :
                 it.getActivity()?.findViewById<CoordinatorLayout>(R.id.container_main)?.let {coordinatorLayout ->
                     Snackbar.make(coordinatorLayout,"Selected $title",Snackbar.LENGTH_SHORT).setAction("Copy") {
                         clipboard?.primaryClip = ClipData.newPlainText("Search text", "$title\n${content.text}")
+                        Toast.makeText(coordinatorLayout.context,"Copied verse", Toast.LENGTH_SHORT).show()
                     }.show()
                 }
                 false

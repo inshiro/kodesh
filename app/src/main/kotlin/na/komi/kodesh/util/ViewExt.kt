@@ -21,6 +21,7 @@ import na.komi.kodesh.Application
 import na.komi.kodesh.ui.internal.BottomSheetBehavior2
 import na.komi.kodesh.ui.internal.LinearLayoutManager2
 import na.komi.kodesh.ui.widget.ViewPager3
+import kotlin.math.absoluteValue
 
 
 fun View.onClick(debounceTime: Long = 1000L, action: () -> Unit) {
@@ -93,12 +94,19 @@ fun RecyclerView.betterSmoothScrollToPosition(targetItem: Int) {
                     distance < -maxScroll -> targetItem - maxScroll
                     else -> topItem
                 }
-                if (anchorItem != topItem) scrollToPosition(anchorItem)
+                var scrollTo = false
+                if (anchorItem != topItem) scrollToPosition(anchorItem).also { scrollTo = true }
                 post {
+                    if (!scrollTo) {
+                        if (anchorItem in 0..targetItem) {
+                            scrollToPosition(anchorItem)
+                        } else if (targetItem-5 >= 0)  scrollToPosition(targetItem-5)
+                        scrollTo = true
+                    }
                     smoothScrollToPosition(targetItem)
                 }
             }
-            else -> smoothScrollToPosition(targetItem)
+            else -> smoothScrollToPosition(targetItem).also { log d "Ran here $targetItem" }
         }
     }
 }
