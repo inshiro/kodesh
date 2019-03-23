@@ -4,7 +4,7 @@
         height="90"
         src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" />
 </a>
-<br><br><br><br><br></p>
+<br><br><br></p>
 
 # Features
 
@@ -18,7 +18,7 @@
 - Night mode
 - Pinch to zoom
 - Lightweight and fast
-- Absolutely no permissions needed
+- Absolutely no permissions n   eeded
 - Completely offline
 - Clean and elegant Material design
 - Translations from the [PCE](http://www.bibleprotector.com/)
